@@ -16,12 +16,14 @@
             IMMERSIVE BOOK EXPERIENCE
           </p>
           <h1 class="main-title font-display text-7xl md:text-9xl font-bold leading-none mb-8">
-            <span class="title-line line-1 opacity-0">书 籍</span>
-            <span class="title-line line-2 opacity-0">气 氛</span>
-            <span class="title-line line-3 opacity-0">可 视 化</span>
+            <span class="title-line line-1 opacity-0">每一本书</span>
+            <span class="title-line line-2 opacity-0">都值得去</span>
+            <span class="title-line line-3 opacity-0">探索</span>
           </h1>
-          <p class="description font-body text-xl md:text-2xl text-gray-600 max-w-2xl leading-relaxed opacity-0">
-            不是阅读，而是探索。每一本书都是一个独特的视觉宇宙，等待你去发现、去触摸、去感受。
+          <p class="description font-body text-xl md:text-2xl text-gray-600 max-w-2xl leading-loose opacity-0">
+            文字并非静止的墨迹，而是呼吸的宇宙。<br>
+            每一本书都藏着一团未曾说破的情绪，<br>
+            等待被光线照亮，被指尖触碰，被灵魂认出。
           </p>
         </div>
 
@@ -75,18 +77,18 @@ const enterButton = ref(null)
 
 // 背景文字词汇
 const bgWords = ref([
-  '探索', '感觉', '沉浸', '氛围', '情绪', '触摸',
-  '发现', '叙事', '空间', '视觉', '灵魂', '共鸣',
-  '忧郁', '悬疑', '治愈', '史诗', '科幻', '温暖'
+  '呼吸', '墨迹', '宇宙', '情绪', '光影', '触碰',
+  '灵魂', '低语', '涟漪', '暮色', '星尘', '回响',
+  '孤独', '温柔', '破碎', '永恒', '流浪', '归处'
 ])
 
 // 浮动关键词
 const keywords = ref([
-  { text: '探索', style: { top: '15%', left: '10%', fontSize: '0.9rem', rotation: '-12deg' } },
-  { text: '氛围', style: { top: '25%', right: '15%', fontSize: '1.2rem', rotation: '8deg' } },
-  { text: '情绪', style: { top: '60%', left: '8%', fontSize: '0.8rem', rotation: '-5deg' } },
-  { text: '触摸', style: { top: '70%', right: '12%', fontSize: '1rem', rotation: '3deg' } },
-  { text: '沉浸', style: { top: '45%', right: '5%', fontSize: '0.7rem', rotation: '-8deg' } },
+  { text: '墨迹', style: { top: '15%', left: '10%', fontSize: '0.9rem', rotation: '-12deg' } },
+  { text: '呼吸', style: { top: '25%', right: '15%', fontSize: '1.2rem', rotation: '8deg' } },
+  { text: '光影', style: { top: '60%', left: '8%', fontSize: '0.8rem', rotation: '-5deg' } },
+  { text: '低语', style: { top: '70%', right: '12%', fontSize: '1rem', rotation: '3deg' } },
+  { text: '星尘', style: { top: '45%', right: '5%', fontSize: '0.7rem', rotation: '-8deg' } },
 ])
 
 onMounted(() => {
