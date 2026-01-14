@@ -51,6 +51,7 @@
         <button
           class="explore-button font-mono text-sm tracking-wider flex items-center gap-2"
           :style="{ color: book.color }"
+          @click="handleExplore"
         >
           <span>探索</span>
           <span class="arrow">→</span>
@@ -416,6 +417,14 @@ const onHover = () => {
 
 const onLeave = () => {
   isHovered.value = false
+}
+
+const handleExplore = () => {
+  // 如果是小王子，在新标签页打开沉浸式体验
+  if (props.book.title === '小王子') {
+    window.open('/little-prince', '_blank')
+  }
+  // 其他书籍暂时不处理
 }
 </script>
 

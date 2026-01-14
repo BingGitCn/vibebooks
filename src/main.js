@@ -7,6 +7,8 @@ import './style.css'
 const routes = [
   { path: '/', component: () => import('./views/Home.vue') },
   { path: '/books', component: () => import('./views/Books.vue') },
+  { path: '/little-prince', component: () => import('./views/LittlePrince.vue') },
+  { path: '/test', component: () => import('./views/Test.vue') },
 ]
 
 const router = createRouter({
