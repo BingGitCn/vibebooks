@@ -31,7 +31,7 @@ const goBack = () => {
 }
 
 body {
-  background: #000;
+  background: #f5f1eb;
   font-family: 'Source Serif 4', serif;
 }
 
@@ -39,6 +39,7 @@ body {
   width: 100vw;
   height: 100vh;
   position: relative;
+  background: #f5f1eb;
 }
 
 /* 视图切换动画 */

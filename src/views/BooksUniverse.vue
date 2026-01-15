@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import gsap from 'gsap'
 
 const emit = defineEmits(['back'])
@@ -393,6 +393,127 @@ const generateBarcode = () => {
 
 const barcodes = ref(books.value.map(() => generateBarcode()))
 
+// 生成书架
+const generateBookshelves = () => {
+  const shelves = []
+  const usedBookIds = new Set()
+
+  // 创建1-2个书架
+  const shelfCount = Math.floor(Math.random() * 2) + 1
+
+  // 书架统一配色方案
+  const colorSchemes = [
+    { name: 'warm', colors: ['#f4d03f', '#f39c12', '#e67e22'] }, // 暖色调
+    { name: 'cool', colors: ['#3498db', '#85c1e9', '#a9cce3'] }, // 冷色调
+    { name: 'neutral', colors: ['#bdc3c7', '#95a5a6', '#7f8c8d'] }, // 中性色调
+    { name: 'nature', colors: ['#27ae60', '#52be80', '#76d7c4'] }, // 自然色调
+  ]
+
+  for (let i = 0; i < shelfCount; i++) {
+    // 随机选择4-6本书
+    const booksPerShelf = Math.floor(Math.random() * 3) + 4
+    const shelfBooks = []
+
+    // 随机选择配色方案
+    const colorScheme = colorSchemes[Math.floor(Math.random() * colorSchemes.length)]
+
+    // 随机选择未使用的书
+    const availableBooks = books.value.filter(b => !usedBookIds.has(b.id))
+    const shuffled = availableBooks.sort(() => Math.random() - 0.5)
+
+    for (let j = 0; j < Math.min(booksPerShelf, shuffled.length); j++) {
+      // 随机高度：200px 到 280px，占书架高度三分之二以上
+      const height = Math.floor(Math.random() * 81) + 200
+
+      // 为这本书分配统一的颜色
+      const color = colorScheme.colors[j % colorScheme.colors.length]
+
+      shelfBooks.push({
+        ...shuffled[j],
+        height: `${height}px`,
+        shelfColor: color // 添加统一的书架颜色
+      })
+      usedBookIds.add(shuffled[j].id)
+    }
+
+    shelves.push({
+      id: `shelf-${i}`,
+      books: shelfBooks,
+      volumeNumber: i + 1, // 卷号
+      position: Math.floor(Math.random() * (books.value.length - 5)) + 5, // 随机位置
+      colorScheme: colorScheme.name // 记录配色方案
+    })
+  }
+
+  return shelves.sort((a, b) => a.position - b.position)
+}
+
+// 创建书籍ID到条码的映射
+const barcodeMap = ref(new Map())
+books.value.forEach((book, index) => {
+  barcodeMap.value.set(book.id, barcodes.value[index])
+})
+
+const bookshelves = ref(generateBookshelves())
+
+// 判断颜色是否为浅色
+const isLightColor = (hexColor) => {
+  const hex = hexColor.replace('#', '')
+  const r = parseInt(hex.substr(0, 2), 16)
+  const g = parseInt(hex.substr(2, 2), 16)
+  const b = parseInt(hex.substr(4, 2), 16)
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000
+  return brightness > 128
+}
+
+// 创建显示项数组，合并书架和书籍
+const displayItems = computed(() => {
+  const bookIdsOnShelves = new Set()
+
+  // 收集书架上的所有书籍ID
+  bookshelves.value.forEach(shelf => {
+    shelf.books.forEach(book => {
+      bookIdsOnShelves.add(book.id)
+    })
+  })
+
+  // 合并书架和不在书架上的书
+  const allItems = []
+
+  // 添加书架
+  bookshelves.value.forEach(shelf => {
+    allItems.push({
+      type: 'shelf',
+      shelfId: shelf.id,
+      ...shelf
+    })
+  })
+
+  // 添加不在书架上的书
+  books.value.forEach(book => {
+    if (!bookIdsOnShelves.has(book.id)) {
+      allItems.push({
+        type: 'book',
+        ...book
+      })
+    }
+  })
+
+  // 按照 position 或 id 排序
+  allItems.sort((a, b) => {
+    if (a.type === 'shelf' && b.type === 'shelf') {
+      return a.position - b.position
+    } else if (a.type === 'shelf') {
+      return a.position - b.id
+    } else if (b.type === 'shelf') {
+      return a.id - b.position
+    }
+    return a.id - b.id
+  })
+
+  return allItems
+})
+
 let ctx = null
 const hoveredBook = ref(null)
 
@@ -469,14 +590,55 @@ onUnmounted(() => {
     </div>
 
     <div class="books-grid">
-      <div
-        v-for="(book, index) in books"
-        :key="book.id"
-        class="book-card"
-        @mouseenter="onBookHover(book, $event)"
-        @mouseleave="onBookLeave"
-        @click="selectBook(book)"
-      >
+      <template v-for="(book, index) in displayItems" :key="book.id || book.shelfId">
+        <!-- 书架组件 -->
+        <div v-if="book.type === 'shelf'" class="book-card shelf-card">
+          <div class="modern-bookshelf">
+            <!-- 顶部标题栏 -->
+            <div class="shelf-header">
+              <span class="shelf-title">书架</span>
+              <span class="shelf-volume">卷{{ book.volumeNumber }}</span>
+            </div>
+
+            <!-- 书架内容区域 -->
+            <div class="shelf-content">
+              <div class="shelf-books-row">
+                <div
+                  v-for="shelfBook in book.books"
+                  :key="shelfBook.id"
+                  class="shelf-book-cover"
+                  :style="{
+                    height: shelfBook.height || '160px',
+                    backgroundColor: shelfBook.shelfColor,
+                    color: isLightColor(shelfBook.shelfColor) ? '#1a1a1a' : '#fff'
+                  }"
+                  @mouseenter="onBookHover(shelfBook, $event)"
+                  @mouseleave="onBookLeave"
+                  @click="selectBook(shelfBook)"
+                >
+                  <!-- 竖排书名 -->
+                  <div class="shelf-book-title">{{ shelfBook.title }}</div>
+
+                  <!-- 底部装饰线 -->
+                  <div class="shelf-book-lines">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 单本书籍卡片 -->
+        <div
+          v-else
+          class="book-card"
+          @mouseenter="onBookHover(book, $event)"
+          @mouseleave="onBookLeave"
+          @click="selectBook(book)"
+        >
         <!-- 上半部分：视觉区域 -->
         <div class="cover-top" :class="[
           `design-${book.design}`,
@@ -800,7 +962,7 @@ onUnmounted(() => {
           <div class="action-row">
             <div class="barcode-random">
               <span
-                v-for="(bar, i) in barcodes[index]"
+                v-for="(bar, i) in barcodeMap.get(book.id)"
                 :key="i"
                 :style="{
                   height: bar.height + 'px',
@@ -812,6 +974,7 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
+      </template>
     </div>
   </div>
 </template>
@@ -953,15 +1116,15 @@ onUnmounted(() => {
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
   display: flex;
   flex-direction: column;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
 }
 
 .book-card:hover {
-  transform: translateY(-12px) scale(1.02);
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+  transform: translateY(-6px) scale(1.015);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
 }
 
 /* 上半部分：视觉区域 */
@@ -2244,6 +2407,769 @@ onUnmounted(() => {
   text-align: center;
   width: 90%;
   font-style: italic;
+}
+
+/* ====== 书架样式 ====== */
+.shelf-card {
+  padding: 0;
+  background: #fff;
+  overflow: hidden;
+}
+
+.real-bookshelf {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  padding: 2rem 1.5rem 1.5rem;
+  background: linear-gradient(180deg, #f5f1eb 0%, #ebe7e0 100%);
+}
+
+/* 书架层板 */
+.shelf-layer {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1rem;
+  right: 1rem;
+  height: 12px;
+}
+
+.shelf-board-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(180deg, #a0522d 0%, #8b4513 50%, #6b3510 100%);
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.shelf-board-front {
+  position: absolute;
+  top: 8px;
+  left: -2px;
+  right: -2px;
+  height: 8px;
+  background: linear-gradient(180deg, #8b4513 0%, #6b3510 100%);
+  border-radius: 0 0 2px 2px;
+}
+
+/* 书架上的书籍行 */
+.shelf-books-row {
+  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  padding: 0 1rem;
+  height: calc(100% - 3.5rem);
+  padding-bottom: 1.2rem;
+}
+
+/* 竖立的书 */
+.shelf-standing-book {
+  position: relative;
+  width: 28px;
+  height: 150px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  transform-origin: bottom center;
+}
+
+.shelf-standing-book:hover {
+  transform: translateY(-8px) scale(1.05) !important;
+  z-index: 10;
+}
+
+/* 书脊 */
+.book-spine {
+  width: 100%;
+  height: 100%;
+  border-radius: 2px 4px 4px 2px;
+  box-shadow:
+    2px 2px 6px rgba(0, 0, 0, 0.3),
+    inset 0 0 2px rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 0.3rem;
+  border-left: 2px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.spine-decoration {
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+}
+
+.spine-title-vertical {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  max-height: 100px;
+  overflow: hidden;
+}
+
+/* ====== 现代书架样式 ====== */
+.shelf-card {
+  padding: 0;
+  background: #fff;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.modern-bookshelf {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #faf8f5;
+}
+
+/* 顶部标题栏 */
+.shelf-header {
+  height: 36px;
+  background: #e8e4df;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+  border-bottom: 1px solid #d4cfc7;
+}
+
+.shelf-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #3d3d3d;
+  letter-spacing: 0.5px;
+}
+
+.shelf-volume {
+  font-size: 12px;
+  font-weight: 500;
+  color: #666;
+}
+
+/* 书架内容区域 */
+.shelf-content {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  padding: 20px 16px 16px;
+  background: #faf8f5;
+  /* 网格纹理背景 - 更淡 */
+  background-image:
+    linear-gradient(rgba(200, 196, 190, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200, 196, 190, 0.2) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: -1px -1px;
+}
+
+/* 书架上的书籍行 */
+.shelf-books-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  width: 100%;
+  gap: 0;
+  flex-wrap: nowrap;
+}
+
+/* 书架内容区域的书籍行样式覆盖 */
+.shelf-content .shelf-books-row {
+  padding: 0;
+  height: auto;
+  position: static;
+}
+
+/* 书籍封面 */
+.shelf-book-cover {
+  width: 50px;
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 4px;
+  border-radius: 2px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  min-width: 50px;
+}
+
+.shelf-book-cover:hover {
+  transform: translateY(-6px);
+  box-shadow: 3px 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+/* 竖排书名 */
+.shelf-book-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  letter-spacing: 0.1em;
+  line-height: 1.3;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  word-break: break-all;
+}
+
+/* 底部装饰线 */
+.shelf-book-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 4px;
+}
+
+.shelf-book-lines .line {
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  opacity: 0.4;
+  border-radius: 1px;
+}
+
+/* 书架封面颜色 - 参考图片配色 */
+.shelf-cover-prince {
+  background: #f4d03f;
+  color: #1a1a1a;
+}
+
+.shelf-cover-dystopia {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.shelf-cover-bookstore {
+  background: #3498db;
+  color: #fff;
+}
+
+.shelf-cover-knight {
+  background: #2c3e50;
+  color: #fff;
+}
+
+.shelf-cover-river {
+  background: #16a085;
+  color: #fff;
+}
+
+.shelf-cover-island {
+  background: #95a5a6;
+  color: #fff;
+}
+
+.shelf-cover-altay {
+  background: #87ceeb;
+  color: #1a1a1a;
+}
+
+.shelf-cover-store {
+  background: #e67e22;
+  color: #fff;
+}
+
+.shelf-cover-sea {
+  background: #3498db;
+  color: #fff;
+}
+
+.shelf-cover-magical {
+  background: #f1c40f;
+  color: #1a1a1a;
+}
+
+.shelf-cover-wencheng {
+  background: #c0392b;
+  color: #fff;
+}
+
+.shelf-cover-temple {
+  background: #8b7355;
+  color: #fff;
+}
+
+.shelf-cover-economics {
+  background: #27ae60;
+  color: #fff;
+}
+
+.shelf-cover-martial {
+  background: #d68910;
+  color: #fff;
+}
+
+.shelf-cover-scifi {
+  background: #00ced1;
+  color: #1a1a1a;
+}
+
+.shelf-cover-count {
+  background: #8e44ad;
+  color: #fff;
+}
+
+.shelf-cover-wall {
+  background: #7f8c8d;
+  color: #fff;
+}
+
+.shelf-cover-sahara {
+  background: #d4a574;
+  color: #1a1a1a;
+}
+
+.shelf-cover-veil {
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+
+.shelf-cover-absurd {
+  background: #34495e;
+  color: #fff;
+}
+
+.shelf-cover-satellite {
+  background: #2c3e50;
+  color: #fff;
+}
+
+.shelf-cover-cholera {
+  background: #c41e3a;
+  color: #fff;
+}
+
+.shelf-cover-whitenight {
+  background: #1a1a2e;
+  color: #fff;
+}
+
+.shelf-cover-melancholy {
+  background: #5d6d7e;
+  color: #fff;
+}
+
+.shelf-cover-choice {
+  background: #52be80;
+  color: #fff;
+}
+
+.shelf-cover-parallel {
+  background: #922b21;
+  color: #fff;
+}
+
+.shelf-cover-desert {
+  background: #f5b041;
+  color: #1a1a1a;
+}
+
+.shelf-cover-nonexistent {
+  background: #85929e;
+  color: #fff;
+}
+
+.shelf-cover-gentleman {
+  background: #7d3c98;
+  color: #fff;
+}
+
+.shelf-cover-submarine {
+  background: #1a5276;
+  color: #fff;
+}
+
+.shelf-cover-tiger {
+  background: #943126;
+  color: #fff;
+}
+
+.shelf-cover-night {
+  background: #1c2833;
+  color: #fff;
+}
+
+.shelf-cover-immortal {
+  background: #f9e79f;
+  color: #1a1a1a;
+}
+
+.shelf-cover-grass {
+  background: #27ae60;
+  color: #fff;
+}
+
+.shelf-cover-litchi {
+  background: #c0392b;
+  color: #fff;
+}
+
+.shelf-cover-stationery {
+  background: #f5cba7;
+  color: #1a1a1a;
+}
+
+.shelf-cover-urban {
+  background: #5499c7;
+  color: #fff;
+}
+
+.shelf-cover-siddhartha {
+  background: #d68910;
+  color: #fff;
+}
+
+.shelf-cover-devotion {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.shelf-cover-minimal {
+  background: #fff;
+  color: #1a1a1a;
+  border: 1px solid #e0e0e0;
+}
+
+.shelf-cover-forest {
+  background: #27ae60;
+  color: #fff;
+}
+
+.shelf-cover-royal {
+  background: #8e44ad;
+  color: #fff;
+}
+
+.shelf-cover-ocean {
+  background: #3498db;
+  color: #fff;
+}
+
+.shelf-cover-sunset {
+  background: #e67e22;
+  color: #fff;
+}
+
+.shelf-cover-midnight {
+  background: #2c3e50;
+  color: #fff;
+}
+
+.shelf-cover-crimson {
+  background: #c0392b;
+  color: #fff;
+}
+
+.shelf-cover-jade {
+  background: #16a085;
+  color: #fff;
+}
+
+.shelf-cover-sakura {
+  background: #fd79a8;
+  color: #fff;
+}
+
+.shelf-cover-amber {
+  background: #f39c12;
+  color: #fff;
+}
+
+.shelf-cover-moss {
+  background: #1abc9c;
+  color: #fff;
+}
+
+.shelf-cover-slate {
+  background: #95a5a6;
+  color: #fff;
+}
+
+.shelf-cover-wine {
+  background: #9b59b6;
+  color: #fff;
+}
+
+.shelf-cover-forest-dark {
+  background: #145a32;
+  color: #fff;
+}
+
+.shelf-cover-golden {
+  background: #f1c40f;
+  color: #1a1a1a;
+}
+
+.shelf-cover-purple {
+  background: #8e44ad;
+  color: #fff;
+}
+
+.shelf-cover-berry {
+  background: #c0392b;
+  color: #fff;
+}
+
+.shelf-cover-teal {
+  background: #1abc9c;
+  color: #fff;
+}
+
+.shelf-cover-bronze {
+  background: #d68910;
+  color: #fff;
+}
+
+.shelf-cover-rose {
+  background: #e84393;
+  color: #fff;
+}
+
+.shelf-cover-cyan {
+  background: #00cec9;
+  color: #fff;
+}
+
+.shelf-cover-coral {
+  background: #ff7675;
+  color: #fff;
+}
+
+.shelf-cover-lavender {
+  background: #a29bfe;
+  color: #fff;
+}
+
+.shelf-cover-peach {
+  background: #fab1a0;
+  color: #1a1a1a;
+}
+
+.shelf-cover-lime {
+  background: #badc58;
+  color: #1a1a1a;
+}
+
+.shelf-cover-indigo {
+  background: #6c5ce7;
+  color: #fff;
+}
+
+.shelf-cover-rust {
+  background: #d63031;
+  color: #fff;
+}
+
+.shelf-cover-mint {
+  background: #55efc4;
+  color: #1a1a1a;
+}
+
+.shelf-cover-maroon {
+  background: #922b21;
+  color: #fff;
+}
+
+.shelf-cover-pear {
+  background: #f9ca24;
+  color: #1a1a1a;
+}
+
+.shelf-cover-plum {
+  background: #6c3483;
+  color: #fff;
+}
+
+.shelf-cover-sand {
+  background: #f5cba7;
+  color: #1a1a1a;
+}
+
+.shelf-cover-sky {
+  background: #74b9ff;
+  color: #fff;
+}
+
+.shelf-cover-ruby {
+  background: #b71540;
+  color: #fff;
+}
+
+.shelf-cover-lemon {
+  background: #f9e79f;
+  color: #1a1a1a;
+}
+
+.shelf-cover-silver {
+  background: #bdc3c7;
+  color: #1a1a1a;
+}
+
+/* 默认封面颜色 */
+.shelf-book-cover:not([class*="shelf-cover-"]) {
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+
+/* 保留旧书架样式的兼容性 */
+.real-bookshelf {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  padding: 2rem 1.5rem 1.5rem;
+  background: linear-gradient(180deg, #f5f1eb 0%, #ebe7e0 100%);
+}
+
+/* 书架层板 */
+.shelf-layer {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1rem;
+  right: 1rem;
+  height: 12px;
+}
+
+.shelf-board-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(180deg, #a0522d 0%, #8b4513 50%, #6b3510 100%);
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.shelf-board-front {
+  position: absolute;
+  top: 8px;
+  left: -2px;
+  right: -2px;
+  height: 8px;
+  background: linear-gradient(180deg, #8b4513 0%, #6b3510 100%);
+  border-radius: 0 0 2px 2px;
+}
+
+/* 竖立的书 */
+.shelf-standing-book {
+  position: relative;
+  width: 28px;
+  height: 150px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  transform-origin: bottom center;
+}
+
+.shelf-standing-book:hover {
+  transform: translateY(-8px) scale(1.05) !important;
+  z-index: 10;
+}
+
+/* 书脊 */
+.book-spine {
+  width: 100%;
+  height: 100%;
+  border-radius: 2px 4px 4px 2px;
+  box-shadow:
+    2px 2px 6px rgba(0, 0, 0, 0.3),
+    inset 0 0 2px rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 0.3rem;
+  border-left: 2px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.spine-decoration {
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+}
+
+.spine-title-vertical {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  max-height: 100px;
+  overflow: hidden;
+}
+
+/* 书脊颜色 - 使用与封面相同的渐变 */
+.spine-prince { background: linear-gradient(90deg, #0a1628 0%, #1a3a5c 50%, #0a1628 100%); }
+.spine-dystopia { background: linear-gradient(90deg, #1a1a1a 0%, #333 50%, #1a1a1a 100%); }
+.spine-magical { background: linear-gradient(90deg, #DAA520 0%, #B8860B 50%, #DAA520 100%); }
+.spine-scifi { background: linear-gradient(90deg, #00CED1 0%, #008B8B 50%, #00CED1 100%); }
+.spine-absurd { background: linear-gradient(90deg, #2C3E50 0%, #1a252f 50%, #2C3E50 100%); }
+.spine-melancholy { background: linear-gradient(90deg, #2C5F7C 0%, #1a3a4d 50%, #2C5F7C 100%); }
+.spine-choice { background: linear-gradient(90deg, #4A6741 0%, #2d3d28 50%, #4A6741 100%); }
+.spine-parallel { background: linear-gradient(90deg, #8B0000 0%, #5c0000 50%, #8B0000 100%); }
+.spine-martial { background: linear-gradient(90deg, #8B4513 0%, #5c2d0d 50%, #8B4513 100%); }
+.spine-desert { background: linear-gradient(90deg, #DAA520 0%, #B8860B 50%, #DAA520 100%); }
+.spine-submarine { background: linear-gradient(90deg, #0a1628 0%, #1e3a5f 50%, #0a1628 100%); }
+.spine-sahara { background: linear-gradient(90deg, #d4a574 0%, #c9956c 50%, #d4a574 100%); }
+.spine-tiger { background: linear-gradient(90deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%); }
+.spine-night { background: linear-gradient(90deg, #1e3a5f 0%, #0d1b2a 50%, #1e3a5f 100%); }
+.spine-altay { background: linear-gradient(90deg, #87ceeb 0%, #98fb98 50%, #87ceeb 100%); }
+.spine-temple { background: linear-gradient(90deg, #8b7355 0%, #6b5344 50%, #8b7355 100%); }
+.spine-immortal { background: linear-gradient(90deg, #ffe5b4 0%, #ffd699 50%, #ffe5b4 100%); }
+.spine-litchi { background: linear-gradient(90deg, #dc143c 0%, #8b0000 50%, #dc143c 100%); }
+.spine-cholera { background: linear-gradient(90deg, #c41e3a 0%, #8b0000 50%, #c41e3a 100%); }
+.spine-store { background: linear-gradient(90deg, #ffa07a 0%, #ff7f50 50%, #ffa07a 100%); }
+.spine-whitenight { background: linear-gradient(90deg, #2c3e50 0%, #1a1a2e 50%, #2c3e50 100%); }
+
+/* 默认书脊颜色 */
+.book-spine:not([class*="spine-"]) {
+  background: linear-gradient(90deg, #333 0%, #222 50%, #333 100%);
+}
+
+/* 书架阴影 */
+.shelf-shadow {
+  position: absolute;
+  bottom: 0;
+  left: 1rem;
+  right: 1rem;
+  height: 0.5rem;
+  background: rgba(0, 0, 0, 0.05);
+  filter: blur(2px);
+  border-radius: 50%;
 }
 
 /* 响应式 */
