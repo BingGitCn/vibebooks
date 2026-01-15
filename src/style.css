@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-mood: #D4AF37;
+  }
+}
+
+@layer components {
+  .mood-text {
+    color: var(--color-mood);
+  }
+  .mood-border {
+    border-color: var(--color-mood);
+  }
+  .mood-bg {
+    background-color: var(--color-mood);
+  }
+  .mood-glow {
+    box-shadow: 0 0 60px var(--color-mood);
+  }
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #000;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-mood);
+  border-radius: 4px;
+}
+
+/* 文本选择颜色 */
+::selection {
+  background: var(--color-mood);
+  color: #000;
+}
