@@ -312,10 +312,10 @@ onMounted(() => {
 .book-card {
   position: relative;
   width: 100%;
-  aspect-ratio: 2 / 3;
+  aspect-ratio: 2 / 2.8;
   background: #ffffff;
   border: 1px solid rgba(26, 26, 26, 0.08);
-  padding: 1.8rem;
+  padding: 1.2rem 1rem;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
@@ -424,10 +424,10 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-  font-size: 0.55rem;
+  margin-bottom: 0.8rem;
+  font-size: 0.45rem;
   font-weight: 500;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   color: #666;
 }
 
@@ -444,14 +444,14 @@ onMounted(() => {
 /* 分类标签 */
 .category-tag {
   position: absolute;
-  top: 1.8rem;
-  right: 1.8rem;
+  top: 1rem;
+  right: 1rem;
   background: #1a1a1a;
   color: #fff;
-  padding: 0.35rem 0.7rem;
-  font-size: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.4rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   z-index: 10;
   transition: all 0.3s ease;
@@ -469,7 +469,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 140px;
+  min-height: 100px;
 }
 
 .content-inner {
@@ -478,11 +478,11 @@ onMounted(() => {
 
 .book-title {
   font-family: 'Noto Serif SC', serif;
-  font-size: clamp(1.3rem, 3.5vw, 1.7rem);
+  font-size: clamp(1rem, 2.8vw, 1.3rem);
   font-weight: 400;
   line-height: 1.3;
   color: #1a1a1a;
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.5rem;
   transition: all 0.3s ease;
 }
 
@@ -492,18 +492,18 @@ onMounted(() => {
 
 .book-subtitle {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 0.8rem;
+  font-size: 0.65rem;
   font-style: italic;
   color: #666;
-  margin-bottom: 1rem;
+  margin-bottom: 0.6rem;
   line-height: 1.3;
 }
 
 .book-author {
   font-family: 'Inter', sans-serif;
-  font-size: 0.65rem;
+  font-size: 0.5rem;
   font-weight: 400;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: #999;
   margin-top: auto;
 }
@@ -512,14 +512,14 @@ onMounted(() => {
 .card-featured {
   position: relative;
   z-index: 10;
-  margin: 1.2rem 0;
-  padding: 1rem 0;
+  margin: 0.8rem 0;
+  padding: 0.7rem 0;
   border-top: 1px solid rgba(26, 26, 26, 0.06);
   border-bottom: 1px solid rgba(26, 26, 26, 0.06);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.6rem;
 }
 
 .featured-quote {
@@ -530,9 +530,9 @@ onMounted(() => {
 
 .quote-mark {
   position: absolute;
-  left: -0.5rem;
-  top: -0.3rem;
-  font-size: 2rem;
+  left: -0.3rem;
+  top: -0.2rem;
+  font-size: 1.5rem;
   font-family: Georgia, serif;
   color: var(--accent-color);
   opacity: 0.3;
@@ -541,18 +541,18 @@ onMounted(() => {
 
 .quote-text {
   font-family: 'Noto Serif SC', serif;
-  font-size: 0.65rem;
-  line-height: 1.5;
+  font-size: 0.5rem;
+  line-height: 1.4;
   color: #555;
   font-style: italic;
-  margin-left: 0.8rem;
+  margin-left: 0.6rem;
   display: block;
 }
 
 .special-symbol {
   flex-shrink: 0;
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -562,8 +562,8 @@ onMounted(() => {
 }
 
 .symbol-icon {
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   color: var(--accent-color);
 }
 
@@ -581,24 +581,24 @@ onMounted(() => {
   z-index: 10;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  margin-bottom: 1rem;
-  padding: 0.5rem 0.8rem;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+  padding: 0.35rem 0.6rem;
   background: rgba(26, 26, 26, 0.02);
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 .mood-label {
-  font-size: 0.45rem;
+  font-size: 0.35rem;
   font-weight: 600;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   color: #999;
   white-space: nowrap;
 }
 
 .mood-bar {
   flex: 1;
-  height: 4px;
+  height: 3px;
   background: rgba(26, 26, 26, 0.08);
   border-radius: 2px;
   overflow: hidden;
@@ -611,10 +611,10 @@ onMounted(() => {
 }
 
 .mood-value {
-  font-size: 0.55rem;
+  font-size: 0.4rem;
   font-weight: 600;
   color: #666;
-  min-width: 20px;
+  min-width: 16px;
   text-align: right;
 }
 
@@ -625,40 +625,40 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.6rem;
   margin-top: auto;
-  padding-top: 1.2rem;
+  padding-top: 0.8rem;
   border-top: 1px solid rgba(26, 26, 26, 0.06);
 }
 
 /* 档案线条 */
 .archive-lines {
   display: flex;
-  gap: 4px;
+  gap: 3px;
 }
 
 .line {
-  width: 2px;
-  height: 20px;
+  width: 1.5px;
+  height: 16px;
   background: rgba(26, 26, 26, 0.25);
   transition: all 0.4s ease;
 }
 
 .book-card:hover .line:nth-child(1) {
   background: var(--accent-color);
-  height: 26px;
+  height: 20px;
   transition-delay: 0s;
 }
 
 .book-card:hover .line:nth-child(2) {
   background: var(--accent-color);
-  height: 22px;
+  height: 18px;
   transition-delay: 0.05s;
 }
 
 .book-card:hover .line:nth-child(3) {
   background: var(--accent-color);
-  height: 18px;
+  height: 16px;
   transition-delay: 0.1s;
 }
 
@@ -672,9 +672,9 @@ onMounted(() => {
 
 .footer-text {
   font-family: 'Inter', sans-serif;
-  font-size: 0.55rem;
+  font-size: 0.4rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: #888;
   text-align: center;
   opacity: 0.8;
@@ -684,15 +684,15 @@ onMounted(() => {
 .read-btn {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.55rem 0.9rem;
+  gap: 0.3rem;
+  padding: 0.4rem 0.7rem;
   background: #1a1a1a;
   border: none;
   color: #fff;
   font-family: 'Inter', sans-serif;
-  font-size: 0.55rem;
+  font-size: 0.4rem;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -700,17 +700,17 @@ onMounted(() => {
 
 .read-btn:hover {
   background: var(--accent-color);
-  transform: translateX(4px);
+  transform: translateX(3px);
 }
 
 .read-btn .arrow-icon {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   transition: transform 0.3s ease;
 }
 
 .read-btn:hover .arrow-icon {
-  transform: translateX(3px);
+  transform: translateX(2px);
 }
 
 /* 光晕叠加层 */
@@ -770,19 +770,19 @@ onMounted(() => {
 /* 响应式 */
 @media (max-width: 1200px) {
   .book-card {
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 2 / 2.6;
   }
 }
 
 @media (max-width: 768px) {
   .book-card {
-    padding: 1.5rem;
+    padding: 1rem;
   }
 
   .card-featured {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.8rem;
+    gap: 0.6rem;
   }
 
   .special-symbol {
@@ -790,25 +790,25 @@ onMounted(() => {
   }
 
   .book-title {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
 
   .category-tag {
-    font-size: 0.45rem;
-    padding: 0.3rem 0.5rem;
+    font-size: 0.35rem;
+    padding: 0.2rem 0.4rem;
   }
 
   .read-btn {
-    padding: 0.45rem 0.7rem;
-    font-size: 0.5rem;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.35rem;
   }
 
   .quote-text {
-    font-size: 0.6rem;
+    font-size: 0.45rem;
   }
 
   .line {
-    height: 16px;
+    height: 14px;
   }
 }
 </style>
