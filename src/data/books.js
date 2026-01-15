@@ -126,7 +126,8 @@ export const booksData = [
     interactiveType: 'innocent',
     vibeDescription: '写给大人的童话',
     footerText: 'B-612',
-    moodScore: 9.5
+    moodScore: 9.5,
+    worldComponent: 'PrinceWorld'
   },
   // VOL.007 - 撒哈拉的故事
   {

@@ -15,6 +15,11 @@ const routes = [
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')
+  },
+  {
+    path: '/world/prince',
+    name: 'PrinceWorld',
+    component: () => import('../worlds/PrinceWorld.vue')
   }
 ]
 

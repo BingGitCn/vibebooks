@@ -292,7 +292,18 @@ function onMouseMove(e) {
 }
 
 const readBook = () => {
-  router.push(`/book/${props.book.id}`)
+  // 如果书籍有特殊世界组件，则导航到该世界
+  if (props.book.worldComponent) {
+    switch(props.book.worldComponent) {
+      case 'PrinceWorld':
+        router.push('/world/prince')
+        break
+      default:
+        router.push(`/book/${props.book.id}`)
+    }
+  } else {
+    router.push(`/book/${props.book.id}`)
+  }
 }
 
 onMounted(() => {
