@@ -20,6 +20,11 @@ const routes = [
     path: '/world/prince',
     name: 'PrinceWorld',
     component: () => import('../worlds/PrinceWorld.vue')
+  },
+  {
+    path: '/world/island-bookstore',
+    name: 'IslandBookstoreWorld',
+    component: () => import('../worlds/IslandBookstoreWorld.vue')
   }
 ]
 

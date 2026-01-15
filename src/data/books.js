@@ -21,7 +21,8 @@ export const booksData = [
     interactiveType: 'gentle',
     vibeDescription: '关于阅读、治愈与连接的故事',
     footerText: 'A.J.费克里',
-    moodScore: 8.5
+    moodScore: 8.5,
+    worldComponent: 'IslandBookstoreWorld' // 有专属沉浸世界
   },
   // VOL.002 - 困于沙丘
   {
