@@ -43,7 +43,8 @@ export const booksData = [
     interactiveType: 'mystery',
     vibeDescription: '从民国考古到战国宫廷，在沙丘迷局中追问权力的代价',
     footerText: '赵武灵王',
-    moodScore: 5.5
+    moodScore: 5.5,
+    worldComponent: 'TrappedInDunesWorld' // 有专属沉浸世界
   },
   // VOL.003 - 架空犯
   {
