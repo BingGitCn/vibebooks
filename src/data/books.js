@@ -11,39 +11,38 @@ export const booksData = [
     author: '加布瑞埃拉·泽文',
     category: 'FICTION',
     accentColor: '#4a7c9f', // 海洋蓝
-    geometric: 'circle',
+    geometric: 'lighthouse-books', // 灯塔与书
     quote: '没有谁是一座孤岛',
     typography: 'serif',
     layout: 'centered',
     tags: ['治愈', '书店', '人生'],
-    // 个性化元素
     featuredQuote: '"我们读书，因为我们孤单，我们孤单，因为我们读书。"',
-    specialElement: 'bookstack', // 书籍堆叠图形
-    interactiveType: 'gentle', // 温柔的悬浮效果
+    specialElement: 'bookstack',
+    interactiveType: 'gentle',
     vibeDescription: '关于阅读、治愈与连接的故事',
-    footerText: 'A.J.费克里', // 卡片底部额外文字
-    moodScore: 8.5 // 治愈指数
+    footerText: 'A.J.费克里',
+    moodScore: 8.5
   },
   // VOL.002 - 困于沙丘
   {
     id: 2,
     vol: '002',
-    title: '沙丘',
-    subtitle: 'Dune',
-    author: '弗兰克·赫伯特',
-    category: 'SCIENCE FICTION',
+    title: '困于沙丘',
+    subtitle: '',
+    author: '宋钊',
+    category: 'HISTORICAL MYSTERY',
     accentColor: '#c9a959',
-    geometric: 'triangle',
-    quote: '恐惧是思维的杀手',
-    typography: 'bold',
-    layout: 'asymmetric',
-    tags: ['科幻', '史诗', '哲学'],
-    featuredQuote: '"我绝不能恐惧。恐惧是思维的杀手。"',
-    specialElement: 'desert-waves',
-    interactiveType: 'intense',
-    vibeDescription: '沙漠星球上的权力与命运',
-    footerText: 'Arrakis',
-    moodScore: 9.2
+    geometric: 'dunes-scroll',
+    quote: '没有路的时候，我们会迷路；路多了的时候，我们也会迷路。',
+    typography: 'archival',
+    layout: 'dual-timeline',
+    tags: ['战国', '史官', '历史悬疑'],
+    featuredQuote: '"几卷得而复失的残简，一段湮没无闻的史实。为何胡服骑射光耀华夏，赵武灵王却只能困死沙丘？"',
+    specialElement: 'bamboo-scroll',
+    interactiveType: 'mystery',
+    vibeDescription: '从民国考古到战国宫廷，在沙丘迷局中追问权力的代价',
+    footerText: '赵武灵王',
+    moodScore: 5.5
   },
   // VOL.003 - 架空犯
   {

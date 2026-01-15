@@ -425,9 +425,9 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.8rem;
-  font-size: 0.45rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   color: #666;
 }
 
@@ -448,10 +448,10 @@ onMounted(() => {
   right: 1rem;
   background: #1a1a1a;
   color: #fff;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.65rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   z-index: 10;
   transition: all 0.3s ease;
@@ -478,11 +478,11 @@ onMounted(() => {
 
 .book-title {
   font-family: 'Noto Serif SC', serif;
-  font-size: clamp(1rem, 2.8vw, 1.3rem);
-  font-weight: 400;
-  line-height: 1.3;
+  font-size: clamp(1.4rem, 4.5vw, 2rem);
+  font-weight: 500;
+  line-height: 1.2;
   color: #1a1a1a;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
   transition: all 0.3s ease;
 }
 
@@ -492,20 +492,20 @@ onMounted(() => {
 
 .book-subtitle {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 0.65rem;
+  font-size: 0.95rem;
   font-style: italic;
   color: #666;
-  margin-bottom: 0.6rem;
-  line-height: 1.3;
+  margin-bottom: 0.5rem;
+  line-height: 1.25;
 }
 
 .book-author {
   font-family: 'Inter', sans-serif;
-  font-size: 0.5rem;
-  font-weight: 400;
-  letter-spacing: 0.06em;
-  color: #999;
-  margin-top: auto;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: #888;
+  margin-top: 0.3rem;
 }
 
 /* 个性化特色区域 */
@@ -541,8 +541,8 @@ onMounted(() => {
 
 .quote-text {
   font-family: 'Noto Serif SC', serif;
-  font-size: 0.5rem;
-  line-height: 1.4;
+  font-size: 0.75rem;
+  line-height: 1.5;
   color: #555;
   font-style: italic;
   margin-left: 0.6rem;
@@ -589,8 +589,8 @@ onMounted(() => {
 }
 
 .mood-label {
-  font-size: 0.35rem;
-  font-weight: 600;
+  font-size: 0.6rem;
+  font-weight: 700;
   letter-spacing: 0.12em;
   color: #999;
   white-space: nowrap;
@@ -611,10 +611,10 @@ onMounted(() => {
 }
 
 .mood-value {
-  font-size: 0.4rem;
-  font-weight: 600;
+  font-size: 0.65rem;
+  font-weight: 700;
   color: #666;
-  min-width: 16px;
+  min-width: 20px;
   text-align: right;
 }
 
@@ -672,27 +672,27 @@ onMounted(() => {
 
 .footer-text {
   font-family: 'Inter', sans-serif;
-  font-size: 0.4rem;
-  font-weight: 500;
+  font-size: 0.65rem;
+  font-weight: 600;
   letter-spacing: 0.06em;
   color: #888;
   text-align: center;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 /* 阅读按钮 */
 .read-btn {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.4rem 0.7rem;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
   background: #1a1a1a;
   border: none;
   color: #fff;
   font-family: 'Inter', sans-serif;
-  font-size: 0.4rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -790,21 +790,45 @@ onMounted(() => {
   }
 
   .book-title {
-    font-size: 1.1rem;
+    font-size: 1.4rem;
+  }
+
+  .book-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .book-author {
+    font-size: 0.75rem;
   }
 
   .category-tag {
-    font-size: 0.35rem;
-    padding: 0.2rem 0.4rem;
+    font-size: 0.55rem;
+    padding: 0.35rem 0.65rem;
   }
 
   .read-btn {
-    padding: 0.35rem 0.6rem;
-    font-size: 0.35rem;
+    padding: 0.45rem 0.8rem;
+    font-size: 0.55rem;
   }
 
   .quote-text {
-    font-size: 0.45rem;
+    font-size: 0.65rem;
+  }
+
+  .card-header {
+    font-size: 0.6rem;
+  }
+
+  .footer-text {
+    font-size: 0.55rem;
+  }
+
+  .mood-label {
+    font-size: 0.5rem;
+  }
+
+  .mood-value {
+    font-size: 0.55rem;
   }
 
   .line {

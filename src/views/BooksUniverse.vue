@@ -15,7 +15,7 @@
       <!-- 页面标题区 -->
       <header class="universe-header">
         <div class="header-content">
-          <h1 class="universe-title">书籍 Vibe 宇宙</h1>
+          <h1 class="universe-title">A Library of Book Vibes </h1>
           <p class="universe-subtitle">Every Book Deserves to be Reinvented</p>
         </div>
         <!-- 返回首页按钮 -->
