@@ -71,18 +71,19 @@ const handleClick = () => {
       :style="{ '--color-mood': book.moodColor }"
     >
       <!-- 书籍封面 -->
-      <div class="absolute inset-0 bg-gradient-to-br from-gray-900 to-black border-2 mood-border rounded-lg overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-br from-gray-900 to-black border-2 rounded-lg overflow-hidden" :style="{ borderColor: book.moodColor }">
         <!-- 书名 -->
         <div class="absolute inset-0 flex flex-col items-center justify-center p-8 text-center">
-          <h3 class="font-serif text-3xl font-bold mb-2 mood-text">{{ book.title }}</h3>
+          <h3 class="font-serif text-3xl font-bold mb-2" :style="{ color: book.moodColor }">{{ book.title }}</h3>
           <p class="text-gray-400 text-sm mb-6">{{ book.author }}</p>
           <p class="text-gray-300 text-lg italic leading-relaxed">"{{ book.quote }}"</p>
         </div>
 
         <!-- 情绪光晕 -->
         <div
-          class="absolute inset-0 mood-glow opacity-0 transition-opacity duration-500"
+          class="absolute inset-0 opacity-0 transition-opacity duration-500"
           :class="{ 'opacity-20': isHovered }"
+          :style="{ boxShadow: isHovered ? `0 0 60px ${book.moodColor}` : 'none' }"
         ></div>
       </div>
 
@@ -92,7 +93,7 @@ const handleClick = () => {
         :class="{ 'opacity-100 translate-y-2': isHovered }"
       >
         <p class="text-gray-400 text-sm">{{ book.description }}</p>
-        <p v-if="book.immersivePage" class="mood-text text-xs mt-2">点击进入沉浸式体验 →</p>
+        <p v-if="book.immersivePage" class="text-xs mt-2" :style="{ color: book.moodColor }">点击进入沉浸式体验 →</p>
       </div>
     </div>
   </div>

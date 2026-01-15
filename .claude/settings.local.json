@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(pnpm preview)"
+      "Bash(pnpm preview)",
+      "Bash(pnpm preview:*)",
+      "Bash(timeout:*)"
     ]
   }
 }
