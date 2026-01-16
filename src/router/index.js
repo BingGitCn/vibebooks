@@ -12,6 +12,11 @@ const routes = [
     component: () => import('../views/BooksUniverse.vue')
   },
   {
+    path: '/vibe-universe',
+    name: 'VibeBooksUniverse',
+    component: () => import('../views/VibeBooksUniverse.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')
