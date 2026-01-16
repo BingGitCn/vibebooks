@@ -400,6 +400,9 @@ const readBook = () => {
       case 'NightSubmarineWorld':
         router.push('/world/night-submarine')
         break
+      case 'MoscowGentlemanWorld':
+        router.push('/world/moscow-gentleman')
+        break
       default:
         router.push(`/book/${props.book.id}`)
     }
