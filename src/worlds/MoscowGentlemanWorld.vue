@@ -12,51 +12,51 @@
     <div class="moscow-skyline">
       <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
         <!-- 克里姆林宫墙 -->
-        <g class="kremlin-wall" opacity="0.04">
-          <path d="M0 850 L1920 850 L1920 920 L0 920 Z" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
-          <path d="M0 850 L80 850 L80 820 L100 820 L100 850 L180 850 L180 800 L200 800 L200 850 L280 850 L280 810 L300 810 L300 850 L380 850 L380 790 L400 790 L400 850 L480 850 L480 815 L500 815 L500 850 L580 850 L580 805 L600 805 L600 850 L680 850 L680 820 L700 820 L700 850 L780 850 L780 810 L800 810 L800 850 L880 850 L880 795 L900 795 L900 850 L980 850 L980 815 L1000 815 L1000 850 L1080 850 L1080 805 L1100 805 L1100 850 L1180 850 L1180 820 L1200 820 L1200 850 L1280 850 L1280 810 L1300 810 L1300 850 L1380 850 L1380 800 L1400 800 L1400 850 L1480 850 L1480 815 L1500 815 L1500 850 L1580 850 L1580 805 L1600 805 L1600 850 L1680 850 L1680 820 L1700 820 L1700 850 L1780 850 L1780 810 L1800 810 L1800 850 L1880 850 L1880 820 L1900 820 L1900 850 L1920 850" fill="none" stroke="#2c3e50" stroke-width="1"/>
+        <g class="kremlin-wall" opacity="0.12">
+          <path d="M0 850 L1920 850 L1920 920 L0 920 Z" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+          <path d="M0 850 L80 850 L80 820 L100 820 L100 850 L180 850 L180 800 L200 800 L200 850 L280 850 L280 810 L300 810 L300 850 L380 850 L380 790 L400 790 L400 850 L480 850 L480 815 L500 815 L500 850 L580 850 L580 805 L600 805 L600 850 L680 850 L680 820 L700 820 L700 850 L780 850 L780 810 L800 810 L800 850 L880 850 L880 795 L900 795 L900 850 L980 850 L980 815 L1000 815 L1000 850 L1080 850 L1080 805 L1100 805 L1100 850 L1180 850 L1180 820 L1200 820 L1200 850 L1280 850 L1280 810 L1300 810 L1300 850 L1380 850 L1380 800 L1400 800 L1400 850 L1480 850 L1480 815 L1500 815 L1500 850 L1580 850 L1580 805 L1600 805 L1600 850 L1680 850 L1680 820 L1700 820 L1700 850 L1780 850 L1780 810 L1800 810 L1800 850 L1880 850 L1880 820 L1900 820 L1900 850 L1920 850" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
           <!-- 塔楼 -->
-          <path d="M400 790 L400 750 L420 750 L420 790" fill="none" stroke="#2c3e50" stroke-width="1"/>
-          <path d="M900 795 L900 740 L920 740 L920 795" fill="none" stroke="#2c3e50" stroke-width="1"/>
-          <path d="M1400 800 L1400 755 L1420 755 L1420 800" fill="none" stroke="#2c3e50" stroke-width="1"/>
+          <path d="M400 790 L400 750 L420 750 L420 790" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+          <path d="M900 795 L900 740 L920 740 L920 795" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+          <path d="M1400 800 L1400 755 L1420 755 L1420 800" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
         </g>
 
         <!-- 圣瓦西里大教堂 -->
-        <g class="st-basil" opacity="0.03">
+        <g class="st-basil" opacity="0.1">
           <!-- 洋葱顶 1 -->
-          <path d="M1650 700 Q1680 600 1700 700" fill="none" stroke="#c0392b" stroke-width="1.5"/>
-          <circle cx="1680" cy="680" r="4" fill="none" stroke="#c0392b" stroke-width="1"/>
+          <path d="M1650 700 Q1680 600 1700 700" fill="none" stroke="#8b0000" stroke-width="2.5"/>
+          <circle cx="1680" cy="680" r="6" fill="none" stroke="#8b0000" stroke-width="2"/>
           <!-- 洋葱顶 2 -->
-          <path d="M1720 720 Q1740 640 1760 720" fill="none" stroke="#c0392b" stroke-width="1.5"/>
-          <circle cx="1740" cy="705" r="3" fill="none" stroke="#c0392b" stroke-width="1"/>
+          <path d="M1720 720 Q1740 640 1760 720" fill="none" stroke="#8b0000" stroke-width="2.5"/>
+          <circle cx="1740" cy="705" r="5" fill="none" stroke="#8b0000" stroke-width="2"/>
           <!-- 洋葱顶 3 -->
-          <path d="M1780 710 Q1810 630 1830 710" fill="none" stroke="#c0392b" stroke-width="1.5"/>
-          <circle cx="1810" cy="695" r="4" fill="none" stroke="#c0392b" stroke-width="1"/>
+          <path d="M1780 710 Q1810 630 1830 710" fill="none" stroke="#8b0000" stroke-width="2.5"/>
+          <circle cx="1810" cy="695" r="6" fill="none" stroke="#8b0000" stroke-width="2"/>
           <!-- 洋葱顶 4 -->
-          <path d="M1690 730 Q1710 670 1730 730" fill="none" stroke="#c0392b" stroke-width="1.5"/>
-          <circle cx="1710" cy="715" r="3" fill="none" stroke="#c0392b" stroke-width="1"/>
+          <path d="M1690 730 Q1710 670 1730 730" fill="none" stroke="#8b0000" stroke-width="2.5"/>
+          <circle cx="1710" cy="715" r="5" fill="none" stroke="#8b0000" stroke-width="2"/>
         </g>
 
         <!-- 莫斯科河 -->
-        <g class="moscow-river" opacity="0.03">
-          <path d="M0 950 Q300 920 600 940 T1200 930 T1920 950" fill="none" stroke="#4A90D9" stroke-width="2"/>
+        <g class="moscow-river" opacity="0.12">
+          <path d="M0 950 Q300 920 600 940 T1200 930 T1920 950" fill="none" stroke="#2980b9" stroke-width="3"/>
         </g>
 
         <!-- 大都会酒店轮廓 -->
-        <g class="metropol-hotel" opacity="0.04">
-          <rect x="150" y="650" width="200" height="200" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
-          <line x1="150" y1="700" x2="350" y2="700" stroke="#2c3e50" stroke-width="0.5" opacity="0.5"/>
-          <line x1="150" y1="750" x2="350" y2="750" stroke="#2c3e50" stroke-width="0.5" opacity="0.5"/>
-          <line x1="150" y1="800" x2="350" y2="800" stroke="#2c3e50" stroke-width="0.5" opacity="0.5"/>
-          <line x1="150" y1="850" x2="350" y2="850" stroke="#2c3e50" stroke-width="0.5" opacity="0.5"/>
+        <g class="metropol-hotel" opacity="0.15">
+          <rect x="150" y="650" width="200" height="200" fill="none" stroke="#1a1a1a" stroke-width="2"/>
+          <line x1="150" y1="700" x2="350" y2="700" stroke="#1a1a1a" stroke-width="1"/>
+          <line x1="150" y1="750" x2="350" y2="750" stroke="#1a1a1a" stroke-width="1"/>
+          <line x1="150" y1="800" x2="350" y2="800" stroke="#1a1a1a" stroke-width="1"/>
+          <line x1="150" y1="850" x2="350" y2="850" stroke="#1a1a1a" stroke-width="1"/>
           <!-- 窗户 -->
-          <g opacity="0.3">
-            <rect x="170" y="670" width="15" height="20" fill="none" stroke="#2c3e50" stroke-width="0.5"/>
-            <rect x="200" y="670" width="15" height="20" fill="none" stroke="#2c3e50" stroke-width="0.5"/>
-            <rect x="230" y="670" width="15" height="20" fill="none" stroke="#2c3e50" stroke-width="0.5"/>
-            <rect x="260" y="670" width="15" height="20" fill="none" stroke="#2c3e50" stroke-width="0.5"/>
-            <rect x="290" y="670" width="15" height="20" fill="none" stroke="#2c3e50" stroke-width="0.5"/>
-            <rect x="320" y="670" width="15" height="20" fill="none" stroke="#2c3e50" stroke-width="0.5"/>
+          <g opacity="0.5">
+            <rect x="170" y="670" width="15" height="20" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+            <rect x="200" y="670" width="15" height="20" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+            <rect x="230" y="670" width="15" height="20" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+            <rect x="260" y="670" width="15" height="20" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+            <rect x="290" y="670" width="15" height="20" fill="none" stroke="#1a1a1a" stroke-width="1"/>
+            <rect x="320" y="670" width="15" height="20" fill="none" stroke="#1a1a1a" stroke-width="1"/>
           </g>
         </g>
       </svg>
@@ -332,8 +332,8 @@ const memories = [
     x: 55,
     y: 30,
     icon: `<svg viewBox="0 0 100 100" class="memory-icon">
-      <path d="M50 20 L60 40 L80 40 L65 55 L70 75 L50 60 L30 75 L35 55 L20 40 L40 40 Z" fill="none" stroke="#fff" stroke-width="2"/>
-      <circle cx="50" cy="50" r="15" fill="none" stroke="#fff" stroke-width="1"/>
+      <path d="M50 20 L60 40 L80 40 L65 55 L70 75 L50 60 L30 75 L35 55 L20 40 L40 40 Z" fill="none" stroke="#b8860b" stroke-width="2"/>
+      <circle cx="50" cy="50" r="15" fill="none" stroke="#b8860b" stroke-width="1"/>
     </svg>`,
     intro: '伯爵33岁。他开始在 Boyarsky 餐厅工作。不是作为顾客，而是作为侍应生。但他发现，即使在服务中，也可以保持优雅和尊严。',
     introQuote: '无论王子还是乞丐，一个人的价值取决于他的行为。',
