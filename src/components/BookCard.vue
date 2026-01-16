@@ -1143,7 +1143,7 @@ onUnmounted(() => {
   text-align: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; 
   gap: 0.5rem;
 }
 
@@ -1152,8 +1152,10 @@ onUnmounted(() => {
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: 0.05em;
-  color: #fff;
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+  /* 修改这里：改成血红色 */
+  color: #e70102; 
+  /* 修改这里：光晕也改成红色，增加发光感 */
+  text-shadow: 0 0 15px rgba(139, 0, 0, 0.8); 
   transition: all 0.3s ease;
 }
 

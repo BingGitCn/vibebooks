@@ -852,6 +852,7 @@ export const booksData = [
     quote: '在白夜里行走',
     typography: 'dark',
     layout: 'parallel-tracks',
+    layout: 'parallel-tracks',
     layoutVariant: 'asymmetric',
     tags: ['推理', '黑暗', '爱情'],
     featuredQuote: '"我的天空里没有太阳，总是黑夜，但并不暗，因为有东西代替了太阳。"',
