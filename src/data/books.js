@@ -164,7 +164,8 @@ export const booksData = [
     interactiveType: 'wandering',
     vibeDescription: '在沙漠中安家的自由灵魂',
     footerText: '荷西 & 三毛',
-    moodScore: 8.2
+    moodScore: 8.2,
+    worldComponent: 'SaharaWorld' // 有专属沉浸世界
   },
   // VOL.008 - 刺杀骑士团长
   {
