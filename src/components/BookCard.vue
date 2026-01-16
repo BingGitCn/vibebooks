@@ -3,6 +3,7 @@
     class="book-card"
     :class="[
       `layout-${book.layout}`,
+      `layout-variant-${book.layoutVariant || 'default'}`,
       `typography-${book.typography}`,
       `interactive-${book.interactiveType}`
     ]"
@@ -243,7 +244,7 @@ const backgroundStyle = computed(() => {
 // 几何图形样式
 const geometricStyle = computed(() => {
   const style = {
-    opacity: isHovered.value ? 0.35 : 0.12,
+    opacity: isHovered.value ? 0.5 : 0.25,
     transform: isHovered.value ? 'scale(1.08) rotate(3deg)' : 'scale(1) rotate(0deg)'
   }
   return style
@@ -600,33 +601,35 @@ onUnmounted(() => {
 
 .book-title {
   font-family: 'Noto Serif SC', serif;
-  font-size: clamp(1.4rem, 4.5vw, 2rem);
-  font-weight: 500;
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  font-weight: 700;
   line-height: 1.2;
-  color: #1a1a1a;
-  margin-bottom: 0.4rem;
+  color: #000;
+  margin-bottom: 0.5rem;
   transition: all 0.3s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 .book-card:hover .book-title {
   color: var(--accent-color);
+  text-shadow: 0 2px 8px var(--accent-color);
 }
 
 .book-subtitle {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-style: italic;
-  color: #666;
+  color: #444;
   margin-bottom: 0.5rem;
   line-height: 1.25;
 }
 
 .book-author {
   font-family: 'Inter', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 600;
   letter-spacing: 0.05em;
-  color: #888;
+  color: #333;
   margin-top: 0.3rem;
 }
 
@@ -887,6 +890,172 @@ onUnmounted(() => {
 .layout-minimal .card-content {
   justify-content: flex-start;
   padding-top: 2rem;
+}
+
+/* === 布局变体系统 === */
+
+/* dramatic - 戏剧性，中间效果主导 */
+.layout-variant-dramatic .card-middle-effect {
+  min-height: 140px;
+  margin: 1.5rem 0;
+}
+
+.layout-variant-dramatic .book-title {
+  font-size: clamp(1.4rem, 4vw, 1.8rem);
+}
+
+.layout-variant-dramatic .card-content {
+  justify-content: flex-start;
+}
+
+/* centered - 居中对称 */
+.layout-variant-centered .card-content {
+  text-align: center;
+  align-items: center;
+}
+
+.layout-variant-centered .book-author {
+  text-align: center;
+}
+
+.layout-variant-centered .card-footer {
+  justify-content: center;
+}
+
+/* minimal-bold - 极简+大字 */
+.layout-variant-minimal-bold .book-title {
+  font-size: clamp(2rem, 6vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.layout-variant-minimal-bold .book-subtitle {
+  display: none;
+}
+
+.layout-variant-minimal-bold .book-author {
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+/* asymmetric - 不对称 */
+.layout-variant-asymmetric .content-inner {
+  transform: translateX(15%);
+}
+
+.layout-variant-asymmetric .card-footer {
+  padding-left: 15%;
+}
+
+/* classic-serif - 经典衬线 */
+.layout-variant-classic-serif .book-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.layout-variant-classic-serif .book-author {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+}
+
+/* bold-modern - 粗体现代 */
+.layout-variant-bold-modern .book-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.layout-variant-bold-modern .book-author {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* title-top - 标题在顶部 */
+.layout-variant-title-top .card-content {
+  justify-content: flex-start;
+  padding-top: 1rem;
+}
+
+.layout-variant-title-top .card-header {
+  order: 2;
+  margin-bottom: 0.2rem;
+}
+
+.layout-variant-title-top .card-content {
+  order: 1;
+}
+
+.layout-variant-title-top .card-middle-effect {
+  order: 3;
+}
+
+.layout-variant-title-top .card-footer {
+  order: 4;
+}
+
+/* author-top - 作者在顶部 */
+.layout-variant-author-top .book-author {
+  order: -1;
+  margin-bottom: 0.8rem;
+  margin-top: 0;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+/* title-bottom - 标题在底部 */
+.layout-variant-title-bottom .card-content {
+  order: 4;
+  justify-content: flex-end;
+  padding-bottom: 1rem;
+}
+
+.layout-variant-title-bottom .card-footer {
+  order: 3;
+}
+
+.layout-variant-title-bottom .card-middle-effect {
+  order: 2;
+}
+
+.layout-variant-title-bottom .card-header {
+  order: 1;
+}
+
+/* split-layout - 标题和作者分开两边 */
+.layout-variant-split .book-title {
+  text-align: left;
+}
+
+.layout-variant-split .book-author {
+  text-align: right;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.layout-variant-split .card-header {
+  display: none;
+}
+
+/* stacked-large - 堆叠大字 */
+.layout-variant-stacked-large .book-title {
+  font-size: clamp(2.2rem, 7vw, 3rem);
+  line-height: 1;
+  margin-bottom: 0.2rem;
+}
+
+.layout-variant-stacked-large .book-subtitle {
+  margin-bottom: 0.3rem;
+}
+
+.layout-variant-stacked-large .book-author {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
 }
 
 /* 响应式 */
