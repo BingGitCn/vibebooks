@@ -48,27 +48,28 @@ export const booksData = [
     moodScore: 5.5,
     worldComponent: 'TrappedInDunesWorld' // 有专属沉浸世界
   },
-  // VOL.003 - 架空犯
+  // VOL.003 - 罪与罚
   {
     id: 3,
     vol: '003',
     title: '罪与罚',
-    subtitle: 'Crime and Punishment',
-    author: '陀思妥耶夫斯基',
-    category: 'CLASSIC',
-    accentColor: '#8b3a3a',
-    geometric: 'square',
-    quote: '苦难是意识的唯一根源',
-    typography: 'dense',
-    layout: 'intense',
-    layoutVariant: 'minimal-bold',
-    tags: ['俄国文学', '心理', '道德'],
-    featuredQuote: '"当爱不在时，剩下的只有道德。"',
-    specialElement: 'confessional',
-    interactiveType: 'tense',
-    vibeDescription: '良知的拷问与救赎',
-    footerText: 'Raskolnikov',
-    moodScore: 3.5
+    subtitle: 'Преступление и наказание',
+    author: '费奥多尔·陀思妥耶夫斯基',
+    category: 'DOSTOEVSKY',
+    accentColor: '#8b0000',
+    geometric: 'axe-cross',
+    quote: '我是个颤抖的生物，还是我有权利...',
+    typography: 'psychological',
+    layout: 'cinematic',
+    layoutVariant: 'intense',
+    tags: ['心理', '救赎', '存在主义'],
+    featuredQuote: '"我是个颤抖的生物，还是我有权利..."',
+    specialElement: 'crime-punishment',
+    interactiveType: 'cinematic',
+    vibeDescription: '一部关于罪恶、良知与救赎的心理史诗',
+    footerText: '拉斯科尔尼科夫 & 索尼娅',
+    moodScore: 1.5,
+    worldComponent: 'CrimeAndPunishmentWorld'
   },
   // VOL.004 - 莫斯科绅士
   {
