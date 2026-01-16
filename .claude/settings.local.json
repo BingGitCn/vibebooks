@@ -8,7 +8,11 @@
       "Bash(npm run build:*)",
       "Bash(npm run deploy)",
       "Bash(git push:*)",
-      "Bash(npx gh-pages:*)"
+      "Bash(npx gh-pages:*)",
+      "Bash(git rm:*)",
+      "Bash(node:*)",
+      "Bash(curl:*)",
+      "mcp__zai-mcp-server__analyze_image"
     ]
   }
 }

@@ -30,6 +30,11 @@ const routes = [
     path: '/world/trapped-in-dunes',
     name: 'TrappedInDunesWorld',
     component: () => import('../worlds/TrappedInDunes.vue')
+  },
+  {
+    path: '/world/night-submarine',
+    name: 'NightSubmarineWorld',
+    component: () => import('../worlds/NightSubmarine.vue')
   }
 ]
 
