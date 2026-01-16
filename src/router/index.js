@@ -50,6 +50,11 @@ const routes = [
     path: '/world/sahara',
     name: 'SaharaWorld',
     component: () => import('../worlds/SaharaWorld.vue')
+  },
+  {
+    path: '/world/killing-commendatore',
+    name: 'KillingCommendatoreWorld',
+    component: () => import('../worlds/KillingCommendatoreWorld.vue')
   }
 ]
 
