@@ -460,6 +460,202 @@
               </div>
             </div>
 
+            <!-- 《书中蘑菇》蘑菇森林 -->
+            <div v-if="currentExploreId === 'mushroom'" class="mushroom-world">
+              <div class="world-intro">
+                <p class="world-narrative">{{ exploreContent.narrative }}</p>
+              </div>
+
+              <!-- 蘑菇选择 -->
+              <div class="mushroom-selection">
+                <div
+                  v-for="(mushroom, index) in exploreContent.scenes"
+                  :key="mushroom.id"
+                  class="mushroom-card"
+                  :class="{ 'collected': isItemCollected(mushroom.items[0]) }"
+                  @click="enterScene(mushroom)"
+                >
+                  <div class="mushroom-glow" :style="{ backgroundColor: mushroom.id === 'fluorescent' ? '#00ff00' : mushroom.id === 'story' ? '#ff69b4' : mushroom.id === 'memory' ? '#9370db' : mushroom.id === 'imagination' ? '#ffa500' : '#ffd700' }"></div>
+                  <div class="mushroom-icon">🍄</div>
+                  <div class="mushroom-info">
+                    <h3 class="mushroom-name">{{ mushroom.name }}</h3>
+                    <p class="mushroom-desc">{{ mushroom.description }}</p>
+                    <div class="spore-indicator" :class="{ 'collected': isItemCollected(mushroom.items[0]) }">
+                      <span>{{ isItemCollected(mushroom.items[0]) ? '已收集孢子' : '未收集' }}</span>
+                    </div>
+                  </div>
+                  <div class="mushroom-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 《竹峰寺》古寺探索 -->
+            <div v-if="currentExploreId === 'zhufeng'" class="zhufeng-world">
+              <div class="world-intro">
+                <p class="world-narrative">{{ exploreContent.narrative }}</p>
+              </div>
+
+              <!-- 地点选择 -->
+              <div class="location-selection">
+                <div
+                  v-for="(location, index) in exploreContent.scenes"
+                  :key="location.id"
+                  class="location-card"
+                  @click="enterScene(location)"
+                >
+                  <div class="location-image">
+                    <div class="location-bg" :class="'location-' + location.id">
+                      <div class="location-icon">{{ getLocationIcon(location.id) }}</div>
+                    </div>
+                  </div>
+                  <div class="location-content">
+                    <h3 class="location-name">{{ location.name }}</h3>
+                    <p class="location-desc">{{ location.description }}</p>
+                    <div class="key-hint" v-if="location.hint">
+                      <span class="hint-icon">💡</span>
+                      <span class="hint-text">提示：{{ location.hint }}</span>
+                    </div>
+                    <div class="key-status" :class="{ 'found': isItemCollected(location.key) }">
+                      <span class="key-icon">{{ isItemCollected(location.key) ? '🗝️' : '🔍' }}</span>
+                      <span class="key-text">{{ isItemCollected(location.key) ? '钥匙已找到' : '寻找钥匙...' }}</span>
+                    </div>
+                  </div>
+                  <div class="location-arrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 艺术区（传彩笔 + 音乐家） -->
+            <div v-if="currentExploreId === 'art'" class="art-world">
+              <div class="world-intro">
+                <p class="world-narrative">{{ exploreContent.narrative }}</p>
+              </div>
+
+              <!-- 艺术分类标签 -->
+              <div class="art-categories">
+                <div class="art-category-header">
+                  <h3 class="category-title">✒️ 传彩笔 - 灵感碎片</h3>
+                  <p class="category-desc">捕捉那些稍纵即逝的创作灵感</p>
+                </div>
+
+                <!-- 传彩笔场景 -->
+                <div class="art-grid pen-fragments">
+                  <div
+                    v-for="fragment in exploreContent.scenes.slice(0, 5)"
+                    :key="fragment.id"
+                    class="art-card pen-card"
+                    :class="{ 'collected': isItemCollected(fragment.items[0]) }"
+                    @click="enterScene(fragment)"
+                  >
+                    <div class="art-card-bg">
+                      <div class="art-sparkle"></div>
+                      <div class="art-icon">{{ fragment.icon }}</div>
+                    </div>
+                    <div class="art-content">
+                      <h4 class="art-title">{{ fragment.name }}</h4>
+                      <p class="art-description">{{ fragment.description }}</p>
+                      <div class="art-status">
+                        <span class="status-icon">{{ isItemCollected(fragment.items[0]) ? '💎' : '✨' }}</span>
+                        <span class="status-text">{{ isItemCollected(fragment.items[0]) ? '已捕获' : '等待捕捉' }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="art-category-header" style="margin-top: 3rem;">
+                  <h3 class="category-title">🎵 音乐家 - 记忆乐章</h3>
+                  <p class="category-desc">重温那些永不消逝的旋律</p>
+                </div>
+
+                <!-- 音乐家场景 -->
+                <div class="art-grid music-movements">
+                  <div
+                    v-for="movement in exploreContent.scenes.slice(5)"
+                    :key="movement.id"
+                    class="art-card music-card"
+                    :class="{ 'collected': isItemCollected(movement.items[0]) }"
+                    @click="enterScene(movement)"
+                  >
+                    <div class="art-card-bg" :class="'movement-' + movement.id">
+                      <div class="music-notes">
+                        <span class="note note-1">♪</span>
+                        <span class="note note-2">♫</span>
+                        <span class="note note-3">♪</span>
+                      </div>
+                      <div class="art-icon">{{ movement.icon }}</div>
+                    </div>
+                    <div class="art-content">
+                      <h4 class="art-title">{{ movement.name }}</h4>
+                      <p class="art-description">{{ movement.description }}</p>
+                      <div class="art-status">
+                        <span class="status-icon">{{ isItemCollected(movement.items[0]) ? '🎼' : '🎵' }}</span>
+                        <span class="status-text">{{ isItemCollected(movement.items[0]) ? '已珍藏' : '待发现' }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 主线故事 - 深渊和现实 -->
+            <div v-if="currentExploreId === 'abyss' || currentExploreId === 'reality'" class="main-story-world">
+              <div class="chapter-narrative" v-if="exploreContent.chapter">
+                <div class="chapter-header">
+                  <h2 class="chapter-title">{{ exploreContent.chapter.title }}</h2>
+                  <span class="chapter-depth">{{ currentDepth }}m</span>
+                </div>
+                <p class="chapter-text">{{ exploreContent.chapter.narrative }}</p>
+                <div class="chapter-mood" :class="'mood-' + exploreContent.chapter.mood">
+                  {{ getMoodText(exploreContent.chapter.mood) }}
+                </div>
+              </div>
+
+              <!-- 记忆碎片展示 -->
+              <div class="memory-fragments" v-if="exploreContent.scenes && exploreContent.scenes.length > 0">
+                <h3 class="fragments-title">
+                  <span class="title-icon">💫</span>
+                  {{ currentExploreId === 'abyss' ? '最后的梦境碎片' : '现实的回响' }}
+                </h3>
+                <div class="fragments-grid">
+                  <div
+                    v-for="memory in exploreContent.scenes"
+                    :key="memory.id"
+                    class="memory-fragment"
+                    :class="{ 'collected': memory.collected || isItemCollected(memory.items[0]) }"
+                    @click="enterScene(memory)"
+                  >
+                    <div class="memory-shard">
+                      <div class="memory-icon">{{ memory.icon }}</div>
+                      <div class="memory-glow"></div>
+                    </div>
+                    <div class="memory-content">
+                      <h4 class="memory-name">{{ memory.name }}</h4>
+                      <p class="memory-story">{{ memory.description }}</p>
+                      <div class="memory-status">
+                        <span class="status-dot"></span>
+                        <span class="status-text">{{ memory.collected || isItemCollected(memory.items[0]) ? '已找回' : '遗失的记忆' }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 未发现记忆时提示 -->
+              <div class="no-memories" v-else>
+                <div class="empty-icon">🌫️</div>
+                <p class="empty-text">这片深域还没有记忆碎片...</p>
+                <p class="empty-hint">也许在更深处，或者回到过去</p>
+              </div>
+            </div>
+
             <!-- 已收集物品展示 -->
             <div class="collected-showcase" v-if="exploreContent.collectedItems?.length > 0">
               <h3>在此处发现的物品</h3>
@@ -822,6 +1018,18 @@ const depthDiscoveries = {
     title: '艺术区',
     description: '灵感与旋律的深处',
     storyId: 'artStory'
+  },
+  2500: {
+    id: 'abyss',
+    title: '深渊底部',
+    description: '最后的梦，想象力消逝的地方...',
+    storyId: 'mainStory'
+  },
+  3800: {
+    id: 'reality',
+    title: '海沟深处',
+    description: '现实世界，回望那段遗失的时光',
+    storyId: 'mainStory'
   }
 }
 
@@ -1247,7 +1455,10 @@ const loadExploreContent = (exploreId, storyId) => {
       title: storyData.title,
       narrative: storyData.description,
       progress: `${collectedInArea.length}/3 钥匙已找到`,
-      scenes: storyData.locations,
+      scenes: storyData.locations.map(location => ({
+        ...location,
+        items: [location.key] // 将key转换为items数组，供enterScene使用
+      })),
       collectedItems: collectedInArea
     }
   } else if (exploreId === 'art') {
@@ -1274,6 +1485,31 @@ const loadExploreContent = (exploreId, storyId) => {
       ],
       collectedItems: collectedInArea
     }
+  } else if (exploreId === 'abyss' || exploreId === 'reality') {
+    // 主线故事 - 深渊和现实
+    const chapter = storyData.chapters.find(ch => ch.depth === currentDepth.value)
+
+    // 获取该深度的主线记忆碎片
+    const memoryFragments = collectedItems.value
+      .filter(item => item.zone === currentDepth.value && item.id.startsWith('main_'))
+      .sort((a, b) => a.id.localeCompare(b.id))
+
+    exploreContent.value = {
+      title: chapter ? chapter.title : (exploreId === 'abyss' ? '深渊底部' : '海沟深处'),
+      narrative: chapter ? chapter.narrative : '在这里，回忆与现实交织。',
+      progress: `${memoryFragments.length}/${exploreId === 'abyss' ? 3 : 3} 记忆碎片已找回`,
+      chapter: chapter,
+      memories: memoryFragments,
+      scenes: memoryFragments.map(item => ({
+        id: item.id,
+        name: item.name,
+        description: item.story,
+        icon: item.icon,
+        items: [item.id],
+        collected: item.collected
+      })),
+      collectedItems: collectedInArea
+    }
   }
 }
 
@@ -1285,6 +1521,29 @@ const getSceneIcon = (sceneId) => {
     'market': '🏪'
   }
   return icons[sceneId] || '📍'
+}
+
+// 获取地点图标（竹峰寺）
+const getLocationIcon = (locationId) => {
+  const icons = {
+    'gate': '⛩️',
+    'hall': '🏯',
+    'backyard': '🎋'
+  }
+  return icons[locationId] || '📍'
+}
+
+// 获取情绪文本（主线故事）
+const getMoodText = (mood) => {
+  const moodTexts = {
+    'wonder': '✨ 奇妙',
+    'joy': '🌈 欢愉',
+    'tension': '⚡ 紧张',
+    'sadness': '💔 悲伤',
+    'loss': '🌑 失落',
+    'nostalgia': '🕰️ 怀念'
+  }
+  return moodTexts[mood] || mood
 }
 
 // 关闭探索模态框
@@ -1805,6 +2064,16 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+/* 全局隐藏滚动条但保持滚动功能 */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 .night-submarine {
   position: fixed;
   top: 0;
@@ -2175,10 +2444,18 @@ onUnmounted(() => {
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 4rem 2rem 2rem;
+  padding: 2.5rem 2rem 2rem;
   position: relative;
   z-index: 200;
   overflow-y: auto;
+  overflow-x: hidden;
+  /* 隐藏滚动条 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.submarine-cockpit::-webkit-scrollbar {
+  display: none;
 }
 
 /* === 仪表盘区域 === */
@@ -2186,8 +2463,8 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 1rem 0;
-  margin-bottom: 1.5rem;
+  padding: 0.875rem 0;
+  margin-bottom: 1.25rem;
   background: rgba(100, 149, 237, 0.05);
   border: 1px solid rgba(100, 149, 237, 0.15);
   border-radius: 8px;
@@ -2211,8 +2488,8 @@ onUnmounted(() => {
 
 .gauge {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
 }
 
 .gauge-svg {
@@ -3008,9 +3285,10 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2rem;
+  padding: 1.25rem 1.5rem;
   background: rgba(100, 149, 237, 0.1);
   border-bottom: 2px solid rgba(100, 149, 237, 0.2);
+  flex-shrink: 0;
 }
 
 .explore-back-btn {
@@ -3065,12 +3343,20 @@ onUnmounted(() => {
 .explore-body {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 2rem;
+  /* 保持滚动但隐藏滚动条 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.explore-body::-webkit-scrollbar {
+  display: none;
 }
 
 .world-intro {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
   background: rgba(100, 149, 237, 0.05);
   border-left: 4px solid #6495ED;
   border-radius: 4px;
@@ -3089,14 +3375,14 @@ onUnmounted(() => {
 .scene-selection {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.875rem;
 }
 
 .scene-card {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  padding: 1.5rem;
+  gap: 1.25rem;
+  padding: 1.25rem;
   background: rgba(100, 149, 237, 0.08);
   border: 1px solid rgba(100, 149, 237, 0.2);
   border-radius: 12px;
@@ -3112,9 +3398,9 @@ onUnmounted(() => {
 }
 
 .scene-icon {
-  font-size: 3rem;
-  width: 80px;
-  height: 80px;
+  font-size: 2.75rem;
+  width: 70px;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3177,21 +3463,946 @@ onUnmounted(() => {
   height: 24px;
 }
 
+/* 蘑菇森林样式 */
+.mushroom-selection {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+  padding: 1rem 0;
+}
+
+.mushroom-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1.5rem 1.25rem;
+  background: rgba(34, 139, 34, 0.05);
+  border: 2px solid rgba(34, 139, 34, 0.2);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  opacity: 0;
+  animation: mushroom-fade-in 0.6s ease-out forwards;
+}
+
+/* 为每个蘑菇卡片添加延迟动画 */
+.mushroom-card:nth-child(1) { animation-delay: 0.1s; }
+.mushroom-card:nth-child(2) { animation-delay: 0.2s; }
+.mushroom-card:nth-child(3) { animation-delay: 0.3s; }
+.mushroom-card:nth-child(4) { animation-delay: 0.4s; }
+.mushroom-card:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes mushroom-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.mushroom-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.mushroom-card:hover::before {
+  opacity: 1;
+}
+
+.mushroom-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 35px rgba(34, 139, 34, 0.3);
+  border-color: rgba(34, 139, 34, 0.5);
+}
+
+.mushroom-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  opacity: 0.15;
+  filter: blur(60px);
+  z-index: 0;
+  animation: mushroom-pulse 3s ease-in-out infinite;
+}
+
+@keyframes mushroom-pulse {
+  0%, 100% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.2;
+    transform: scale(1.1);
+  }
+}
+
+.mushroom-icon {
+  font-size: 4rem;
+  z-index: 1;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  animation: mushroom-bob 4s ease-in-out infinite;
+}
+
+@keyframes mushroom-bob {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.mushroom-info {
+  text-align: center;
+  z-index: 1;
+}
+
+.mushroom-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #90EE90;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.mushroom-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: rgba(144, 238, 144, 0.8);
+  margin: 0 0 1rem 0;
+  line-height: 1.4;
+}
+
+.spore-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(34, 139, 34, 0.2);
+  border: 1px solid rgba(34, 139, 34, 0.4);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  color: #90EE90;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.spore-indicator.collected {
+  background: rgba(255, 215, 0, 0.2);
+  border-color: rgba(255, 215, 0, 0.5);
+  color: #FFD700;
+}
+
+.mushroom-arrow {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  width: 24px;
+  height: 24px;
+  color: #90EE90;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+.mushroom-card:hover .mushroom-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.mushroom-arrow svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* 竹峰寺古寺样式 */
+.location-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+.location-card {
+  position: relative;
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(139, 69, 19, 0.08);
+  border: 2px solid rgba(139, 69, 19, 0.25);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  overflow: hidden;
+  opacity: 0;
+  animation: location-fade-in 0.8s ease-out forwards;
+}
+
+.location-card:nth-child(1) { animation-delay: 0.1s; }
+.location-card:nth-child(2) { animation-delay: 0.3s; }
+.location-card:nth-child(3) { animation-delay: 0.5s; }
+
+@keyframes location-fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.location-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #8B4513 0%, #D2691E 50%, #8B4513 100%);
+  opacity: 0.6;
+  transition: width 0.3s ease;
+}
+
+.location-card:hover {
+  background: rgba(139, 69, 19, 0.15);
+  border-color: rgba(210, 105, 30, 0.5);
+  transform: translateX(8px);
+  box-shadow: 0 8px 30px rgba(139, 69, 19, 0.3);
+}
+
+.location-card:hover::before {
+  width: 6px;
+}
+
+.location-image {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.location-bg {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.location-bg.location-gate {
+  background: linear-gradient(135deg, #2F1810 0%, #5C4033 50%, #2F1810 100%);
+  border: 2px solid rgba(139, 69, 19, 0.4);
+}
+
+.location-bg.location-hall {
+  background: linear-gradient(135deg, #1A1A1A 0%, #4A4A4A 50%, #1A1A1A 100%);
+  border: 2px solid rgba(74, 74, 74, 0.6);
+}
+
+.location-bg.location-backyard {
+  background: linear-gradient(135deg, #1B4D1B 0%, #228B22 50%, #1B4D1B 100%);
+  border: 2px solid rgba(34, 139, 34, 0.4);
+}
+
+.location-icon {
+  font-size: 3.5rem;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+  animation: icon-glow 3s ease-in-out infinite;
+}
+
+@keyframes icon-glow {
+  0%, 100% {
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 4px 16px rgba(255, 215, 0, 0.3));
+  }
+}
+
+.location-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.location-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #D2691E;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.location-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: rgba(210, 105, 30, 0.85);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.key-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px dashed rgba(255, 215, 0, 0.3);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: rgba(255, 215, 0, 0.9);
+}
+
+.hint-icon {
+  font-size: 1rem;
+}
+
+.key-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(139, 69, 19, 0.2);
+  border: 1px solid rgba(139, 69, 19, 0.4);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: #CD853F;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.key-status.found {
+  background: rgba(255, 215, 0, 0.15);
+  border-color: rgba(255, 215, 0, 0.5);
+  color: #FFD700;
+}
+
+.key-icon {
+  font-size: 1.1rem;
+}
+
+.location-arrow {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  color: #D2691E;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.location-card:hover .location-arrow {
+  opacity: 1;
+  transform: translateY(-50%) translateX(5px);
+}
+
+.location-arrow svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* 艺术区样式 */
+.art-categories {
+  padding: 1rem 0;
+}
+
+.art-category-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.category-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #FF69B4;
+  margin: 0 0 0.4rem 0;
+  text-shadow: 0 2px 8px rgba(255, 105, 180, 0.4);
+}
+
+.category-desc {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: rgba(255, 105, 180, 0.7);
+  margin: 0;
+  font-style: italic;
+}
+
+.art-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.25rem;
+  padding: 1rem 0;
+}
+
+.art-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 105, 180, 0.05);
+  border: 2px solid rgba(255, 105, 180, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  opacity: 0;
+  animation: art-card-appear 0.6s ease-out forwards;
+}
+
+.pen-card:nth-child(1) { animation-delay: 0.05s; }
+.pen-card:nth-child(2) { animation-delay: 0.1s; }
+.pen-card:nth-child(3) { animation-delay: 0.15s; }
+.pen-card:nth-child(4) { animation-delay: 0.2s; }
+.pen-card:nth-child(5) { animation-delay: 0.25s; }
+
+.music-card:nth-child(1) { animation-delay: 0.05s; }
+.music-card:nth-child(2) { animation-delay: 0.1s; }
+.music-card:nth-child(3) { animation-delay: 0.15s; }
+.music-card:nth-child(4) { animation-delay: 0.2s; }
+
+@keyframes art-card-appear {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.art-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(255, 105, 180, 0.3);
+  border-color: rgba(255, 105, 180, 0.5);
+}
+
+.art-card.collected {
+  background: rgba(255, 215, 0, 0.08);
+  border-color: rgba(255, 215, 0, 0.3);
+}
+
+.art-card.collected:hover {
+  box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+  border-color: rgba(255, 215, 0, 0.5);
+}
+
+.art-card-bg {
+  position: relative;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(255, 105, 180, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+}
+
+.pen-card .art-card-bg {
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.15) 0%, rgba(255, 105, 180, 0.15) 100%);
+}
+
+.music-card .art-card-bg {
+  background: linear-gradient(135deg, rgba(100, 149, 237, 0.15) 0%, rgba(138, 43, 226, 0.15) 100%);
+}
+
+.music-card .art-card-bg.movement-musician_1 {
+  background: linear-gradient(135deg, rgba(173, 216, 230, 0.2) 0%, rgba(135, 206, 250, 0.15) 100%);
+}
+
+.music-card .art-card-bg.movement-musician_2 {
+  background: linear-gradient(135deg, rgba(255, 182, 193, 0.2) 0%, rgba(255, 105, 180, 0.15) 100%);
+}
+
+.music-card .art-card-bg.movement-musician_3 {
+  background: linear-gradient(135deg, rgba(119, 136, 153, 0.2) 0%, rgba(47, 79, 79, 0.15) 100%);
+}
+
+.music-card .art-card-bg.movement-musician_4 {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 165, 0, 0.15) 100%);
+}
+
+.art-sparkle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+  animation: sparkle-move 4s ease-in-out infinite;
+}
+
+@keyframes sparkle-move {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(10px, -10px) scale(1.1);
+  }
+}
+
+.music-notes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.note {
+  position: absolute;
+  font-size: 1.2rem;
+  opacity: 0;
+  animation: note-float 3s ease-in-out infinite;
+}
+
+.note-1 {
+  top: 20%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.note-2 {
+  top: 60%;
+  right: 25%;
+  animation-delay: 1s;
+}
+
+.note-3 {
+  bottom: 25%;
+  left: 50%;
+  animation-delay: 2s;
+}
+
+@keyframes note-float {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+}
+
+.art-icon {
+  font-size: 3.5rem;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+  animation: icon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes icon-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.art-content {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.art-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #FF69B4;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.music-card .art-title {
+  color: #87CEEB;
+}
+
+.art-description {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 1rem 0;
+  line-height: 1.4;
+}
+
+.art-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(255, 105, 180, 0.15);
+  border: 1px solid rgba(255, 105, 180, 0.3);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  color: #FF69B4;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.art-card.collected .art-status {
+  background: rgba(255, 215, 0, 0.15);
+  border-color: rgba(255, 215, 0, 0.4);
+  color: #FFD700;
+}
+
+.music-card .art-status {
+  background: rgba(100, 149, 237, 0.15);
+  border-color: rgba(100, 149, 237, 0.3);
+  color: #6495ED;
+}
+
+.music-card.collected .art-status {
+  background: rgba(255, 215, 0, 0.15);
+  border-color: rgba(255, 215, 0, 0.4);
+  color: #FFD700;
+}
+
+.status-icon {
+  font-size: 1rem;
+  animation: status-bounce 2s ease-in-out infinite;
+}
+
+@keyframes status-bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* 主线故事样式 */
+.main-story-world {
+  padding: 1rem 0;
+}
+
+.chapter-narrative {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  background: linear-gradient(180deg, rgba(13, 27, 42, 0.3) 0%, rgba(13, 27, 42, 0.1) 100%);
+  border-radius: 16px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(100, 149, 237, 0.1);
+}
+
+.chapter-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.chapter-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #E0E0E0;
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.chapter-depth {
+  padding: 0.5rem 1rem;
+  background: rgba(100, 149, 237, 0.2);
+  border: 1px solid rgba(100, 149, 237, 0.3);
+  border-radius: 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: #6495ED;
+  font-weight: 600;
+}
+
+.chapter-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: rgba(224, 224, 224, 0.9);
+  margin: 0 0 1.25rem 0;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  font-style: italic;
+}
+
+.chapter-mood {
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  background: rgba(100, 149, 237, 0.1);
+  border: 1px solid rgba(100, 149, 237, 0.2);
+  border-radius: 25px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: #6495ED;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.chapter-mood.mood-wonder { color: #FFD700; border-color: rgba(255, 215, 0, 0.3); }
+.chapter-mood.mood-joy { color: #FF69B4; border-color: rgba(255, 105, 180, 0.3); }
+.chapter-mood.mood-tension { color: #FF6347; border-color: rgba(255, 99, 71, 0.3); }
+.chapter-mood.mood-sadness { color: #6495ED; border-color: rgba(100, 149, 237, 0.3); }
+.chapter-mood.mood-loss { color: #9370DB; border-color: rgba(147, 112, 219, 0.3); }
+.chapter-mood.mood-nostalgia { color: #CD853F; border-color: rgba(205, 133, 63, 0.3); }
+
+.memory-fragments {
+  padding: 1rem 0;
+}
+
+.fragments-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #E0E0E0;
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.title-icon {
+  font-size: 1.8rem;
+  animation: title-sparkle 2s ease-in-out infinite;
+}
+
+@keyframes title-sparkle {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(5deg);
+  }
+}
+
+.fragments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.memory-fragment {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  background: rgba(100, 149, 237, 0.05);
+  border: 2px solid rgba(100, 149, 237, 0.15);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  opacity: 0;
+  animation: memory-appear 0.8s ease-out forwards;
+}
+
+.memory-fragment:nth-child(1) { animation-delay: 0.1s; }
+.memory-fragment:nth-child(2) { animation-delay: 0.2s; }
+.memory-fragment:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes memory-appear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.memory-fragment:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(100, 149, 237, 0.2);
+  border-color: rgba(100, 149, 237, 0.4);
+  background: rgba(100, 149, 237, 0.1);
+}
+
+.memory-fragment.collected {
+  background: rgba(255, 215, 0, 0.08);
+  border-color: rgba(255, 215, 0, 0.25);
+}
+
+.memory-fragment.collected:hover {
+  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+  border-color: rgba(255, 215, 0, 0.5);
+}
+
+.memory-shard {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(100, 149, 237, 0.2) 0%, rgba(147, 51, 234, 0.2) 100%);
+  border-radius: 12px;
+}
+
+.memory-fragment.collected .memory-shard {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 165, 0, 0.15) 100%);
+}
+
+.memory-icon {
+  font-size: 2.5rem;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+}
+
+.memory-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+  opacity: 0;
+  animation: memory-glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes memory-glow-pulse {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+}
+
+.memory-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.memory-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #E0E0E0;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.memory-story {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: rgba(224, 224, 224, 0.7);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.memory-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: rgba(224, 224, 224, 0.6);
+  font-weight: 600;
+}
+
+.memory-fragment.collected .memory-status {
+  color: rgba(255, 215, 0, 0.9);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(224, 224, 224, 0.3);
+  transition: all 0.3s ease;
+}
+
+.memory-fragment.collected .status-dot {
+  background: #FFD700;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+}
+
+.no-memories {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+  color: rgba(224, 224, 224, 0.6);
+  margin: 0 0 0.5rem 0;
+}
+
+.empty-hint {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: rgba(224, 224, 224, 0.4);
+  margin: 0;
+  font-style: italic;
+}
+
 /* 已收集物品展示 */
 .collected-showcase {
-  padding: 2rem;
+  padding: 1.25rem 1.5rem;
   background: rgba(100, 149, 237, 0.05);
   border-top: 1px solid rgba(100, 149, 237, 0.2);
+  flex-shrink: 0;
 }
 
 .collected-showcase h3 {
   font-family: 'Inter', sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #6495ED;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  margin: 0 0 1rem 0;
+  margin: 0 0 0.75rem 0;
 }
 
 .showcase-items {
@@ -3872,24 +5083,6 @@ onUnmounted(() => {
   transform: scale(0.9);
 }
 
-/* === 滚动条 === */
-.modal-body::-webkit-scrollbar {
-  width: 6px;
-}
-
-.modal-body::-webkit-scrollbar-track {
-  background: rgba(100, 149, 237, 0.1);
-}
-
-.modal-body::-webkit-scrollbar-thumb {
-  background: rgba(100, 149, 237, 0.3);
-  border-radius: 3px;
-}
-
-.modal-body::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 149, 237, 0.5);
-}
-
 /* === 响应式设计 === */
 @media (max-width: 768px) {
   .exit-btn {
@@ -4074,6 +5267,375 @@ onUnmounted(() => {
 
   .control-btn {
     flex: 0 0 calc(50% - 0.5rem);
+  }
+
+  /* 响应式探索模态框 */
+  .explore-modal-content {
+    max-width: 95vw;
+    max-height: 90vh;
+    border-radius: 12px;
+  }
+
+  .explore-header {
+    padding: 1.25rem 1rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .explore-back-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .explore-title {
+    font-size: 1.1rem;
+  }
+
+  .explore-progress {
+    font-size: 0.7rem;
+  }
+
+  .explore-body {
+    padding: 1rem;
+  }
+
+  /* 响应式场景卡片 */
+  .scene-card {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .scene-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+  }
+
+  .scene-name {
+    font-size: 0.95rem;
+  }
+
+  .scene-desc {
+    font-size: 0.75rem;
+  }
+
+  /* 响应式蘑菇卡片 */
+  .mushroom-selection {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .mushroom-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .mushroom-icon {
+    font-size: 3rem;
+  }
+
+  .mushroom-name {
+    font-size: 1rem;
+  }
+
+  .mushroom-desc {
+    font-size: 0.8rem;
+  }
+
+  /* 响应式竹峰寺地点卡片 */
+  .location-card {
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+
+  .location-card::before {
+    width: 100%;
+    height: 4px;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .location-card:hover::before {
+    height: 6px;
+    width: 100%;
+  }
+
+  .location-image {
+    width: 100%;
+    height: 100px;
+  }
+
+  .location-icon {
+    font-size: 2.5rem;
+  }
+
+  .location-name {
+    font-size: 1.1rem;
+  }
+
+  .location-arrow {
+    display: none;
+  }
+
+  /* 响应式艺术卡片 */
+  .art-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .art-card-bg {
+    height: 100px;
+  }
+
+  .art-icon {
+    font-size: 2.5rem;
+  }
+
+  .art-title {
+    font-size: 1rem;
+  }
+
+  .art-description {
+    font-size: 0.8rem;
+  }
+
+  .category-title {
+    font-size: 1.2rem;
+  }
+
+  /* 响应式主线故事 */
+  .chapter-title {
+    font-size: 1.5rem;
+  }
+
+  .chapter-text {
+    font-size: 0.95rem;
+  }
+
+  .fragments-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .memory-fragment {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .memory-shard {
+    width: 60px;
+    height: 60px;
+  }
+
+  .memory-icon {
+    font-size: 2rem;
+  }
+
+  .memory-name {
+    font-size: 0.95rem;
+  }
+
+  .memory-story {
+    font-size: 0.8rem;
+  }
+
+  /* 响应式已收集物品展示 */
+  .collected-showcase {
+    padding: 1rem;
+  }
+
+  .showcase-item {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  /* 响应式发现提示 */
+  .discovery-hint {
+    left: 1rem;
+    right: 1rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .discovery-title {
+    font-size: 0.9rem;
+  }
+
+  .discovery-desc {
+    font-size: 0.7rem;
+  }
+
+  .discovery-action {
+    font-size: 0.65rem;
+    padding: 0.4rem 0.75rem;
+  }
+}
+
+/* 平板设备适配 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .mushroom-selection {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .art-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .fragments-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .location-card {
+    padding: 1.5rem;
+  }
+
+  .location-image {
+    width: 100px;
+    height: 100px;
+  }
+
+  .chapter-title {
+    font-size: 1.75rem;
+  }
+}
+
+/* 大屏幕优化 */
+@media (min-width: 1400px) {
+  .mushroom-selection {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .art-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .fragments-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .explore-modal-content {
+    max-width: 1200px;
+  }
+}
+
+/* 触摸设备优化 */
+@media (hover: none) and (pointer: coarse) {
+  .control-btn,
+  .scene-card,
+  .mushroom-card,
+  .location-card,
+  .art-card,
+  .memory-fragment {
+    &:hover {
+      transform: none;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  .control-btn:active,
+  .scene-card:active,
+  .mushroom-card:active,
+  .location-card:active,
+  .art-card:active,
+  .memory-fragment:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* 横屏模式优化 */
+@media (orientation: landscape) and (max-height: 600px) {
+  .submarine-cockpit {
+    padding: 2rem 1rem 1rem;
+  }
+
+  .porthole-view {
+    min-height: 200px;
+    max-height: 35vh;
+  }
+
+  .dashboard-gauges {
+    margin-bottom: 1rem;
+  }
+
+  .control-panel {
+    bottom: 1rem;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .control-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.7rem;
+  }
+
+  .explore-modal-content {
+    max-height: 95vh;
+  }
+
+  .explore-body {
+    /* 移除max-height限制，让flex自动处理 */
+  }
+}
+
+/* 超小屏幕设备 */
+@media (max-width: 480px) {
+  .exit-btn {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .exit-btn span {
+    display: none;
+  }
+
+  .gauge-container {
+    flex: 0 0 calc(50% - 0.5rem);
+  }
+
+  .gauge {
+    width: 50px;
+    height: 50px;
+  }
+
+  .gauge-label {
+    font-size: 0.6rem;
+  }
+
+  .gauge-value {
+    font-size: 0.75rem;
+  }
+
+  .control-btn {
+    font-size: 0.6rem;
+    padding: 0.6rem 0.5rem;
+  }
+
+  .control-btn span {
+    display: none;
+  }
+
+  .control-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .scene-card,
+  .mushroom-card,
+  .location-card,
+  .art-card,
+  .memory-fragment {
+    padding: 0.75rem;
+  }
+
+  .chapter-title {
+    font-size: 1.25rem;
+  }
+
+  .chapter-text {
+    font-size: 0.85rem;
   }
 }
 </style>
