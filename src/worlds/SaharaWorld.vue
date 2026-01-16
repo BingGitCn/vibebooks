@@ -1,12 +1,13 @@
 <template>
-  <div class="sahara-world">
+  <div class="sahara-world" @click="handleSceneClick">
     <canvas ref="canvas"></canvas>
 
     <!-- 开场文字 -->
     <transition name="fade">
-      <div v-if="showIntro" class="intro-text">
+      <div v-if="showIntro" class="intro-text" @click.stop="handleIntroClick">
         <p class="quote">"每想你一次，天上飘落一粒沙"</p>
         <p class="quote-sub">从此形成了撒哈拉</p>
+        <p class="click-hint">点击进入 →</p>
       </div>
     </transition>
 
@@ -17,19 +18,27 @@
       </div>
     </transition>
 
+    <!-- 跳过提示 -->
+    <transition name="fade">
+      <div v-if="showSkipHint" class="skip-hint">
+        <p>点击跳过 →</p>
+      </div>
+    </transition>
+
     <!-- 继续/结束按钮 -->
     <transition name="fade">
-      <button v-if="showButton" @click="handleButtonClick" class="continue-btn">
+      <button v-if="showButton" @click.stop="handleButtonClick" class="continue-btn">
         {{ isLastChapter ? '重新开始' : '继续 →' }}
       </button>
     </transition>
 
     <!-- 结尾文字 -->
     <transition name="fade">
-      <div v-if="showOutro" class="outro-text">
+      <div v-if="showOutro" class="outro-text" @click.stop="restart">
         <p class="quote">"不要问我从哪里来"</p>
         <p class="quote-sub">我的故乡在远方</p>
         <p class="author">— 三毛</p>
+        <p class="click-hint">点击重新开始 →</p>
       </div>
     </transition>
   </div>
@@ -46,6 +55,7 @@ let animationId = null
 const showIntro = ref(true)
 const showOutro = ref(false)
 const showChapterText = ref(false)
+const showSkipHint = ref(false)
 const showButton = ref(false)
 const currentChapterIndex = ref(0)
 const currentChapterText = ref('')
@@ -528,6 +538,13 @@ const animate = () => {
     case 6: drawChapter7Return(progress); break
   }
 
+  // 显示跳过提示（章节播放超过30%后显示）
+  if (!showIntro.value && !showOutro.value && !showButton.value && progress > 0.3) {
+    showSkipHint.value = true
+  } else {
+    showSkipHint.value = false
+  }
+
   // 检查章节是否结束
   if (progress >= 1) {
     if (chapters[currentChapterIndex.value].hasButton) {
@@ -573,6 +590,26 @@ const handleButtonClick = () => {
   } else {
     nextChapter()
   }
+}
+
+// 场景点击处理（跳过当前章节）
+const handleSceneClick = () => {
+  // 只在播放章节时响应
+  if (!showIntro.value && !showOutro.value && !showButton.value) {
+    nextChapter()
+  }
+}
+
+// 开场点击处理
+const handleIntroClick = () => {
+  // 立即开始，不等3秒
+  showIntro.value = false
+  currentChapterText.value = chapters[0].text
+  chapterStartTime = Date.now()
+
+  setTimeout(() => {
+    showChapterText.value = true
+  }, 1000)
 }
 
 // 重新开始
@@ -684,6 +721,25 @@ canvas {
   opacity: 0.9;
 }
 
+.click-hint {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 300;
+  color: #fff;
+  margin-top: 2rem;
+  opacity: 0.8;
+  letter-spacing: 0.15em;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 .author {
   font-size: clamp(1rem, 2vw, 1.5rem);
   font-weight: 300;
@@ -709,6 +765,29 @@ canvas {
   text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
   letter-spacing: 0.15em;
   line-height: 1.8;
+}
+
+/* 跳过提示 */
+.skip-hint {
+  position: absolute;
+  bottom: 10%;
+  right: 5%;
+  z-index: 5;
+  text-align: right;
+}
+
+.skip-hint p {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 300;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.15em;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.skip-hint:hover p {
+  opacity: 1;
 }
 
 /* 继续/结束按钮 */
