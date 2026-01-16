@@ -90,7 +90,8 @@ export const booksData = [
     interactiveType: 'gentle',
     vibeDescription: '在酒店大堂度过的32年人生',
     footerText: 'Count Rostov',
-    moodScore: 8.8
+    moodScore: 8.8,
+    worldComponent: 'MoscowGentlemanWorld' // 时间轴展览系统
   },
   // VOL.005 - 夜晚的潜水艇
   {
