@@ -42,7 +42,7 @@
     </div>
 
     <!-- 个性化特色区域（卡片中部） -->
-    <div class="card-featured" v-if="book.featuredQuote">
+    <div class="card-featured" v-if="book.featuredQuote && !book.middleEffect">
       <div class="featured-quote" :style="quoteStyle">
         <span class="quote-mark">"</span>
         <span class="quote-text">{{ truncateQuote(book.featuredQuote) }}</span>
@@ -51,6 +51,59 @@
       <!-- 特殊符号元素 -->
       <div class="special-symbol" :style="symbolStyle">
         <svg class="symbol-icon" viewBox="0 0 24 24" v-html="getSpecialSymbol(book.specialElement)"></svg>
+      </div>
+    </div>
+
+    <!-- 中间效果区域（特殊书籍） -->
+    <div class="card-middle-effect" v-if="book.middleEffect" :class="`effect-${book.middleEffect.type}`">
+      <!-- 倒计时效果（三体） -->
+      <div v-if="book.middleEffect.type === 'countdown'" class="countdown-effect">
+        <div class="countdown-icon">⏳</div>
+        <div class="countdown-number">{{ book.middleEffect.value }}</div>
+        <div class="countdown-label">UNTIL COLLAPSE</div>
+      </div>
+
+      <!-- 监视眼效果（1984） -->
+      <div v-if="book.middleEffect.type === 'eye'" class="eye-effect">
+        <svg class="eye-svg" viewBox="0 0 100 100">
+          <!-- 眼睛外轮廓 -->
+          <ellipse cx="50" cy="50" rx="40" ry="25" fill="none" stroke="currentColor" stroke-width="2"/>
+          <!-- 瞳孔 -->
+          <circle cx="50" cy="50" r="12" fill="currentColor" class="eye-pupil">
+            <animate attributeName="r" values="12;14;12" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <!-- 瞳孔高光 -->
+          <circle cx="46" cy="46" r="4" fill="#ffffff" opacity="0.8"/>
+          <!-- 盯视的文字 -->
+          <text x="50" y="90" text-anchor="middle" font-size="8" fill="currentColor" opacity="0.6">BIG BROTHER IS WATCHING</text>
+        </svg>
+      </div>
+
+      <!-- 竖排诗句效果（小王子） -->
+      <div v-if="book.middleEffect.type === 'vertical-quote'" class="vertical-quote-effect">
+        <div class="quote-vertical">{{ book.middleEffect.value }}</div>
+      </div>
+
+      <!-- 代码块引用（置身事内） -->
+      <div v-if="book.middleEffect.type === 'code-quote'" class="code-quote-effect">
+        <pre class="code-block">{{ book.middleEffect.value }}</pre>
+      </div>
+
+      <!-- 心电图效果（霍乱时期的爱情） -->
+      <div v-if="book.middleEffect.type === 'ekg'" class="ekg-effect">
+        <svg class="ekg-svg" viewBox="0 0 200 60">
+          <path d="M0,30 L40,30 L50,10 L60,50 L70,30 L120,30 L130,5 L140,55 L150,30 L200,30"
+                fill="none" stroke="currentColor" stroke-width="2" class="ekg-line"/>
+          <circle cx="150" cy="30" r="4" fill="currentColor" class="ekg-heart">
+            <animate attributeName="r" values="4;6;4" dur="0.8s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+        <div class="ekg-label">51年9个月零4天</div>
+      </div>
+
+      <!-- 极简符号效果（悉达多） -->
+      <div v-if="book.middleEffect.type === 'minimal-symbol'" class="minimal-symbol-effect">
+        <div class="symbol-large">{{ book.middleEffect.value }}</div>
       </div>
     </div>
 
@@ -131,6 +184,11 @@ const titleStyle = computed(() => {
 
 // 背景样式
 const backgroundStyle = computed(() => {
+  // 如果书籍有自定义背景，优先使用
+  if (props.book.customBackground) {
+    return { background: props.book.customBackground }
+  }
+
   const backgrounds = {
     'dreamy': 'radial-gradient(ellipse at 30% 20%, rgba(74, 124, 159, 0.08) 0%, transparent 50%)',
     'surreal': 'linear-gradient(135deg, rgba(123, 75, 138, 0.06) 0%, transparent 100%)',
@@ -854,5 +912,161 @@ onMounted(() => {
   .line {
     height: 14px;
   }
+}
+
+/* === 中间效果区域样式 === */
+.card-middle-effect {
+  position: relative;
+  z-index: 10;
+  margin: 1rem 0;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 倒计时效果（三体） */
+.countdown-effect {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.countdown-icon {
+  font-size: 2rem;
+  opacity: 0.8;
+  animation: countdown-pulse 1s ease-in-out infinite;
+}
+
+@keyframes countdown-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+.countdown-number {
+  font-family: 'Courier New', monospace;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.countdown-label {
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+}
+
+/* 监视眼效果（1984） */
+.eye-effect {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.eye-svg {
+  width: 80%;
+  height: auto;
+  color: rgba(26, 26, 26, 0.7);
+}
+
+.book-card:hover .eye-svg {
+  color: #2ecc71;
+}
+
+/* 竖排诗句效果（小王子） */
+.vertical-quote-effect {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.quote-vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  line-height: 2;
+  letter-spacing: 0.3em;
+  color: #555;
+  font-weight: 300;
+}
+
+/* 代码块效果（置身事内） */
+.code-quote-effect {
+  width: 100%;
+  background: rgba(26, 26, 26, 0.03);
+  border-radius: 4px;
+  padding: 0.8rem;
+  border-left: 3px solid var(--accent-color);
+}
+
+.code-block {
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  line-height: 1.6;
+  color: #444;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* 心电图效果（霍乱时期的爱情） */
+.ekg-effect {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ekg-svg {
+  width: 90%;
+  height: auto;
+  color: #e74c3c;
+}
+
+.ekg-line {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: ekg-draw 2s linear forwards infinite;
+}
+
+@keyframes ekg-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+.ekg-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.7rem;
+  font-style: italic;
+  color: #e74c3c;
+  opacity: 0.8;
+}
+
+/* 极简符号效果（悉达多） */
+.minimal-symbol-effect {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.symbol-large {
+  font-size: 3rem;
+  opacity: 0.3;
+  transition: all 0.5s ease;
+}
+
+.book-card:hover .symbol-large {
+  opacity: 0.5;
+  transform: scale(1.1);
 }
 </style>

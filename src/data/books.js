@@ -118,7 +118,7 @@ export const booksData = [
     subtitle: 'Le Petit Prince',
     author: '圣埃克苏佩里',
     category: 'PHILOSOPHY',
-    accentColor: '#f4d03f',
+    accentColor: '#e74c3c',
     geometric: 'star',
     quote: '本质的东西用眼睛是看不见的',
     typography: 'naive',
@@ -130,7 +130,11 @@ export const booksData = [
     vibeDescription: '写给大人的童话',
     footerText: 'B-612',
     moodScore: 9.5,
-    worldComponent: 'PrinceWorld'
+    worldComponent: 'PrinceWorld',
+    middleEffect: {
+      type: 'vertical-quote',
+      value: '本质的东西用眼睛是看不见的'
+    }
   },
   // VOL.007 - 撒哈拉的故事
   {
@@ -235,7 +239,11 @@ export const booksData = [
     interactiveType: 'logical',
     vibeDescription: '读懂中国经济与政府运作',
     footerText: '兰小欢',
-    moodScore: 7.8
+    moodScore: 7.8,
+    middleEffect: {
+      type: 'code-quote',
+      value: '> 中国经济.realWorld()\n"生活过得好一点，\n 比大多数宏伟更宏伟"'
+    }
   },
   // VOL.012 - 文城
   {
@@ -602,7 +610,7 @@ export const booksData = [
     subtitle: 'El Amor en los Tiempos del Cólera',
     author: '加西亚·马尔克斯',
     category: 'ROMANCE',
-    accentColor: '#d4a06a',
+    accentColor: '#e74c3c',
     geometric: 'infinity',
     quote: '等待了五十年九个月零四天',
     typography: 'enduring',
@@ -613,7 +621,10 @@ export const booksData = [
     interactiveType: 'enduring',
     vibeDescription: '跨越半个世纪的爱情',
     footerText: 'Florentino Ariza',
-    moodScore: 7.5
+    moodScore: 7.5,
+    middleEffect: {
+      type: 'ekg'
+    }
   },
   // VOL.030 - 山茶文具店
   {
@@ -697,7 +708,11 @@ export const booksData = [
     interactiveType: 'spiritual',
     vibeDescription: '一条河流与寻找自我',
     footerText: 'Siddhartha',
-    moodScore: 8.5
+    moodScore: 8.5,
+    middleEffect: {
+      type: 'minimal-symbol',
+      value: 'ॐ'
+    }
   },
   // VOL.034 - 无人生还
   {
@@ -770,7 +785,7 @@ export const booksData = [
     subtitle: 'The Three-Body Problem',
     author: '刘慈欣',
     category: 'SCIENCE FICTION',
-    accentColor: '#1a4a7a',
+    accentColor: '#8b0000',
     geometric: 'three-suns',
     quote: '给岁月以文明',
     typography: 'cosmic',
@@ -781,7 +796,12 @@ export const booksData = [
     interactiveType: 'cosmic',
     vibeDescription: '人类文明与三体文明的博弈',
     footerText: '汪淼 & 叶文洁',
-    moodScore: 4.5
+    moodScore: 4.5,
+    middleEffect: {
+      type: 'countdown',
+      value: '450:00:00'
+    },
+    customBackground: 'linear-gradient(180deg, rgba(139, 0, 0, 0.15) 0%, rgba(139, 0, 0, 0.05) 100%)'
   },
   // VOL.038 - 白夜行
   {
