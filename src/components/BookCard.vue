@@ -58,8 +58,7 @@
     <div class="card-middle-effect" v-if="book.middleEffect" :class="`effect-${book.middleEffect.type}`">
       <!-- 倒计时效果（三体） -->
       <div v-if="book.middleEffect.type === 'countdown'" class="countdown-effect">
-        <div class="countdown-icon">⏳</div>
-        <div class="countdown-number">{{ book.middleEffect.value }}</div>
+        <div class="countdown-number">{{ currentCountdown }}</div>
         <div class="countdown-label">UNTIL COLLAPSE</div>
       </div>
 
@@ -165,6 +164,41 @@ const particlesCanvas = ref(null)
 const isHovered = ref(false)
 const mousePos = ref({ x: 0, y: 0 })
 const cardCenter = ref({ x: 0, y: 0 })
+
+// 倒计时效果（三体）
+const currentCountdown = ref('450:00:00')
+let countdownInterval = null
+
+// 启动倒计时动画
+const startCountdownAnimation = () => {
+  if (!props.book.middleEffect || props.book.middleEffect.type !== 'countdown') return
+
+  let [hours, minutes, seconds] = props.book.middleEffect.value.split(':').map(Number)
+
+  countdownInterval = setInterval(() => {
+    // 随机减少时间，模拟倒计时跳跃
+    const randomDecrement = Math.floor(Math.random() * 10) + 1
+
+    seconds -= randomDecrement
+    if (seconds < 0) {
+      seconds += 60
+      minutes--
+    }
+    if (minutes < 0) {
+      minutes += 60
+      hours--
+    }
+    if (hours < 0) {
+      // 重置
+      hours = 450
+      minutes = 0
+      seconds = 0
+    }
+
+    // 格式化
+    currentCountdown.value = `${String(hours).padStart(3, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+  }, 800) // 每800毫秒更新一次
+}
 
 // 标题样式
 const titleStyle = computed(() => {
@@ -383,6 +417,16 @@ onMounted(() => {
       }
     }
   })
+
+  // 启动倒计时动画
+  startCountdownAnimation()
+})
+
+onUnmounted(() => {
+  // 清除倒计时定时器
+  if (countdownInterval) {
+    clearInterval(countdownInterval)
+  }
 })
 </script>
 
@@ -934,24 +978,19 @@ onMounted(() => {
   gap: 0.5rem;
 }
 
-.countdown-icon {
-  font-size: 2rem;
-  opacity: 0.8;
-  animation: countdown-pulse 1s ease-in-out infinite;
-}
-
-@keyframes countdown-pulse {
-  0%, 100% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.1); opacity: 1; }
-}
-
 .countdown-number {
   font-family: 'Courier New', monospace;
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   color: #fff;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+}
+
+.countdown-number:hover {
+  transform: scale(1.05);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
 }
 
 .countdown-label {

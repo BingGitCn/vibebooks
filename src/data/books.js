@@ -801,7 +801,7 @@ export const booksData = [
       type: 'countdown',
       value: '450:00:00'
     },
-    customBackground: 'linear-gradient(180deg, rgba(139, 0, 0, 0.15) 0%, rgba(139, 0, 0, 0.05) 100%)'
+    customBackground: 'linear-gradient(180deg, rgba(139, 0, 0, 0.25) 0%, rgba(80, 0, 0, 0.15) 100%)'
   },
   // VOL.038 - 白夜行
   {
