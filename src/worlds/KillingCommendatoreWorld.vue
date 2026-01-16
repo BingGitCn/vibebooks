@@ -2,9 +2,27 @@
   <div class="killing-commendatore-world" ref="container">
     <!-- WebGL Canvas 由 Three.js 自动创建 -->
 
-    <!-- UI 层 -->
+    <!-- 光痕 Canvas (Phase 6) -->
+    <canvas v-if="showLightTrailCanvas" ref="lightTrailCanvas" class="light-trail-canvas"></canvas>
+
+    <!-- 开场说明 -->
     <transition name="fade">
-      <div v-if="showText && currentPhaseText" class="phase-text">
+      <div v-if="showIntro" class="intro-screen">
+        <h1 class="intro-title">刺杀骑士团长</h1>
+        <p class="intro-author">村上春树</p>
+        <p class="intro-subtitle">一次从现实到隐喻的滑落</p>
+      </div>
+    </transition>
+
+    <!-- 阶段标题（右下角） -->
+    <div class="phase-indicator">
+      <span class="phase-roman">{{ currentPhaseRoman }}</span>
+      <span class="phase-name">{{ currentPhaseName }}</span>
+    </div>
+
+    <!-- 核心文字（中心，淡入淡出） -->
+    <transition name="fade">
+      <div v-if="showCoreText && currentPhaseText" class="core-text">
         <p v-html="currentPhaseText"></p>
       </div>
     </transition>
@@ -24,11 +42,16 @@ import * as THREE from 'three'
 
 // 容器引用
 const container = ref(null)
+const lightTrailCanvas = ref(null)
 
 // UI 状态
-const showText = ref(false)
+const showIntro = ref(true)
+const showLightTrailCanvas = ref(false)
+const showCoreText = ref(false)
 const showClickHint = ref(false)
 const currentPhaseText = ref('')
+const currentPhaseRoman = ref('I')
+const currentPhaseName = ref('')
 
 // Three.js 核心对象
 let scene = null
@@ -75,6 +98,18 @@ const phaseTexts = {
   idea: '理念<br>就是那从天而降的东西'
 }
 
+const phaseNames = {
+  blank: '空白的凝视',
+  chance: '偶然性降临',
+  well: '井的显现',
+  manifest: '意象显形',
+  dual: '双重世界',
+  kill: '杀死',
+  idea: '理念降落'
+}
+
+const phaseRomans = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII']
+
 // 初始化 Three.js 场景
 const initThree = () => {
   scene = new THREE.Scene()
@@ -101,7 +136,13 @@ const initThree = () => {
   initPhase5()
 
   phaseStartTime = Date.now()
-  transitionToPhase(0)
+
+  // 开场 3 秒后开始体验
+  setTimeout(() => {
+    showIntro.value = false
+    transitionToPhase(0)
+  }, 3000)
+
   animate()
 }
 
@@ -538,12 +579,56 @@ const updateIdea = (time) => {
   // 粒子变成金色雨
   particles.material.opacity = 1
 
-  // 绘制光痕
+  // 更新光痕生命周期
   clickPositions.forEach(pos => {
-    pos.life -= 0.002
+    pos.life -= 0.001  // 淡出更慢
   })
 
   clickPositions = clickPositions.filter(pos => pos.life > 0)
+
+  // 渲染光痕到 Canvas
+  renderLightTrails()
+}
+
+// 渲染光痕
+const renderLightTrails = () => {
+  if (!lightTrailCanvas.value) return
+
+  const canvas = lightTrailCanvas.value
+  const ctx = canvas.getContext('2d')
+
+  // 清空画布
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+  if (clickPositions.length === 0) return
+
+  // 绘制所有光痕
+  clickPositions.forEach((pos, index) => {
+    if (index === 0) return
+
+    const prevPos = clickPositions[index - 1]
+    const opacity = pos.life
+
+    // 创建金色渐变
+    const gradient = ctx.createLinearGradient(
+      prevPos.x * canvas.width,
+      prevPos.y * canvas.height,
+      pos.x * canvas.width,
+      pos.y * canvas.height
+    )
+
+    gradient.addColorStop(0, `rgba(212, 175, 55, ${opacity * 0.5})`)
+    gradient.addColorStop(1, `rgba(255, 215, 0, ${opacity})`)
+
+    ctx.strokeStyle = gradient
+    ctx.lineWidth = 3
+    ctx.lineCap = 'round'
+
+    ctx.beginPath()
+    ctx.moveTo(prevPos.x * canvas.width, prevPos.y * canvas.height)
+    ctx.lineTo(pos.x * canvas.width, pos.y * canvas.height)
+    ctx.stroke()
+  })
 }
 
 // Phase 切换
@@ -551,6 +636,13 @@ const transitionToPhase = (phaseIndex) => {
   currentPhase = phaseIndex
   phaseProgress = 0
   phaseStartTime = Date.now()
+
+  // 更新阶段标题
+  currentPhaseRoman.value = phaseRomans[phaseIndex]
+  currentPhaseName.value = phaseNames[phases[phaseIndex]]
+
+  // Phase 6 显示光痕 Canvas
+  showLightTrailCanvas.value = phaseIndex === 6
 
   const grid = scene.getObjectByName('gridMesh')
   const well = scene.getObjectByName('well')
@@ -610,11 +702,11 @@ const transitionToPhase = (phaseIndex) => {
       break
   }
 
-  // 更新文字
+  // 更新核心文字
   currentPhaseText.value = phaseTexts[phases[phaseIndex]]
-  showText.value = true
+  showCoreText.value = true
   setTimeout(() => {
-    showText.value = false
+    showCoreText.value = false
   }, 4000)
 }
 
@@ -708,10 +800,25 @@ const onResize = () => {
   camera.aspect = window.innerWidth / window.innerHeight
   camera.updateProjectionMatrix()
   renderer.setSize(window.innerWidth, window.innerHeight)
+
+  // 调整光痕 Canvas 大小
+  if (lightTrailCanvas.value) {
+    lightTrailCanvas.value.width = window.innerWidth
+    lightTrailCanvas.value.height = window.innerHeight
+  }
+}
+
+// 初始化光痕 Canvas
+const initLightTrailCanvas = () => {
+  if (lightTrailCanvas.value) {
+    lightTrailCanvas.value.width = window.innerWidth
+    lightTrailCanvas.value.height = window.innerHeight
+  }
 }
 
 onMounted(() => {
   initThree()
+  initLightTrailCanvas()
 
   window.addEventListener('mousemove', onMouseMove)
   window.addEventListener('mousedown', onMouseDown)
@@ -750,7 +857,86 @@ onUnmounted(() => {
   height: 100%;
 }
 
-.phase-text {
+/* 光痕 Canvas */
+.light-trail-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* 开场屏幕 */
+.intro-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.95);
+  z-index: 20;
+}
+
+.intro-title {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 300;
+  color: #7b4b8a;
+  letter-spacing: 0.4em;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.intro-author {
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-weight: 300;
+  color: #1a1a2e;
+  margin-bottom: 2rem;
+  opacity: 0.8;
+}
+
+.intro-subtitle {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 300;
+  color: #666;
+  letter-spacing: 0.2em;
+  font-style: italic;
+}
+
+/* 阶段指示器 */
+.phase-indicator {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+  z-index: 10;
+  text-align: right;
+  pointer-events: none;
+}
+
+.phase-roman {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 200;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.3em;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.phase-name {
+  font-size: clamp(0.8rem, 1.5vw, 1rem);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* 核心文字 */
+.core-text {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -758,9 +944,10 @@ onUnmounted(() => {
   z-index: 10;
   text-align: center;
   pointer-events: none;
+  max-width: 80%;
 }
 
-.phase-text p {
+.core-text p {
   font-size: clamp(1.5rem, 4vw, 3rem);
   font-weight: 300;
   color: #ffffff;
@@ -769,6 +956,7 @@ onUnmounted(() => {
   line-height: 2;
 }
 
+/* 点击提示 */
 .click-hint {
   position: absolute;
   bottom: 10%;
@@ -785,6 +973,7 @@ onUnmounted(() => {
   opacity: 0.7;
 }
 
+/* 转场动画 */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 1s ease;
@@ -796,8 +985,17 @@ onUnmounted(() => {
 }
 
 @media (max-width: 768px) {
-  .phase-text p {
+  .core-text p {
     letter-spacing: 0.15em;
+  }
+
+  .phase-indicator {
+    bottom: 3%;
+    right: 3%;
+  }
+
+  .click-hint {
+    bottom: 15%;
   }
 }
 </style>
