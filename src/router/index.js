@@ -70,6 +70,21 @@ const routes = [
     path: '/world/ergun-river',
     name: 'ErgunRiverWorld',
     component: () => import('../worlds/ErgunRiverWorld.vue')
+  },
+  {
+    path: '/world/embodied',
+    name: 'EmbodiedWorld',
+    component: () => import('../worlds/EmbodiedWorld.vue')
+  },
+  {
+    path: '/world/wencheng',
+    name: 'WenchengWorld',
+    component: () => import('../worlds/WenchengWorld.vue')
+  },
+  {
+    path: '/world/norwegian-forest',
+    name: 'NorwegianForestWorld',
+    component: () => import('../worlds/NorwegianForestWorld.vue')
   }
 ]
 

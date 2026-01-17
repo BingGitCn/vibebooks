@@ -99,40 +99,41 @@
         <div :key="currentStoryIndex" class="story-content">
           <!-- 几何装饰 -->
           <svg class="story-decoration" viewBox="0 0 200 200">
-            <!-- 春：森林嫩芽 -->
+            <!-- 春：萌芽 -->
             <g v-if="selectedSeason === 'spring'">
-              <line x1="100" y1="180" x2="100" y2="80" stroke="#059669" stroke-width="2" opacity="0.5"/>
-              <circle cx="100" cy="70" r="8" fill="#059669" opacity="0.6"/>
-              <line x1="60" y1="180" x2="80" y2="100" stroke="#059669" stroke-width="1.5" opacity="0.4"/>
-              <circle cx="80" cy="95" r="6" fill="#059669" opacity="0.5"/>
-              <line x1="140" y1="180" x2="120" y2="100" stroke="#059669" stroke-width="1.5" opacity="0.4"/>
-              <circle cx="120" cy="95" r="6" fill="#059669" opacity="0.5"/>
+              <circle cx="100" cy="100" r="15" fill="none" stroke="#059669" stroke-width="2" opacity="0.5"/>
+              <circle cx="100" cy="100" r="8" fill="#059669" opacity="0.6"/>
+              <line x1="100" y1="115" x2="100" y2="140" stroke="#059669" stroke-width="2" opacity="0.4"/>
+              <line x1="85" y1="125" x2="70" y2="135" stroke="#059669" stroke-width="1.5" opacity="0.3"/>
+              <line x1="115" y1="125" x2="130" y2="135" stroke="#059669" stroke-width="1.5" opacity="0.3"/>
             </g>
-            <!-- 夏：茂盛森林 -->
+            <!-- 夏：繁茂 -->
             <g v-if="selectedSeason === 'summer'">
-              <line x1="40" y1="180" x2="40" y2="60" stroke="#047857" stroke-width="2" opacity="0.6"/>
-              <line x1="80" y1="180" x2="80" y2="40" stroke="#047857" stroke-width="2" opacity="0.7"/>
-              <line x1="120" y1="180" x2="120" y2="50" stroke="#047857" stroke-width="2" opacity="0.6"/>
-              <line x1="160" y1="180" x2="160" y2="70" stroke="#047857" stroke-width="2" opacity="0.5"/>
+              <circle cx="60" cy="120" r="25" fill="none" stroke="#047857" stroke-width="2" opacity="0.4"/>
+              <circle cx="100" cy="110" r="30" fill="none" stroke="#047857" stroke-width="2" opacity="0.5"/>
+              <circle cx="140" cy="120" r="25" fill="none" stroke="#047857" stroke-width="2" opacity="0.4"/>
+              <line x1="60" y1="145" x2="60" y2="170" stroke="#047857" stroke-width="2" opacity="0.3"/>
+              <line x1="100" y1="140" x2="100" y2="170" stroke="#047857" stroke-width="2" opacity="0.3"/>
+              <line x1="140" y1="145" x2="140" y2="170" stroke="#047857" stroke-width="2" opacity="0.3"/>
             </g>
-            <!-- 秋：飘落的叶子 -->
+            <!-- 秋：飘零 -->
             <g v-if="selectedSeason === 'autumn'">
-              <ellipse cx="60" cy="80" rx="12" ry="6" fill="#d97706" opacity="0.4" transform="rotate(30, 60, 80)"/>
-              <ellipse cx="100" cy="60" rx="10" ry="5" fill="#d97706" opacity="0.5" transform="rotate(-20, 100, 60)"/>
-              <ellipse cx="140" cy="90" rx="11" ry="5" fill="#d97706" opacity="0.45" transform="rotate(45, 140, 90)"/>
-              <ellipse cx="80" cy="120" rx="9" ry="4" fill="#d97706" opacity="0.35" transform="rotate(-15, 80, 120)"/>
-              <ellipse cx="120" cy="130" rx="10" ry="5" fill="#d97706" opacity="0.4" transform="rotate(60, 120, 130)"/>
+              <ellipse cx="70" cy="90" rx="10" ry="5" fill="none" stroke="#d97706" stroke-width="1.5" opacity="0.5" transform="rotate(30, 70, 90)"/>
+              <ellipse cx="100" cy="110" rx="12" ry="6" fill="none" stroke="#d97706" stroke-width="1.5" opacity="0.6" transform="rotate(-15, 100, 110)"/>
+              <ellipse cx="130" cy="90" rx="10" ry="5" fill="none" stroke="#d97706" stroke-width="1.5" opacity="0.5" transform="rotate(45, 130, 90)"/>
+              <path d="M70,100 Q85,80 100,90 T130,100" stroke="#d97706" stroke-width="1" fill="none" opacity="0.3"/>
             </g>
-            <!-- 冬：雪花 -->
+            <!-- 冬：寂静 -->
             <g v-if="selectedSeason === 'winter'">
-              <circle cx="50" cy="60" r="3" fill="#9ca3af" opacity="0.5"/>
-              <circle cx="100" cy="40" r="2" fill="#9ca3af" opacity="0.6"/>
-              <circle cx="150" cy="70" r="3" fill="#9ca3af" opacity="0.4"/>
-              <circle cx="70" cy="100" r="2" fill="#9ca3af" opacity="0.5"/>
-              <circle cx="130" cy="110" r="2" fill="#9ca3af" opacity="0.5"/>
-              <line x1="50" y1="60" x2="50" y2="180" stroke="#9ca3af" stroke-width="0.5" opacity="0.3"/>
-              <line x1="100" y1="40" x2="100" y2="180" stroke="#9ca3af" stroke-width="0.5" opacity="0.3"/>
-              <line x1="150" y1="70" x2="150" y2="180" stroke="#9ca3af" stroke-width="0.5" opacity="0.3"/>
+              <circle cx="70" cy="80" r="3" fill="#9ca3af" opacity="0.6"/>
+              <circle cx="100" cy="70" r="2" fill="#9ca3af" opacity="0.7"/>
+              <circle cx="130" cy="80" r="3" fill="#9ca3af" opacity="0.6"/>
+              <circle cx="85" cy="110" r="2" fill="#9ca3af" opacity="0.5"/>
+              <circle cx="115" cy="110" r="2" fill="#9ca3af" opacity="0.5"/>
+              <circle cx="100" cy="130" r="2" fill="#9ca3af" opacity="0.4"/>
+              <line x1="70" y1="83" x2="70" y2="170" stroke="#9ca3af" stroke-width="0.5" opacity="0.2"/>
+              <line x1="100" y1="72" x2="100" y2="170" stroke="#9ca3af" stroke-width="0.5" opacity="0.2"/>
+              <line x1="130" y1="83" x2="130" y2="170" stroke="#9ca3af" stroke-width="0.5" opacity="0.2"/>
             </g>
           </svg>
 

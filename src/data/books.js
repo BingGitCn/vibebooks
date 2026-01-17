@@ -257,6 +257,7 @@ export const booksData = [
     vibeDescription: '读懂中国经济与政府运作',
     footerText: '兰小欢',
     moodScore: 7.8,
+    worldComponent: 'EmbodiedWorld',
     middleEffect: {
       type: 'code-quote',
       value: '> 中国经济.realWorld()\n"生活过得好一点，\n 比大多数宏伟更宏伟"'
@@ -282,7 +283,8 @@ export const booksData = [
     interactiveType: 'haunting',
     vibeDescription: '一个男人的寻找与宿命',
     footerText: '林祥福',
-    moodScore: 4.5
+    moodScore: 4.5,
+    worldComponent: 'WenchengWorld'
   },
   // VOL.013 - 挪威的森林
   {
@@ -304,7 +306,8 @@ export const booksData = [
     interactiveType: 'melancholic',
     vibeDescription: '关于青春、爱与失去的记忆',
     footerText: '渡边 & 直子',
-    moodScore: 4.0
+    moodScore: 4.0,
+    worldComponent: 'NorwegianForestWorld'
   },
   // VOL.014 - 小城与不确定性的墙
   {
