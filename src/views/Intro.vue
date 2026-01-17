@@ -22,7 +22,7 @@
       <!-- 门 -->
       <div class="door-container" @click="enterUniverse">
         <!-- 年份标记 -->
-        <div class="door-year">EST. 2025</div>
+        <div class="door-year">EST. 2026</div>
 
         <!-- 门框 -->
         <div class="door-frame">
@@ -38,6 +38,9 @@
 
           <!-- 门缝光芒 -->
           <div class="door-glow"></div>
+
+          <!-- 门把手（星号） -->
+          <div class="door-handle">✦</div>
         </div>
 
         <!-- 门槛 -->
@@ -295,6 +298,23 @@ onMounted(() => {
   opacity: 0.6;
 }
 
+/* 门把手（星号） */
+.door-handle {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  color: rgba(26, 26, 26, 0.3);
+  pointer-events: none;
+  transition: all 0.4s ease;
+}
+
+.door-container:hover .door-handle {
+  color: rgba(26, 26, 26, 0.6);
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
 /* ========== 副标题 ========== */
 .subtitle {
   font-family: 'Source Serif 4', Georgia, serif;
@@ -393,6 +413,10 @@ onMounted(() => {
   .door-year {
     font-size: 0.55rem;
     margin-bottom: 1.5rem;
+  }
+
+  .door-handle {
+    font-size: 1.2rem;
   }
 
   .enter-btn {
