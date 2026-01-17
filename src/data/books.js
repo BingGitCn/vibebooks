@@ -329,7 +329,8 @@ export const booksData = [
     interactiveType: 'metaphysical',
     vibeDescription: '关于存在与自我的寓言',
     footerText: '17岁的我',
-    moodScore: 5.5
+    moodScore: 5.5,
+    worldComponent: 'UncertainWallWorld'
   },
   // VOL.015 - 1Q84
   {
@@ -351,7 +352,8 @@ export const booksData = [
     interactiveType: 'parallel',
     vibeDescription: '两个月亮与两个世界',
     footerText: '青豆 & 天吾',
-    moodScore: 6.2
+    moodScore: 6.2,
+    worldComponent: 'Q84World'
   },
   // VOL.016 - 山月记
   {

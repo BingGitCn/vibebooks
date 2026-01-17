@@ -85,6 +85,16 @@ const routes = [
     path: '/world/norwegian-forest',
     name: 'NorwegianForestWorld',
     component: () => import('../worlds/NorwegianForestWorld.vue')
+  },
+  {
+    path: '/world/uncertain-wall',
+    name: 'UncertainWallWorld',
+    component: () => import('../worlds/UncertainWallWorld.vue')
+  },
+  {
+    path: '/world/q84',
+    name: 'Q84World',
+    component: () => import('../worlds/Q84World.vue')
   }
 ]
 
