@@ -9,8 +9,8 @@
     <!-- 跃迁动画遮罩 -->
     <transition name="warp">
       <div v-if="showWarp" class="warp-overlay">
-        <div class="warp-triangle">
-          <div class="warp-triangle-inner"></div>
+        <div class="warp-circle">
+          <div class="warp-circle-inner"></div>
         </div>
         <div class="warp-text">小王子</div>
       </div>
@@ -537,7 +537,7 @@ onMounted(() => {
 <style scoped>
 .prince-universe {
   min-height: 100vh;
-  background: #FFFFFF;
+  background: #f7f5f2;
   position: relative;
   overflow-x: hidden;
 }
@@ -585,27 +585,27 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  background: #FFFFFF;
+  background: #f7f5f2;
 }
 
-.warp-triangle {
+.warp-circle {
   width: 300px;
-  height: 260px;
-  border: 1px solid rgba(0, 0, 0, 0.3);
+  height: 300px;
+  border: 1px solid rgba(26, 26, 26, 0.2);
+  border-radius: 50%;
   position: relative;
-  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
   animation: warp-expand 1.5s ease-out forwards;
 }
 
-.warp-triangle-inner {
+.warp-circle-inner {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 200px;
-  height: 173px;
-  border: 1px solid rgba(0, 0, 0, 0.5);
-  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  height: 200px;
+  border: 1px solid rgba(26, 26, 26, 0.3);
+  border-radius: 50%;
   animation: warp-pulse 1s ease-in-out infinite;
 }
 
@@ -614,7 +614,7 @@ onMounted(() => {
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 0.9rem;
   letter-spacing: 0.3em;
-  color: rgba(0, 0, 0, 0.8);
+  color: rgba(26, 26, 26, 0.8);
   animation: warp-fade 1.5s ease-out forwards;
 }
 
