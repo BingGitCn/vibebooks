@@ -1,135 +1,92 @@
 <template>
   <div class="intro-container">
-    <!-- 星空背景 -->
-    <canvas ref="starsCanvas" class="stars-canvas"></canvas>
+    <!-- 噪点纹理层 -->
+    <div class="noise-texture"></div>
 
-    <!-- 漂浮的几何体 -->
-    <div class="geometric-layer">
-      <div class="geo-shape triangle" :style="{ ...getTrianglePosition(0), ...getRotation(0) }">
-        <svg viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="none" stroke="rgba(26,26,26,0.08)" stroke-width="1"/></svg>
-      </div>
-      <div class="geo-shape circle" :style="{ ...getCirclePosition(0), ...getRotation(1) }">
-        <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="rgba(26,26,26,0.06)" stroke-width="1"/></svg>
-      </div>
-      <div class="geo-shape arc" :style="{ ...getArcPosition(0), ...getRotation(2) }">
-        <svg viewBox="0 0 100 100"><path d="M 10 90 Q 50 10 90 90" fill="none" stroke="rgba(26,26,26,0.07)" stroke-width="1"/></svg>
-      </div>
-      <div class="geo-shape triangle" :style="{ ...getTrianglePosition(1), ...getRotation(3) }">
-        <svg viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="none" stroke="rgba(26,26,26,0.05)" stroke-width="1"/></svg>
-      </div>
-      <div class="geo-shape circle" :style="{ ...getCirclePosition(1), ...getRotation(4) }">
-        <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="none" stroke="rgba(26,26,26,0.04)" stroke-width="1"/></svg>
-      </div>
+    <!-- 水平线纹理层 -->
+    <div class="lines-texture"></div>
+
+    <!-- 黑色方块点阵 (替代圆形星星) -->
+    <div class="dot-matrix">
+      <div
+        v-for="dot in dots"
+        :key="dot.id"
+        class="dot"
+        :style="{
+          left: dot.x + '%',
+          top: dot.y + '%',
+          opacity: dot.currentAlpha,
+          animationDelay: dot.delay + 's'
+        }"
+      ></div>
+    </div>
+
+    <!-- 几何线条装饰 -->
+    <div class="geometric-lines">
+      <div class="line line-1"></div>
+      <div class="line line-2"></div>
+      <div class="line line-3"></div>
+      <div class="square-deco square-1"></div>
+      <div class="square-deco square-2"></div>
     </div>
 
     <!-- 中心内容 -->
     <div class="center-content">
+      <div class="decorative-ruler">
+        <div class="thick-line"></div>
+        <div class="small-square"></div>
+      </div>
+
       <h1 class="main-title">每一本书，都值得被探索。</h1>
+
       <p class="subtitle">Where stories breathe</p>
+
       <button class="enter-btn" @click="enterUniverse">
-        <span>Enter the Library</span>
+        Enter the Library
       </button>
     </div>
-
-
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const starsCanvas = ref(null)
-let animationId = null
-let stars = []
+const dots = ref([])
 
-// 生成星星
-class Star {
-  constructor(canvas) {
-    this.canvas = canvas
-    this.reset()
-  }
+// 生成黑色方块点阵
+function initDots() {
+  const dotCount = 50
+  const newDots = []
 
-  reset() {
-    this.x = Math.random() * this.canvas.width
-    this.y = Math.random() * this.canvas.height
-    this.size = Math.random() * 2 + 0.5
-    this.baseAlpha = Math.random() * 0.5 + 0.2
-    this.twinkleSpeed = Math.random() * 0.02 + 0.005
-    this.twinkleOffset = Math.random() * Math.PI * 2
-  }
-
-  update(time) {
-    this.currentAlpha = this.baseAlpha + Math.sin(time * this.twinkleSpeed + this.twinkleOffset) * 0.15
-  }
-
-  draw(ctx) {
-    ctx.beginPath()
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
-    ctx.fillStyle = `rgba(26, 26, 26, ${this.currentAlpha})`
-    ctx.fill()
-  }
-}
-
-function initStars() {
-  const canvas = starsCanvas.value
-  const ctx = canvas.getContext('2d')
-
-  const resizeCanvas = () => {
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
-    stars.forEach(star => star.reset())
-  }
-
-  resizeCanvas()
-  window.addEventListener('resize', resizeCanvas)
-
-  // 创建50颗星星
-  stars = Array.from({ length: 50 }, () => new Star(canvas))
-
-  let time = 0
-  const animate = () => {
-    time++
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-    stars.forEach(star => {
-      star.update(time)
-      star.draw(ctx)
+  for (let i = 0; i < dotCount; i++) {
+    newDots.push({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      baseAlpha: Math.random() * 0.15 + 0.05,
+      currentAlpha: 0,
+      delay: Math.random() * 3,
+      duration: Math.random() * 2 + 2
     })
-
-    animationId = requestAnimationFrame(animate)
   }
 
-  animate()
+  dots.value = newDots
+
+  // 启动闪烁动画
+  requestAnimationFrame(animateDots)
 }
 
-// 几何体位置计算
-function getTrianglePosition(index) {
-  const positions = [
-    { top: '15%', left: '10%' },
-    { bottom: '20%', right: '15%' }
-  ]
-  return positions[index] || positions[0]
-}
+function animateDots() {
+  const time = Date.now() / 1000
 
-function getCirclePosition(index) {
-  const positions = [
-    { top: '25%', right: '18%' },
-    { bottom: '30%', left: '12%' }
-  ]
-  return positions[index] || positions[0]
-}
+  dots.value.forEach(dot => {
+    const phase = Math.sin(time * (1 / dot.duration) + dot.delay)
+    dot.currentAlpha = dot.baseAlpha + phase * 0.05
+  })
 
-function getArcPosition(index) {
-  return { top: '60%', left: '20%' }
-}
-
-function getRotation(index) {
-  const speeds = [120, 90, 150, 100, 80]
-  return {
-    animation: `float-rotate ${speeds[index]}s linear infinite`
-  }
+  requestAnimationFrame(animateDots)
 }
 
 const enterUniverse = () => {
@@ -137,77 +94,136 @@ const enterUniverse = () => {
 }
 
 onMounted(() => {
-  initStars()
-})
-
-onUnmounted(() => {
-  if (animationId) {
-    cancelAnimationFrame(animationId)
-  }
+  initDots()
 })
 </script>
 
 <style scoped>
+/* ========== 容器 ========== */
 .intro-container {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(180deg, #f7f5f2 0%, #ebe8e3 100%);
+  background: #FFFFFF;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.stars-canvas {
+/* ========== 噪点纹理 (全局纸张质感) ========== */
+.noise-texture {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
-}
-
-.geometric-layer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2;
   pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.02;
 }
 
-.geo-shape {
+/* ========== 水平线纹理 (核心视觉元素) ========== */
+.lines-texture {
   position: absolute;
-  width: 120px;
-  height: 120px;
-  opacity: 0.6;
-}
-
-.geo-shape svg {
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 1px,
+    #000 1px,
+    #000 2px
+  );
+  background-size: 100% 4px;
+  opacity: 0.015;
 }
 
-@keyframes float-rotate {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  25% {
-    transform: translate(10px, -15px) rotate(90deg);
-  }
-  50% {
-    transform: translate(-5px, -25px) rotate(180deg);
-  }
-  75% {
-    transform: translate(-15px, -10px) rotate(270deg);
-  }
-  100% {
-    transform: translate(0, 0) rotate(360deg);
-  }
+/* ========== 黑色方块点阵 ========== */
+.dot-matrix {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
 }
 
+.dot {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #000000;
+  transition: opacity 0.1s;
+}
+
+/* ========== 几何线条装饰 ========== */
+.geometric-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.line {
+  position: absolute;
+  background: #000000;
+  opacity: 0.08;
+}
+
+.line-1 {
+  width: 1px;
+  height: 200px;
+  top: 10%;
+  left: 15%;
+  transform: rotate(15deg);
+}
+
+.line-2 {
+  width: 150px;
+  height: 1px;
+  top: 70%;
+  right: 20%;
+}
+
+.line-3 {
+  width: 1px;
+  height: 150px;
+  bottom: 15%;
+  right: 25%;
+  transform: rotate(-10deg);
+}
+
+.square-deco {
+  position: absolute;
+  border: 1px solid #000000;
+  opacity: 0.06;
+}
+
+.square-1 {
+  width: 40px;
+  height: 40px;
+  top: 20%;
+  right: 15%;
+}
+
+.square-2 {
+  width: 25px;
+  height: 25px;
+  bottom: 25%;
+  left: 12%;
+}
+
+/* ========== 中心内容 ========== */
 .center-content {
   position: relative;
   z-index: 10;
@@ -215,77 +231,99 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  padding: 0 2rem;
 }
 
-.main-title {
-  font-family: 'Noto Serif SC', serif;
-  font-size: clamp(2rem, 5vw, 4rem);
-  font-weight: 300;
-  letter-spacing: 0.15em;
-  color: #1a1a1a;
-  margin-bottom: 0.5rem;
-  animation: fade-up 1.2s ease-out;
-}
-
-.subtitle {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(1rem, 2vw, 1.5rem);
-  font-weight: 300;
-  font-style: italic;
-  letter-spacing: 0.3em;
-  color: #666;
+/* ========== 装饰性标尺 ========== */
+.decorative-ruler {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   margin-bottom: 2rem;
-  animation: fade-up 1.2s ease-out 0.3s backwards;
 }
 
+.thick-line {
+  width: 80px;
+  height: 4px;
+  background: #000000;
+}
+
+.small-square {
+  width: 8px;
+  height: 8px;
+  border: 2px solid #000000;
+}
+
+/* ========== 主标题 ========== */
+.main-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(4rem, 12vw, 10rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #000000;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  max-width: 90vw;
+}
+
+/* ========== 副标题 ========== */
+.subtitle {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.15em;
+  color: #525252;
+  margin-bottom: 3rem;
+}
+
+/* ========== 按钮 ========== */
 .enter-btn {
   position: relative;
-  padding: 1rem 3rem;
-  background: rgba(26, 26, 26, 0.85);
-  border: 1px solid rgba(26, 26, 26, 0.1);
-  color: #f7f5f2;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
+  padding: 1rem 2.5rem;
+  background: #000000;
+  border: none;
+  color: #FFFFFF;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.4s ease;
-  backdrop-filter: blur(10px);
-  animation: fade-up 1.2s ease-out 0.6s backwards;
+  transition: all 0.1s;
 }
 
 .enter-btn:hover {
-  background: rgba(26, 26, 26, 0.95);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 40px rgba(26, 26, 26, 0.15);
+  background: #FFFFFF;
+  color: #000000;
+  box-shadow: inset 0 0 0 2px #000000;
 }
 
-.enter-btn:active {
-  transform: translateY(0);
+.enter-btn:focus-visible {
+  outline: 3px solid #000000;
+  outline-offset: 3px;
 }
 
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
+/* ========== 移动端适配 ========== */
 @media (max-width: 768px) {
-  .geo-shape {
-    width: 80px;
-    height: 80px;
+  .main-title {
+    font-size: clamp(3rem, 15vw, 5rem);
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
   }
 
   .enter-btn {
     padding: 0.875rem 2rem;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .line,
+  .square-deco {
+    display: none;
   }
 }
 </style>

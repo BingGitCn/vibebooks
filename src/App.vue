@@ -3,17 +3,21 @@
 </template>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Playfair+Display:wght@400;500;600;700;900&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root {
-  --bg-primary: #f7f5f2;
-  --bg-secondary: #ebe8e3;
-  --text-primary: #1a1a1a;
-  --text-secondary: #666;
-  --accent-blue: #4a7c9f;
-  --accent-green: #2d5a3d;
-  --accent-red: #8b3a3a;
-  --accent-gold: #c9a959;
+  /* Minimalist Monochrome - Pure Black & White */
+  --background: #FFFFFF;
+  --foreground: #000000;
+  --muted: #F5F5F5;
+  --muted-foreground: #525252;
+  --accent: #000000;
+  --accent-foreground: #FFFFFF;
+  --border: #000000;
+  --border-light: #E5E5E5;
+  --card: #FFFFFF;
+  --card-foreground: #000000;
+  --ring: #000000;
 }
 
 * {
@@ -27,9 +31,9 @@ html {
 }
 
 body {
-  font-family: 'Inter', 'Noto Serif SC', serif;
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  font-family: 'Source Serif 4', Georgia, serif;
+  background: var(--background);
+  color: var(--foreground);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

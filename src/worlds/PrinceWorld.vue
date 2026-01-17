@@ -1,481 +1,343 @@
 <template>
-  <div class="prince-world" :class="{ 'is-transitioning': isTransitioning }">
+  <div class="prince-universe">
+    <!-- 噪点纹理层 -->
+    <div class="noise-texture"></div>
+
+    <!-- 水平线纹理层 -->
+    <div class="lines-texture"></div>
+
     <!-- 跃迁动画遮罩 -->
     <transition name="warp">
       <div v-if="showWarp" class="warp-overlay">
-        <div class="warp-circle">
-          <div class="warp-circle-inner"></div>
+        <div class="warp-triangle">
+          <div class="warp-triangle-inner"></div>
         </div>
-        <div class="warp-text">B-612</div>
+        <div class="warp-text">小王子</div>
       </div>
     </transition>
 
+    <!-- 左侧装饰文字 -->
+    <aside class="left-decoration">
+      <div class="vertical-text">LE PETIT PRINCE</div>
+      <div class="vertical-subtext">1943 · Antoine de Saint-Exupéry</div>
+    </aside>
+
     <!-- 返回按钮 -->
     <button class="exit-btn" @click="exitWorld">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M19 12H5M12 19l-7-7 7-7"/>
       </svg>
       <span>Return</span>
     </button>
 
-    <!-- === 入场：星空呼唤 === -->
-    <transition name="summon">
-      <div v-if="currentChapter === 'summon'" class="chapter-summon">
-        <canvas ref="summonCanvas" class="summon-canvas"></canvas>
-        <div class="summon-content">
-          <p class="summon-text">{{ summonText }}</p>
-          <button v-if="showSummonButton" class="summon-btn" @click="answerSummon">
-            我在听
-          </button>
+    <!-- 标题区 -->
+    <header class="universe-header" :class="{ blurred: selectedNode }">
+      <div class="header-decoration">
+        <div class="thick-line"></div>
+        <div class="small-square"></div>
+      </div>
+      <h1 class="universe-title">小王子</h1>
+      <p class="universe-subtitle">几何宇宙 · 七种人生</p>
+    </header>
+
+    <!-- 几何网络画布 -->
+    <div class="geometric-canvas" :class="{ blurred: selectedNode }">
+      <svg class="connections-layer" :viewBox="`0 0 ${canvasWidth} ${canvasHeight}`">
+        <line
+          v-for="conn in connections"
+          :key="conn.id"
+          :x1="conn.x1"
+          :y1="conn.y1"
+          :x2="conn.x2"
+          :y2="conn.y2"
+          class="connection-line"
+        />
+      </svg>
+
+      <!-- 几何节点 -->
+      <div
+        v-for="node in nodes"
+        :key="node.id"
+        class="geometric-node"
+        :class="{ 'node-dimmed': selectedNode && selectedNode.id !== node.id }"
+        :style="{
+          left: node.x + '%',
+          top: node.y + '%',
+          '--delay': node.animationDelay + 's'
+        }"
+        @click="selectNode(node)"
+      >
+        <svg class="geometry-shape" viewBox="0 0 100 100">
+          <template v-if="node.type === 'triangle'">
+            <polygon
+              points="50,15 85,85 15,85"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+          </template>
+          <template v-else-if="node.type === 'square'">
+            <rect
+              x="20"
+              y="20"
+              width="60"
+              height="60"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+          </template>
+          <template v-else-if="node.type === 'hexagon'">
+            <polygon
+              points="50,15 80,32.5 80,67.5 50,85 20,67.5 20,32.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+          </template>
+          <template v-else-if="node.type === 'concentric'">
+            <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          </template>
+          <template v-else-if="node.type === 'grid'">
+            <line x1="20" y1="35" x2="80" y2="35" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="20" y1="50" x2="80" y2="50" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="20" y1="65" x2="80" y2="65" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="35" y1="20" x2="35" y2="80" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="50" y1="20" x2="50" y2="80" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="65" y1="20" x2="65" y2="80" stroke="currentColor" stroke-width="1.5"/>
+          </template>
+          <template v-else-if="node.type === 'diamond'">
+            <polygon
+              points="50,15 85,50 50,85 15,50"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+          </template>
+          <template v-else-if="node.type === 'spiral'">
+            <path
+              d="M50,50 Q50,30 65,35 T80,50 T65,65 T50,80 T35,65 T20,50 T35,35 T50,20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </template>
+          <template v-else-if="node.type === 'wave'">
+            <path d="M20,50 Q35,20 50,50 T80,50" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            <path d="M20,35 Q35,5 50,35 T80,35" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+            <path d="M20,65 Q35,35 50,65 T80,65" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+          </template>
+        </svg>
+
+        <div class="node-label">
+          <span class="label-number">0{{ node.number }}</span>
+          <span class="label-name">{{ node.name }}</span>
         </div>
       </div>
-    </transition>
+    </div>
 
-    <!-- === 第一章：日落 === -->
-    <transition name="chapter">
-      <div v-if="currentChapter === 'sunset'" class="chapter-sunset" :style="{ background: sunsetColor }">
-        <div class="sunset-scene">
-          <!-- B-612 星球 -->
-          <div class="b612-planet-sunset">
-            <svg viewBox="0 0 200 200" class="planet-svg">
-              <circle cx="100" cy="100" r="60" fill="none" stroke="currentColor" stroke-width="0.8"/>
-              <circle cx="85" cy="90" r="4" fill="currentColor" class="crater" opacity="0.3"/>
-              <circle cx="115" cy="105" r="3" fill="currentColor" class="crater" opacity="0.3"/>
-            </svg>
-            <!-- 小王子坐在星球上 -->
-            <div class="prince-sitting">
-              <svg viewBox="0 0 100 100" class="prince-svg">
-                <circle cx="50" cy="30" r="12" fill="currentColor" class="prince-head"/>
-                <line x1="50" y1="42" x2="50" y2="70" stroke="currentColor" stroke-width="2" class="prince-body"/>
-                <line x1="50" y1="50" x2="35" y2="65" stroke="currentColor" stroke-width="2" class="prince-leg"/>
-                <line x1="50" y1="50" x2="65" y2="65" stroke="currentColor" stroke-width="2" class="prince-leg"/>
-                <rect x="38" y="22" width="24" height="18" fill="currentColor" opacity="0.3" class="prince-hair"/>
-              </svg>
-            </div>
-          </div>
-
-          <!-- 日落计数器 -->
-          <div class="sunset-counter">
-            <span class="counter-number">{{ sunsetCount }}</span>
-            <span class="counter-label">/ 44</span>
-          </div>
-
-          <!-- 点击区域 -->
-          <div class="sunset-click-area" @click="watchSunset"></div>
-
-          <!-- 小王子的对话 -->
-          <transition name="dialogue">
-            <div v-if="sunsetDialogue" class="prince-dialogue">
-              <p>{{ sunsetDialogue }}</p>
-            </div>
-          </transition>
+    <!-- 几何展开叙事层 -->
+    <transition name="geometry-expand">
+      <div v-if="selectedNode" class="expanded-geometry" @click="closeExpanded">
+        <!-- 背景几何网格 -->
+        <div class="geometry-background">
+          <svg class="geometry-massive" viewBox="0 0 100 100">
+            <template v-if="selectedNode.type === 'triangle'">
+              <polygon
+                points="50,15 85,85 15,85"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="0.3"
+              />
+              <polygon
+                points="50,30 70,75 30,75"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="0.2"
+                opacity="0.5"
+              />
+              <polygon
+                points="50,45 55,65 45,65"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="0.1"
+                opacity="0.3"
+              />
+            </template>
+            <template v-else-if="selectedNode.type === 'square'">
+              <rect x="20" y="20" width="60" height="60" fill="none" stroke="currentColor" stroke-width="0.3"/>
+              <rect x="30" y="30" width="40" height="40" fill="none" stroke="currentColor" stroke-width="0.2" opacity="0.5"/>
+              <rect x="40" y="40" width="20" height="20" fill="none" stroke="currentColor" stroke-width="0.1" opacity="0.3"/>
+            </template>
+            <template v-else-if="selectedNode.type === 'hexagon'">
+              <polygon points="50,15 80,32.5 80,67.5 50,85 20,67.5 20,32.5" fill="none" stroke="currentColor" stroke-width="0.3"/>
+              <polygon points="50,30 65,40 65,60 50,70 35,60 35,40" fill="none" stroke="currentColor" stroke-width="0.2" opacity="0.5"/>
+            </template>
+            <template v-else-if="selectedNode.type === 'concentric'">
+              <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" stroke-width="0.3"/>
+              <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="0.2" opacity="0.5"/>
+              <circle cx="50" cy="50" r="15" fill="none" stroke="currentColor" stroke-width="0.1" opacity="0.3"/>
+              <circle cx="50" cy="50" r="5" fill="currentColor" opacity="0.2"/>
+            </template>
+            <template v-else-if="selectedNode.type === 'grid'">
+              <line x1="20" y1="35" x2="80" y2="35" stroke="currentColor" stroke-width="0.3"/>
+              <line x1="20" y1="50" x2="80" y2="50" stroke="currentColor" stroke-width="0.3"/>
+              <line x1="20" y1="65" x2="80" y2="65" stroke="currentColor" stroke-width="0.3"/>
+              <line x1="35" y1="20" x2="35" y2="80" stroke="currentColor" stroke-width="0.3"/>
+              <line x1="50" y1="20" x2="50" y2="80" stroke="currentColor" stroke-width="0.3"/>
+              <line x1="65" y1="20" x2="65" y2="80" stroke="currentColor" stroke-width="0.3"/>
+            </template>
+            <template v-else-if="selectedNode.type === 'diamond'">
+              <polygon points="50,15 85,50 50,85 15,50" fill="none" stroke="currentColor" stroke-width="0.3"/>
+              <polygon points="50,30 70,50 50,70 30,50" fill="none" stroke="currentColor" stroke-width="0.2" opacity="0.5"/>
+            </template>
+            <template v-else-if="selectedNode.type === 'spiral'">
+              <path d="M50,50 Q50,30 65,35 T80,50 T65,65 T50,80 T35,65 T20,50 T35,35 T50,20" fill="none" stroke="currentColor" stroke-width="0.3" stroke-linecap="round"/>
+              <path d="M50,40 Q50,30 60,32 T70,40 T60,48 T50,45" fill="none" stroke="currentColor" stroke-width="0.2" opacity="0.5" stroke-linecap="round"/>
+            </template>
+            <template v-else-if="selectedNode.type === 'wave'">
+              <path d="M20,50 Q35,20 50,50 T80,50" fill="none" stroke="currentColor" stroke-width="0.3" stroke-linecap="round"/>
+              <path d="M20,35 Q35,5 50,35 T80,35" fill="none" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" opacity="0.5"/>
+              <path d="M20,65 Q35,35 50,65 T80,65" fill="none" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" opacity="0.5"/>
+            </template>
+          </svg>
         </div>
 
-        <!-- 操作提示 -->
-        <div class="interaction-hint" v-if="sunsetCount < 44">
-          <span>点击陪伴看日落</span>
-        </div>
-      </div>
-    </transition>
-
-    <!-- === 第二章：玫瑰 === -->
-    <transition name="chapter">
-      <div v-if="currentChapter === 'rose'" class="chapter-rose">
-        <div class="rose-scene">
-          <!-- 玫瑰 -->
-          <div class="rose-plant" :class="{ 'is-blooming': roseTrust >= 100 }">
-            <svg viewBox="0 0 200 350" class="rose-svg">
-              <!-- 茎 -->
-              <line x1="100" y1="320" x2="100" y2="200" stroke="#2d5016" stroke-width="2.5" class="rose-stem"/>
-
-              <!-- 叶子 -->
-              <path d="M100 280 Q 75 265 65 280 Q 85 290 100 280" fill="#4a7c2a" stroke="#2d5016" stroke-width="1.5" class="rose-leaf"/>
-              <path d="M100 250 Q 125 235 135 250 Q 115 260 100 250" fill="#4a7c2a" stroke="#2d5016" stroke-width="1.5" class="rose-leaf"/>
-
-              <!-- 花萼 -->
-              <g class="rose-calyx" :style="{ opacity: roseTrust >= 20 ? 1 : 0 }">
-                <path d="M100 198 Q 90 190 85 198 Q 95 205 100 198" fill="#2d5016" />
-                <path d="M100 198 Q 110 190 115 198 Q 105 205 100 198" fill="#2d5016" />
-                <path d="M100 198 Q 100 188 100 198 Q 100 208 100 198" fill="#2d5016" />
-              </g>
-
-              <!-- 外层花瓣 - 红色玫瑰 -->
-              <g class="rose-petals-outer" :style="{ opacity: roseTrust >= 30 ? 1 : 0 }">
-                <!-- 花瓣1 -->
-                <path d="M100 175
-                         C 90 165, 75 160, 70 175
-                         C 75 190, 90 195, 100 190
-                         C 110 195, 125 190, 130 175
-                         C 125 160, 110 165, 100 175"
-                      fill="#e74c3c" stroke="#c0392b" stroke-width="0.5"/>
-                <!-- 花瓣2 -->
-                <path d="M100 175
-                         C 115 170, 130 165, 140 175
-                         C 145 190, 130 200, 115 200
-                         C 100 200, 90 190, 95 180"
-                      fill="#e74c3c" stroke="#c0392b" stroke-width="0.5" transform="rotate(72 100 185)"/>
-                <!-- 花瓣3 -->
-                <path d="M100 175
-                         C 85 170, 70 165, 60 175
-                         C 55 190, 70 200, 85 200
-                         C 100 200, 110 190, 105 180"
-                      fill="#e74c3c" stroke="#c0392b" stroke-width="0.5" transform="rotate(144 100 185)"/>
-                <!-- 花瓣4 -->
-                <path d="M100 175
-                         C 110 168, 125 168, 135 178
-                         C 140 193, 125 203, 110 203
-                         C 95 203, 85 193, 90 178"
-                      fill="#e74c3c" stroke="#c0392b" stroke-width="0.5" transform="rotate(216 100 185)"/>
-                <!-- 花瓣5 -->
-                <path d="M100 175
-                         C 90 168, 75 168, 65 178
-                         C 60 193, 75 203, 90 203
-                         C 105 203, 115 193, 110 178"
-                      fill="#e74c3c" stroke="#c0392b" stroke-width="0.5" transform="rotate(288 100 185)"/>
-              </g>
-
-              <!-- 中层花瓣 - 深红色 -->
-              <g class="rose-petals-middle" :style="{ opacity: roseTrust >= 60 ? 1 : 0 }">
-                <!-- 花瓣1 -->
-                <path d="M100 180
-                         C 92 172, 82 170, 78 180
-                         C 82 190, 92 192, 100 188
-                         C 108 192, 118 190, 122 180
-                         C 118 170, 108 172, 100 180"
-                      fill="#c0392b" stroke="#a93226" stroke-width="0.5"/>
-                <!-- 花瓣2 -->
-                <path d="M100 180
-                         C 108 172, 118 170, 122 180
-                         C 126 190, 116 192, 108 188
-                         C 100 185, 92 185, 94 180"
-                      fill="#c0392b" stroke="#a93226" stroke-width="0.5" transform="rotate(90 100 185)"/>
-                <!-- 花瓣3 -->
-                <path d="M100 180
-                         C 105 175, 115 175, 120 183
-                         C 123 193, 113 195, 105 190
-                         C 97 195, 87 193, 90 183"
-                      fill="#c0392b" stroke="#a93226" stroke-width="0.5" transform="rotate(180 100 185)"/>
-                <!-- 花瓣4 -->
-                <path d="M100 180
-                         C 95 175, 85 175, 80 183
-                         C 77 193, 87 195, 95 190
-                         C 103 195, 113 193, 110 183"
-                      fill="#c0392b" stroke="#a93226" stroke-width="0.5" transform="rotate(270 100 185)"/>
-              </g>
-
-              <!-- 内层花瓣 - 更深的红色 -->
-              <g class="rose-petals-inner" :style="{ opacity: roseTrust >= 80 ? 1 : 0 }">
-                <!-- 花瓣1 -->
-                <path d="M100 182
-                         C 94 178, 88 178, 85 183
-                         C 88 190, 94 191, 100 188
-                         C 106 191, 112 190, 115 183
-                         C 112 178, 106 178, 100 182"
-                      fill="#a93226" stroke="#922b21" stroke-width="0.5"/>
-                <!-- 花瓣2 -->
-                <path d="M100 182
-                         C 106 178, 112 178, 115 183
-                         C 118 190, 112 191, 106 188
-                         C 100 186, 96 186, 94 182"
-                      fill="#a93226" stroke="#922b21" stroke-width="0.5" transform="rotate(120 100 185)"/>
-                <!-- 花瓣3 -->
-                <path d="M100 182
-                         C 103 179, 109 179, 111 184
-                         C 113 191, 107 192, 101 189
-                         C 95 192, 89 191, 93 184"
-                      fill="#a93226" stroke="#922b21" stroke-width="0.5" transform="rotate(240 100 185)"/>
-              </g>
-
-              <!-- 花心 - 最深红 -->
-              <g class="rose-center" :style="{ opacity: roseTrust >= 100 ? 1 : 0.5 }">
-                <path d="M100 183
-                         C 97 181, 94 183, 95 185
-                         C 93 187, 95 189, 98 188
-                         C 101 187, 104 189, 102 191
-                         C 100 193, 97 192, 99 190
-                         C 101 188, 104 186, 102 184
-                         C 100 182, 99 182, 100 183"
-                      fill="#922b21" stroke="#7b241c" stroke-width="0.3"/>
-                <circle cx="100" cy="186" r="3" fill="#c0392b"/>
-              </g>
-            </svg>
-          </div>
-
-          <!-- 信任度显示 -->
-          <div class="trust-meter">
-            <div class="trust-bar">
-              <div class="trust-fill" :style="{ width: roseTrust + '%' }"></div>
-            </div>
-            <span class="trust-label">信任: {{ roseTrust }}%</span>
-          </div>
-
-          <!-- 交互按钮 -->
-          <div class="rose-actions">
-            <button class="rose-action-btn water-btn" @click="waterRose" :disabled="roseActions.watered">
-              <svg viewBox="0 0 50 50" class="action-icon">
-                <path d="M25 5 L25 35 M15 25 Q25 45 35 25" fill="none" stroke="currentColor" stroke-width="2"/>
-                <rect x="15" y="35" width="20" height="10" fill="currentColor"/>
-              </svg>
-              浇水
-            </button>
-            <button class="rose-action-btn shield-btn" @click="shieldRose" :disabled="roseActions.shielded">
-              <svg viewBox="0 0 50 50" class="action-icon">
-                <path d="M25 5 L25 35 M15 25 Q25 45 35 25" fill="none" stroke="currentColor" stroke-width="2"/>
-              </svg>
-              挡风
-            </button>
-            <button class="rose-action-btn listen-btn" @click="listenRose">
-              <svg viewBox="0 0 50 50" class="action-icon">
-                <circle cx="25" cy="25" r="15" fill="none" stroke="currentColor" stroke-width="2"/>
-                <path d="M20 25 L25 20 L30 25 L25 30 Z" fill="currentColor"/>
-              </svg>
-              倾听
-            </button>
-          </div>
-
-          <!-- 玫瑰的对话 -->
-          <transition name="dialogue">
-            <div v-if="roseDialogue" class="rose-dialogue">
-              <p>{{ roseDialogue }}</p>
-            </div>
-          </transition>
-        </div>
-      </div>
-    </transition>
-
-    <!-- === 第三章：狐狸驯服 === -->
-    <transition name="chapter">
-      <div v-if="currentChapter === 'fox'" class="chapter-fox">
-        <canvas ref="wheatFieldCanvas" class="wheat-field-canvas"></canvas>
-
-        <div class="fox-scene">
-          <!-- 狐狸 -->
-          <div class="fox-wrapper" :class="{ 'is-tamed': foxDay >= 3 }">
-            <svg viewBox="0 0 200 150" class="fox-svg">
-              <g class="fox-outline" stroke="#1a1a1a" stroke-width="1.5" fill="none">
-                <!-- 耳朵 -->
-                <path d="M 60 50 L 75 70 L 90 50" class="fox-ear-left"/>
-                <path d="M 110 50 L 125 70 L 140 50" class="fox-ear-right"/>
-                <!-- 头 -->
-                <circle cx="100" cy="75" r="30" class="fox-head"/>
-                <!-- 眼睛 -->
-                <circle cx="90" cy="70" r="2" fill="#1a1a1a" class="fox-eye"/>
-                <circle cx="110" cy="70" r="2" fill="#1a1a1a" class="fox-eye"/>
-                <!-- 身体 -->
-                <path d="M 130 80 Q 160 90 170 110 L 170 130 L 125 120 Q 115 100 130 80" class="fox-body"/>
-                <!-- 尾巴 -->
-                <path d="M 170 110 Q 200 90 205 110 Q 200 130 170 130" class="fox-tail"/>
-              </g>
+        <!-- 内容容器 -->
+        <div class="expanded-content" @click.stop>
+          <!-- 中心几何标记 -->
+          <div class="center-geometry">
+            <svg class="center-shape" viewBox="0 0 100 100">
+              <template v-if="selectedNode.type === 'triangle'">
+                <polygon
+                  points="50,15 85,85 15,85"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  class="draw-animation"
+                />
+              </template>
+              <template v-else-if="selectedNode.type === 'square'">
+                <rect
+                  x="20"
+                  y="20"
+                  width="60"
+                  height="60"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  class="draw-animation"
+                />
+              </template>
+              <template v-else-if="selectedNode.type === 'hexagon'">
+                <polygon
+                  points="50,15 80,32.5 80,67.5 50,85 20,67.5 20,32.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  class="draw-animation"
+                />
+              </template>
+              <template v-else-if="selectedNode.type === 'concentric'">
+                <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" stroke-width="1.5" class="draw-animation"/>
+                <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="1" class="draw-animation-delayed"/>
+              </template>
+              <template v-else-if="selectedNode.type === 'grid'">
+                <line x1="20" y1="35" x2="80" y2="35" stroke="currentColor" stroke-width="1.5" class="draw-animation"/>
+                <line x1="20" y1="50" x2="80" y2="50" stroke="currentColor" stroke-width="1.5" class="draw-animation-delayed"/>
+                <line x1="20" y1="65" x2="80" y2="65" stroke="currentColor" stroke-width="1.5" class="draw-animation-delayed-2"/>
+                <line x1="35" y1="20" x2="35" y2="80" stroke="currentColor" stroke-width="1.5" class="draw-animation"/>
+                <line x1="50" y1="20" x2="50" y2="80" stroke="currentColor" stroke-width="1.5" class="draw-animation-delayed"/>
+                <line x1="65" y1="20" x2="65" y2="80" stroke="currentColor" stroke-width="1.5" class="draw-animation-delayed-2"/>
+              </template>
+              <template v-else-if="selectedNode.type === 'diamond'">
+                <polygon
+                  points="50,15 85,50 50,85 15,50"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  class="draw-animation"
+                />
+              </template>
+              <template v-else-if="selectedNode.type === 'spiral'">
+                <path
+                  d="M50,50 Q50,30 65,35 T80,50 T65,65 T50,80 T35,65 T20,50 T35,35 T50,20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  class="draw-animation"
+                />
+              </template>
+              <template v-else-if="selectedNode.type === 'wave'">
+                <path d="M20,50 Q35,20 50,50 T80,50" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="draw-animation"/>
+                <path d="M20,35 Q35,5 50,35 T80,35" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5" class="draw-animation-delayed"/>
+                <path d="M20,65 Q35,35 50,65 T80,65" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5" class="draw-animation-delayed-2"/>
+              </template>
             </svg>
           </div>
 
-          <!-- 对话区域 -->
-          <transition name="dialogue">
-            <div v-if="foxDialogue" class="fox-dialogue">
-              <p class="dialogue-text">{{ foxDialogue }}</p>
-              <p v-if="foxDay < 3" class="dialogue-hint">
-                {{ foxDay === 0 ? '点击按钮开始驯服' : `点击继续驯服 (${foxDay}/3)` }}
-              </p>
+          <!-- 信息层 -->
+          <div class="info-layer">
+            <!-- 编号和名称 -->
+            <div class="node-header">
+              <span class="node-number-large">0{{ selectedNode.number }}</span>
+              <h2 class="node-title-large">{{ selectedNode.name }}</h2>
             </div>
-          </transition>
 
-          <!-- 驯服按钮 -->
-          <button v-if="canVisitFox && !foxDialogue" class="visit-fox-btn" @click="visitFox">
-            {{ foxDay === 0 ? '靠近狐狸' : '继续驯服' }}
-          </button>
-
-          <!-- 对话显示时的继续按钮 -->
-          <button v-if="canVisitFox && foxDialogue && foxDay < 3" class="visit-fox-btn" @click="visitFox">
-            {{ `第 ${foxDay + 1} 天` }}
-          </button>
-
-          <!-- 日期显示 -->
-          <div v-if="foxDay > 0" class="fox-day-indicator">
-            第 {{ foxDay }} / 3 天
-          </div>
-        </div>
-      </div>
-    </transition>
-
-    <!-- === 第四章：井与星星 === -->
-    <transition name="chapter">
-      <div v-if="currentChapter === 'well'" class="chapter-well">
-        <div class="well-scene">
-          <!-- 井 -->
-          <div class="well-structure">
-            <svg viewBox="0 0 200 280" class="well-svg">
-              <!-- 井口 -->
-              <ellipse cx="100" cy="50" rx="65" ry="22" fill="none" stroke="#8B4513" stroke-width="4"/>
-              <ellipse cx="100" cy="50" rx="55" ry="18" fill="none" stroke="#A0522D" stroke-width="2"/>
-
-              <!-- 井身 -->
-              <path d="M35 50 L35 220 L165 220 L165 50" fill="none" stroke="#8B4513" stroke-width="3"/>
-              <path d="M40 60 L40 210 L160 210 L160 60" fill="none" stroke="#654321" stroke-width="1" opacity="0.5"/>
-
-              <!-- 井架 -->
-              <line x1="35" y1="50" x2="20" y2="15" stroke="#8B4513" stroke-width="4"/>
-              <line x1="165" y1="50" x2="180" y2="15" stroke="#8B4513" stroke-width="4"/>
-              <line x1="20" y1="15" x2="180" y2="15" stroke="#8B4513" stroke-width="4"/>
-              <circle cx="20" cy="15" r="3" fill="#654321"/>
-              <circle cx="180" cy="15" r="3" fill="#654321"/>
-
-              <!-- 绳索 -->
-              <line x1="100" y1="15" x2="100" :y1="bucketY" stroke="#654321" stroke-width="2" class="well-rope"/>
-
-              <!-- 桶 -->
-              <g :transform="`translate(0, ${bucketY - 80})`" class="bucket-group" @click="drawWater">
-                <!-- 桶身 -->
-                <path d="M75 70 L75 100
-                         Q75 112 85 115
-                         L115 115
-                         Q125 112 125 100
-                         L125 70"
-                      fill="#8B4513" stroke="#654321" stroke-width="2"/>
-
-                <!-- 桶口边缘 -->
-                <ellipse cx="100" cy="70" rx="25" ry="8" fill="none" stroke="#654321" stroke-width="2"/>
-
-                <!-- 桶底 -->
-                <path d="M75 115 Q100 120 125 115" fill="none" stroke="#654321" stroke-width="2"/>
-
-                <!-- 桶梁 -->
-                <path d="M75 70 Q100 50 125 70" fill="none" stroke="#654321" stroke-width="3"/>
-
-                <!-- 水（打水后显示） -->
-                <g v-if="hasDrawnWater" class="water-in-bucket">
-                  <ellipse cx="100" cy="95" rx="20" ry="10" fill="#4A90D9" opacity="0.7"/>
-                  <ellipse cx="100" cy="93" rx="18" ry="8" fill="#87CEEB" opacity="0.5"/>
-                  <path d="M85 90 Q100 85 115 90" stroke="#87CEEB" stroke-width="1.5" fill="none" opacity="0.8"/>
-                </g>
-
-                <!-- 空桶（未打水时显示） -->
-                <g v-if="!hasDrawnWater && !isDrawingWater" class="empty-bucket-hint">
-                  <ellipse cx="100" cy="95" rx="15" ry="6" fill="none" stroke="#8B4513" stroke-width="1" stroke-dasharray="2,2" opacity="0.4"/>
-                </g>
-
-                <!-- 波纹效果（打水动画中显示） -->
-                <g v-if="isDrawingWater" class="water-ripples">
-                  <ellipse cx="100" cy="120" rx="30" ry="5" fill="none" stroke="#4A90D9" stroke-width="1" opacity="0.6">
-                    <animate attributeName="rx" values="30;45;30" dur="1s" repeatCount="indefinite"/>
-                    <animate attributeName="opacity" values="0.6;0;0.6" dur="1s" repeatCount="indefinite"/>
-                  </ellipse>
-                  <ellipse cx="100" cy="120" rx="35" ry="6" fill="none" stroke="#4A90D9" stroke-width="1" opacity="0.4">
-                    <animate attributeName="rx" values="35;50;35" dur="1s" repeatCount="indefinite" begin="0.2s"/>
-                    <animate attributeName="opacity" values="0.4;0;0.4" dur="1s" repeatCount="indefinite" begin="0.2s"/>
-                  </ellipse>
-                </g>
-              </g>
-            </svg>
-          </div>
-
-          <!-- 操作提示 -->
-          <div class="well-hint">
-            <p v-if="!hasDrawnWater">点击水桶打水</p>
-            <p v-else class="water-quote">"这水像礼物一样"</p>
-          </div>
-
-          <!-- 星空 -->
-          <div class="stars-container">
-            <div
-              v-for="(star, index) in collectedStars"
-              :key="index"
-              class="collected-star"
-              :style="{ top: star.top || '20%', left: star.left || `${20 + index * 15}%` }"
-            >
-              {{ star.icon }}
-              <span class="star-message">{{ star.message }}</span>
+            <!-- 主题标签 -->
+            <div class="theme-pulse">
+              <span class="theme-dot"></span>
+              <span class="theme-text">{{ selectedNode.theme }}</span>
             </div>
-          </div>
-        </div>
-      </div>
-    </transition>
 
-    <!-- === 第五章：告别 === -->
-    <transition name="chapter">
-      <div v-if="currentChapter === 'goodbye'" class="chapter-goodbye">
-        <div class="goodbye-scene">
-          <!-- 金色的蛇 -->
-          <div class="golden-snake">
-            <svg viewBox="0 0 100 100" class="snake-svg">
-              <circle cx="50" cy="50" r="40" fill="none" stroke="#f4d03f" stroke-width="2" stroke-dasharray="5,5" class="snake-coil"/>
-              <circle cx="50" cy="50" r="3" fill="#f4d03f" class="snake-eye"/>
-            </svg>
-          </div>
+            <!-- 金句 -->
+            <div class="quote-container">
+              <p class="main-quote">{{ selectedNode.quote }}</p>
+            </div>
 
-          <!-- 珍贵记忆回顾 -->
-          <div class="memory-review">
-            <h3>珍贵的回忆</h3>
-            <div class="memory-cards">
-              <div class="memory-card">
-                <span class="memory-icon">🌅</span>
-                <p>看了 {{ sunsetCount }} 次日落</p>
+            <!-- 小王子的困惑 -->
+            <div class="reflection-box">
+              <span class="reflection-label">小王子的困惑</span>
+              <p class="reflection-text">{{ selectedNode.reflection }}</p>
+            </div>
+
+            <!-- 更多金句 -->
+            <transition name="quotes-reveal">
+              <div v-if="showExtended" class="extended-container">
+                <div class="extended-divider"></div>
+                <p
+                  v-for="(q, i) in selectedNode.extendedQuotes"
+                  :key="i"
+                  class="extended-quote"
+                  :style="{ '--index': i }"
+                >
+                  {{ q }}
+                </p>
               </div>
-              <div class="memory-card">
-                <span class="memory-icon">🌹</span>
-                <p>玫瑰完全信任你</p>
-              </div>
-              <div class="memory-card">
-                <span class="memory-icon">🦊</span>
-                <p>被狐狸驯服</p>
-              </div>
-              <div class="memory-card">
-                <span class="memory-icon">⭐</span>
-                <p>收集了 {{ collectedStars.length }} 颗星星</p>
-              </div>
+            </transition>
+
+            <!-- 操作区 -->
+            <div class="action-zone">
+              <button
+                class="toggle-btn"
+                @click="showExtended = !showExtended"
+              >
+                <span>{{ showExtended ? 'Show Less' : 'Explore More' }}</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path :d="showExtended ? 'M19 15l-7 7-7-7' : 'M19 9l-7 7-7-7'"/>
+                </svg>
+              </button>
             </div>
-          </div>
 
-          <!-- 最后的话 -->
-          <div class="final-message">
-            <p>"所有的大人都曾经是小孩，<br>虽然，只有少数人记得"</p>
-          </div>
-
-          <!-- 告别按钮 -->
-          <button class="farewell-btn" @click="sayGoodbye">
-            再见，小王子
-          </button>
-        </div>
-      </div>
-    </transition>
-
-    <!-- === 第六章：回归 === -->
-    <transition name="chapter">
-      <div v-if="currentChapter === 'return'" class="chapter-return">
-        <canvas ref="returnCanvas" class="return-canvas"></canvas>
-
-        <div class="return-scene">
-          <h2 class="return-title">你已经回到地球</h2>
-
-          <p class="return-message">
-            抬头看星星，它们在对你笑
-          </p>
-
-          <!-- 统计信息 -->
-          <div class="return-stats">
-            <div class="stat-item">
-              <span class="stat-number">{{ daysSinceFirstVisit }}</span>
-              <span class="stat-label">天被驯服</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-number">{{ visitCount }}</span>
-              <span class="stat-label">次探访</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-number">{{ collectedStars.length }}</span>
-              <span class="stat-label">颗星星</span>
-            </div>
-          </div>
-
-          <!-- 重新探索按钮 -->
-          <div class="return-actions">
-            <button class="revisit-btn" @click="revisitChapter('sunset')">
-              再看一次日落
-            </button>
-            <button class="revisit-btn" @click="revisitChapter('rose')">
-              探望玫瑰
-            </button>
-            <button class="revisit-btn" @click="revisitChapter('fox')">
-              看望狐狸
+            <!-- 返回按钮 - 右上角固定 -->
+            <button class="expanded-close-btn" @click="closeExpanded">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              </svg>
+              <span>Back</span>
             </button>
           </div>
         </div>
@@ -485,1016 +347,855 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-
-// === 状态管理 ===
-const isTransitioning = ref(false)
+const selectedNode = ref(null)
+const showExtended = ref(false)
 const showWarp = ref(true)
 
-// 当前章节
-const currentChapter = ref('summon')
+const canvasWidth = 1000
+const canvasHeight = 700
 
-// 入场动画
-const summonCanvas = ref(null)
-const summonText = ref('...')
-const showSummonButton = ref(false)
-let summonAnimationId = null
-
-// 日落系统
-const sunsetCount = ref(0)
-const sunsetDialogue = ref('')
-const sunsetColor = ref('#FFE4B5')
-
-// 玫瑰系统
-const roseTrust = ref(0)
-const roseDialogue = ref('')
-const roseActions = ref({
-  watered: false,
-  shielded: false
-})
-
-// 狐狸系统
-const foxDay = ref(0)
-const foxDialogue = ref('')
-const foxLastVisit = ref(null)
-const wheatFieldCanvas = ref(null)
-let wheatAnimationId = null
-
-// 井系统
-const bucketY = ref(80)
-const hasDrawnWater = ref(false)
-
-// 星星收集
-const collectedStars = ref([])
-
-// 统计数据
-const firstVisitDate = ref(null)
-const lastVisitDate = ref(null)
-const visitCount = ref(0)
-
-// === 计算属性 ===
-const daysSinceFirstVisit = computed(() => {
-  if (!firstVisitDate.value) return 0
-  const now = new Date()
-  const first = new Date(firstVisitDate.value)
-  return Math.floor((now - first) / (1000 * 60 * 60 * 24))
-})
-
-const canVisitFox = computed(() => {
-  // 狐狸驯服：用户可以随时点击继续，无需等待真实时间
-  return true
-})
-
-// === 本地存储 ===
-const STORAGE_KEY = 'prince-taming-progress'
-
-const saveProgress = () => {
-  const progress = {
-    currentChapter: currentChapter.value,
-    sunsetCount: sunsetCount.value,
-    roseTrust: roseTrust.value,
-    roseActions: roseActions.value,
-    foxDay: foxDay.value,
-    foxLastVisit: foxLastVisit.value,
-    collectedStars: collectedStars.value,
-    firstVisitDate: firstVisitDate.value,
-    lastVisitDate: lastVisitDate.value,
-    visitCount: visitCount.value
+const nodes = [
+  {
+    id: 'prince',
+    number: 1,
+    name: '小王子',
+    type: 'triangle',
+    x: 50,
+    y: 50,
+    animationDelay: 0,
+    theme: '纯真 · 探索',
+    quote: '所有的大人都曾经是小孩，虽然，只有少数人记得',
+    reflection: '我不懂为什么大人这么奇怪',
+    extendedQuotes: [
+      '有一天，我看了四十四次日落。',
+      '如果你说你在下午四点来，从三点钟开始，我就开始感觉很快乐，时间越临近，我就越来越感到快乐。',
+      '真正重要的东西，用眼睛是看不见的',
+      '人只有用心灵才能看得清事物本质',
+      '你为你的玫瑰花费的时间，让她变得重要',
+      '驯服就是建立联系',
+      '星星发亮是为了让每一个人有一天都能找到属于自己的星星',
+      '在这个世界上，只有心灵才能洞察一切，肉眼是看不到本质的'
+    ]
+  },
+  {
+    id: 'king',
+    number: 2,
+    name: '国王',
+    type: 'square',
+    x: 20,
+    y: 25,
+    animationDelay: -1.5,
+    theme: '权威 · 控制',
+    quote: '我只能命令我也能做到的事',
+    reflection: '为什么他不能命令太阳落下？',
+    extendedQuotes: [
+      '权威必须建立在能力之上',
+      '审判自己比审判别人难多了',
+      '命令要有道理，否则没人会听'
+    ]
+  },
+  {
+    id: 'vain',
+    number: 3,
+    name: '爱慕虚荣的人',
+    type: 'hexagon',
+    x: 80,
+    y: 20,
+    animationDelay: -3,
+    theme: '虚荣 · 表面',
+    quote: '啊！你崇拜我？',
+    reflection: '大人们真奇怪',
+    extendedQuotes: [
+      '虚荣就是只听得进赞美',
+      '只有在别人面前，我才算得上真正英俊',
+      '大人们只关心数字和外表'
+    ]
+  },
+  {
+    id: 'drunkard',
+    number: 4,
+    name: '酒鬼',
+    type: 'concentric',
+    x: 15,
+    y: 60,
+    animationDelay: -4.5,
+    theme: '逃避 · 循环',
+    quote: '我喝酒是为了遗忘',
+    reflection: '这比国王更奇怪',
+    extendedQuotes: [
+      '我喝酒是为了遗忘我的羞愧',
+      '遗忘什么？遗忘我喝酒这件事',
+      '成人的世界充满了逃避'
+    ]
+  },
+  {
+    id: 'businessman',
+    number: 5,
+    name: '商人',
+    type: 'grid',
+    x: 85,
+    y: 55,
+    animationDelay: -6,
+    theme: '占有 · 计算',
+    quote: '这颗星星属于我',
+    reflection: '拥有有什么用？',
+    extendedQuotes: [
+      '我有五百三十二万一千六百二十七颗星星',
+      '拥有不代表有用',
+      '严肃的人只关心数字'
+    ]
+  },
+  {
+    id: 'fox',
+    number: 6,
+    name: '狐狸',
+    type: 'diamond',
+    x: 50,
+    y: 85,
+    animationDelay: -7.5,
+    theme: '驯服 · 联结',
+    quote: '驯服就是建立联系',
+    reflection: '我终于明白玫瑰对我的意义',
+    extendedQuotes: [
+      '只有用心才能看清事物本质',
+      '你永远要对你驯服过的东西负责',
+      '正是你为玫瑰花费的时间，让她变得重要'
+    ]
+  },
+  {
+    id: 'rose',
+    number: 7,
+    name: '玫瑰',
+    type: 'spiral',
+    x: 75,
+    y: 75,
+    animationDelay: -9,
+    theme: '爱 · 骄傲',
+    quote: '我不笨，但我太骄傲了',
+    reflection: '我不懂怎么爱她',
+    extendedQuotes: [
+      '你驯服了我，现在我们互相不可缺少',
+      '骄傲是爱的敌人',
+      '我要用我的刺来保护自己'
+    ]
+  },
+  {
+    id: 'snake',
+    number: 8,
+    name: '蛇',
+    type: 'wave',
+    x: 25,
+    y: 80,
+    animationDelay: -10.5,
+    theme: '离别 · 永恒',
+    quote: '如果你想念我，就看看星星',
+    reflection: '我要回到我的星球了',
+    extendedQuotes: [
+      '对于真心喜爱的人，星星是会笑的',
+      '所有的大人都曾经是小孩',
+      '身体的重量太轻了，带不动这个身体'
+    ]
   }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress))
+]
+
+const connections = [
+  { id: '1-2', x1: 500, y1: 350, x2: 200, y2: 175 },
+  { id: '1-3', x1: 500, y1: 350, x2: 800, y2: 140 },
+  { id: '1-4', x1: 500, y1: 350, x2: 150, y2: 420 },
+  { id: '1-5', x1: 500, y1: 350, x2: 850, y2: 385 },
+  { id: '1-6', x1: 500, y1: 350, x2: 500, y2: 595 },
+  { id: '6-7', x1: 500, y1: 595, x2: 750, y2: 525 },
+  { id: '6-8', x1: 500, y1: 595, x2: 250, y2: 560 }
+]
+
+const selectNode = (node) => {
+  selectedNode.value = node
+  showExtended.value = false
 }
 
-const loadProgress = () => {
-  const saved = localStorage.getItem(STORAGE_KEY)
-  if (saved) {
-    const progress = JSON.parse(saved)
-    currentChapter.value = progress.currentChapter || 'summon'
-    sunsetCount.value = progress.sunsetCount || 0
-    roseTrust.value = progress.roseTrust || 0
-    roseActions.value = progress.roseActions || { watered: false, shielded: false }
-    foxDay.value = progress.foxDay || 0
-    foxLastVisit.value = progress.foxLastVisit || null
-    collectedStars.value = progress.collectedStars || []
-    firstVisitDate.value = progress.firstVisitDate || null
-    lastVisitDate.value = progress.lastVisitDate || null
-    visitCount.value = progress.visitCount || 0
-  }
+const closeExpanded = () => {
+  selectedNode.value = null
+  showExtended.value = false
 }
 
-// === 入场动画 ===
-const initSummonCanvas = () => {
-  const canvas = summonCanvas.value
-  if (!canvas) return
-
-  const ctx = canvas.getContext('2d')
-  canvas.width = window.innerWidth
-  canvas.height = window.innerHeight
-
-  // 创建星星
-  const stars = []
-  for (let i = 0; i < 100; i++) {
-    stars.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      size: Math.random() * 2 + 0.5,
-      alpha: Math.random() * 0.5 + 0.1,
-      twinkle: Math.random() * 0.02 + 0.005
-    })
-  }
-
-  let time = 0
-  const animate = () => {
-    time++
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-    stars.forEach(star => {
-      star.alpha += Math.sin(time * star.twinkle) * 0.01
-      ctx.beginPath()
-      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2)
-      ctx.fillStyle = `rgba(244, 208, 63, ${Math.max(0.1, Math.min(0.6, star.alpha))})`
-      ctx.fill()
-    })
-
-    summonAnimationId = requestAnimationFrame(animate)
-  }
-
-  animate()
-
-  // 渐显文字
-  setTimeout(() => {
-    summonText.value = '有人在吗...'
-  }, 2000)
-
-  setTimeout(() => {
-    summonText.value = '我是来自 B-612 星球的小王子'
-  }, 4000)
-
-  setTimeout(() => {
-    summonText.value = '你愿意听我讲故事吗？'
-    showSummonButton.value = true
-  }, 6000)
+const exitWorld = () => {
+  router.push('/universe')
 }
 
-const answerSummon = () => {
-  // 记录首次访问
-  if (!firstVisitDate.value) {
-    firstVisitDate.value = new Date().toISOString()
-  }
-  lastVisitDate.value = new Date().toISOString()
-  visitCount.value++
-
-  currentChapter.value = 'sunset'
-  saveProgress()
-}
-
-// === 日落系统 ===
-const getSunsetColor = (count) => {
-  if (count <= 10) return '#FFE4B5' // 清晨
-  if (count <= 20) return '#FFA07A' // 正午
-  if (count <= 30) return '#FF6347' // 黄昏
-  return '#4B0082' // 夜晚
-}
-
-const getSunsetDialogue = (count) => {
-  const dialogues = {
-    1: '你看，日落开始了...',
-    5: '你还在陪我，真好',
-    10: '一天中看了十次日落，你一定很难过',
-    20: '二十次了...时间过得很慢',
-    30: '三十次...我很喜欢你这样陪着我',
-    44: '谢谢你陪了我四十四次。你很难过的时候，我喜欢看日落'
-  }
-  return dialogues[count] || ''
-}
-
-const watchSunset = () => {
-  if (sunsetCount.value >= 44) return
-
-  sunsetCount.value++
-  sunsetColor.value = getSunsetColor(sunsetCount.value)
-
-  const dialogue = getSunsetDialogue(sunsetCount.value)
-  if (dialogue) {
-    sunsetDialogue.value = dialogue
-    setTimeout(() => {
-      sunsetDialogue.value = ''
-    }, 4000)
-  }
-
-  if (sunsetCount.value === 44) {
-    setTimeout(() => {
-      currentChapter.value = 'rose'
-      saveProgress()
-    }, 5000)
-  }
-
-  saveProgress()
-}
-
-// === 玫瑰系统 ===
-const roseDialogues = {
-  0: '我是宇宙中唯一的玫瑰',
-  30: '我怕风...你应该要明白我的温柔',
-  60: '我不笨，但我太骄傲了',
-  100: '你驯服了我，现在我们互相不可缺少了'
-}
-
-const waterRose = () => {
-  roseActions.value.watered = true
-  roseTrust.value = Math.min(100, roseTrust.value + 10)
-  saveProgress()
-}
-
-const shieldRose = () => {
-  roseActions.value.shielded = true
-  roseTrust.value = Math.min(100, roseTrust.value + 15)
-  saveProgress()
-}
-
-const listenRose = () => {
-  // 根据信任度显示不同对话
-  const dialogue = Object.entries(roseDialogues)
-    .reverse()
-    .find(([threshold]) => roseTrust.value >= threshold)?.[1] || roseDialogues[0]
-
-  roseDialogue.value = dialogue
-  setTimeout(() => {
-    roseDialogue.value = ''
-  }, 4000)
-
-  // 倾听也增加信任度
-  roseTrust.value = Math.min(100, roseTrust.value + 5)
-
-  // 信任度达到100，解锁下一章
-  if (roseTrust.value >= 100) {
-    setTimeout(() => {
-      currentChapter.value = 'fox'
-      saveProgress()
-    }, 5000)
-  }
-
-  saveProgress()
-}
-
-// === 狐狸系统 ===
-const initWheatFieldCanvas = () => {
-  const canvas = wheatFieldCanvas.value
-  if (!canvas) return
-
-  const ctx = canvas.getContext('2d')
-  canvas.width = window.innerWidth
-  canvas.height = window.innerHeight
-
-  // 简单的麦田背景
-  ctx.fillStyle = '#e8dcc8'
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-  // 可以添加麦浪动画
-}
-
-const foxDialogues = {
-  0: '请你...驯服我吧',
-  1: '你继续回来了，这很好。驯服需要"仪式感"，就是每一次都带着真心来见我',
-  2: '很好。现在我要告诉你一个秘密：只有用心才能看清事物的本质，真正重要的东西，用眼睛是看不见的',
-  3: '现在，你已经驯服了我。我们互相不可缺少了'
-}
-
-const visitFox = () => {
-  const now = new Date().toISOString()
-  foxDay.value++
-  foxLastVisit.value = now
-
-  foxDialogue.value = foxDialogues[Math.min(foxDay.value, 3)]
-  setTimeout(() => {
-    foxDialogue.value = ''
-  }, 6000)
-
-  if (foxDay.value >= 3) {
-    // 收集第一颗星星
-    collectedStars.value.push({
-      icon: '⭐',
-      message: '我为你而笑',
-      top: `${10 + Math.random() * 30}%`,
-      left: `${10 + Math.random() * 40}%`
-    })
-
-    setTimeout(() => {
-      currentChapter.value = 'well'
-      saveProgress()
-    }, 7000)
-  }
-
-  saveProgress()
-}
-
-// === 井系统 ===
-const isDrawingWater = ref(false)
-
-const drawWater = () => {
-  if (hasDrawnWater.value || isDrawingWater.value) return
-
-  isDrawingWater.value = true
-
-  // 动画：水桶先下降，再上升（放慢速度，更清晰）
-  let y = 80
-  let phase = 'down' // down, up
-
-  const drawInterval = setInterval(() => {
-    if (phase === 'down') {
-      y += 2  // 减小速度，从3改为2
-      if (y >= 200) {
-        phase = 'up'
-        // 到达井底，稍微停顿
-      }
-    } else {
-      y -= 2  // 减小速度，从3改为2
-      if (y <= 80) {
-        clearInterval(drawInterval)
-        isDrawingWater.value = false
-        hasDrawnWater.value = true
-
-        // 收集第二颗星星
-        collectedStars.value.push({
-          icon: '💧',
-          message: '这水像礼物一样',
-          top: `${10 + Math.random() * 30}%`,
-          left: `${50 + Math.random() * 40}%`
-        })
-
-        setTimeout(() => {
-          currentChapter.value = 'goodbye'
-          saveProgress()
-        }, 5000)
-      }
-    }
-
-    bucketY.value = y
-  }, 30)  // 增加间隔，从20ms改为30ms，使动画更流畅
-
-  saveProgress()
-}
-
-const showStarMessage = (star) => {
-  // 星星消息通过 hover 显示，不需要点击
-  // 这里可以留空或者添加其他交互
-}
-
-// === 告别系统 ===
-const sayGoodbye = () => {
-  // 收集最后一颗星星
-  collectedStars.value.push({
-    icon: '🌟',
-    message: '所有的大人都曾经是小孩',
-    top: `${10 + Math.random() * 30}%`,
-    left: `${30 + Math.random() * 40}%`
-  })
-
-  currentChapter.value = 'return'
-  saveProgress()
-}
-
-// === 回归系统 ===
-const returnCanvas = ref(null)
-
-const initReturnCanvas = () => {
-  const canvas = returnCanvas.value
-  if (!canvas) return
-
-  const ctx = canvas.getContext('2d')
-  canvas.width = window.innerWidth
-  canvas.height = window.innerHeight
-
-  // 绘制星空，被驯服的星星会笑
-  // 简化版：绘制静态星星
-}
-
-const revisitChapter = (chapter) => {
-  currentChapter.value = chapter
-}
-
-// === 退出 ===
-const exitWorld = async () => {
-  isTransitioning.value = true
-  await nextTick()
-  setTimeout(() => {
-    router.push('/universe')
-  }, 800)
-}
-
-// === 生命周期 ===
-onMounted(async () => {
-  // 跃迁动画消失
+// 页面加载时的跃迁动画
+onMounted(() => {
   setTimeout(() => {
     showWarp.value = false
   }, 1800)
-
-  // 加载进度
-  await nextTick()
-  loadProgress()
-
-  // 根据当前章节初始化
-  if (currentChapter.value === 'summon') {
-    initSummonCanvas()
-  } else if (currentChapter.value === 'fox') {
-    initWheatFieldCanvas()
-  } else if (currentChapter.value === 'return') {
-    initReturnCanvas()
-  }
-
-  visitCount.value++
-  saveProgress()
-})
-
-onUnmounted(() => {
-  if (summonAnimationId) {
-    cancelAnimationFrame(summonAnimationId)
-  }
-  if (wheatAnimationId) {
-    cancelAnimationFrame(wheatAnimationId)
-  }
 })
 </script>
 
 <style scoped>
-.prince-world {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: linear-gradient(180deg, #f7f5f2 0%, #efe8d9 50%, #e8dcc8 100%);
-  overflow: hidden;
-  z-index: 1000;
-  font-family: 'Noto Serif SC', serif;
+.prince-universe {
+  min-height: 100vh;
+  background: #FFFFFF;
+  position: relative;
+  overflow-x: hidden;
 }
 
-/* === 跃迁动画 === */
-.warp-overlay {
-  position: absolute;
+/* ========== 纹理层 ========== */
+.noise-texture {
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: #f7f5f2;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.02;
+}
+
+.lines-texture {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 1px,
+    #000 1px,
+    #000 2px
+  );
+  background-size: 100% 4px;
+  opacity: 0.015;
+}
+
+/* ========== 跃迁动画 ========== */
+.warp-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 5000;
+  z-index: 9999;
+  background: #FFFFFF;
 }
 
-.warp-circle {
+.warp-triangle {
   width: 300px;
-  height: 300px;
-  border: 1px solid rgba(244, 208, 63, 0.3);
-  border-radius: 50%;
+  height: 260px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
   position: relative;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
   animation: warp-expand 1.5s ease-out forwards;
 }
 
-.warp-circle-inner {
+.warp-triangle-inner {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 200px;
-  height: 200px;
-  border: 1px solid rgba(244, 208, 63, 0.5);
-  border-radius: 50%;
+  height: 173px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
   animation: warp-pulse 1s ease-in-out infinite;
 }
 
 .warp-text {
   position: absolute;
+  font-family: 'Playfair Display', Georgia, serif;
   font-size: 0.9rem;
   letter-spacing: 0.3em;
-  color: rgba(244, 208, 63, 0.8);
+  color: rgba(0, 0, 0, 0.8);
   animation: warp-fade 1.5s ease-out forwards;
 }
 
 @keyframes warp-expand {
-  0% { transform: scale(0); opacity: 0; }
-  50% { opacity: 1; }
-  100% { transform: scale(3); opacity: 0; }
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
 }
 
 @keyframes warp-pulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); }
-  50% { transform: translate(-50%, -50%) scale(1.1); }
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
 }
 
 @keyframes warp-fade {
-  0% { opacity: 0; transform: translateY(20px); }
-  50% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; }
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
-/* === 返回按钮 === */
-.exit-btn {
-  position: absolute;
-  top: 2rem;
+.warp-enter-active,
+.warp-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.warp-enter-from,
+.warp-leave-to {
+  opacity: 0;
+}
+
+/* ========== 装饰文字 ========== */
+.left-decoration {
+  position: fixed;
+  top: 50%;
   left: 2rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 1.5rem;
-  background: rgba(26, 26, 26, 0.03);
-  border: 1px solid rgba(26, 26, 26, 0.08);
-  color: #1a1a1a;
-  backdrop-filter: blur(10px);
-  font-family: 'Inter', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 3000;
-}
-
-.exit-btn:hover {
-  background: rgba(26, 26, 26, 0.9);
-  color: #f7f5f2;
-  transform: translateX(-3px);
-}
-
-.exit-btn svg {
-  width: 16px;
-  height: 16px;
-}
-
-/* === 章节过渡 === */
-.chapter-enter-active,
-.chapter-leave-active {
-  transition: all 1s ease;
-}
-
-.chapter-enter-from {
-  opacity: 0;
-  transform: translateY(40px);
-}
-
-.chapter-leave-to {
-  opacity: 0;
-  transform: translateY(-40px);
-}
-
-/* === 入场章节 === */
-.chapter-summon {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.summon-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.summon-content {
-  text-align: center;
-  z-index: 10;
-  padding: 2rem;
-}
-
-.summon-text {
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
-  color: #1a1a1a;
-  letter-spacing: 0.15em;
-  margin-bottom: 3rem;
-  line-height: 1.8;
-}
-
-.summon-btn {
-  padding: 1rem 2.5rem;
-  background: rgba(244, 208, 63, 0.2);
-  border: 1px solid rgba(244, 208, 63, 0.5);
-  color: #1a1a1a;
-  font-family: 'Noto Serif SC', serif;
-  font-size: 1rem;
-  letter-spacing: 0.2em;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.summon-btn:hover {
-  background: rgba(244, 208, 63, 0.4);
-  transform: scale(1.05);
-}
-
-/* === 日落章节 === */
-.chapter-sunset {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  transition: background 2s ease;
-  position: relative;
-}
-
-.sunset-scene {
+  transform: translateY(-50%);
+  z-index: 5;
+  pointer-events: none;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2rem;
 }
 
-.b612-planet-sunset {
-  width: 300px;
-  height: 300px;
-  position: relative;
-  animation: planet-float 20s ease-in-out infinite;
-  color: #1a1a1a;
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: #000000;
+  opacity: 0.12;
+  text-transform: uppercase;
 }
 
-.planet-svg {
-  width: 100%;
-  height: 100%;
+.vertical-subtext {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 0.6rem;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.15em;
+  color: #525252;
+  opacity: 0.15;
 }
 
-.prince-sitting {
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 60px;
-}
-
-.prince-svg {
-  width: 100%;
-  height: 100%;
-  fill: #1a1a1a;
-}
-
-.sunset-counter {
-  font-size: 3rem;
-  color: #1a1a1a;
-  letter-spacing: 0.2em;
-}
-
-.sunset-click-area {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+/* ========== 返回按钮 ========== */
+.exit-btn {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 2rem;
+  background: #000000;
+  border: none;
+  color: #FFFFFF;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   cursor: pointer;
-  z-index: 1;
-}
-
-.prince-dialogue {
-  position: absolute;
-  bottom: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.95);
-  padding: 1.5rem 2rem;
-  border-radius: 8px;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.1s;
   z-index: 100;
 }
 
-.prince-dialogue p {
-  font-size: 1.1rem;
-  color: #1a1a1a;
-  line-height: 1.8;
-  margin: 0;
+.exit-btn:hover {
+  background: #FFFFFF;
+  color: #000000;
+  box-shadow: inset 0 0 0 2px #000000;
 }
 
-.interaction-hint {
-  position: absolute;
-  bottom: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 0.9rem;
-  color: rgba(26, 26, 26, 0.6);
-  letter-spacing: 0.15em;
-  z-index: 10;
+.exit-btn svg {
+  width: 18px;
+  height: 18px;
 }
 
-@keyframes planet-float {
-  0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(180deg); }
-}
-
-/* === 玫瑰章节 === */
-.chapter-rose {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(244, 208, 63, 0.05);
-}
-
-.rose-scene {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-}
-
-.rose-plant {
-  width: 250px;
-  height: 350px;
-  transition: all 0.5s ease;
-}
-
-.rose-svg {
-  width: 100%;
-  height: 100%;
-}
-
-/* 花瓣动画 */
-.rose-calyx {
-  transition: opacity 1s ease;
-}
-
-.rose-petals-outer {
-  transition: opacity 1.5s ease;
-  transform-origin: 100px 170px;
-}
-
-.rose-petals-outer .petal {
-  animation: petal-breathe 4s ease-in-out infinite;
-}
-
-.rose-petals-outer .petal:nth-child(1) { animation-delay: 0s; }
-.rose-petals-outer .petal:nth-child(2) { animation-delay: 0.8s; }
-.rose-petals-outer .petal:nth-child(3) { animation-delay: 1.6s; }
-.rose-petals-outer .petal:nth-child(4) { animation-delay: 2.4s; }
-.rose-petals-outer .petal:nth-child(5) { animation-delay: 3.2s; }
-
-.rose-petals-middle {
-  transition: opacity 1.5s ease 0.3s;
-  transform-origin: 100px 165px;
-}
-
-.rose-petals-inner {
-  transition: opacity 1.5s ease 0.6s;
-  transform-origin: 100px 160px;
-}
-
-.rose-center {
-  transition: opacity 1s ease 0.9s;
-}
-
-.rose-plant.is-blooming .rose-petals-outer .petal {
-  animation: petal-breathe-bloom 6s ease-in-out infinite;
-}
-
-@keyframes petal-breathe {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.85; }
-}
-
-@keyframes petal-breathe-bloom {
-  0%, 100% {
-    opacity: 1;
-    transform: rotate(var(--rotation, 0deg)) scale(1);
-  }
-  50% {
-    opacity: 0.9;
-    transform: rotate(var(--rotation, 0deg)) scale(1.02);
-  }
-}
-
-.trust-meter {
+/* ========== 标题区 ========== */
+.universe-header {
   text-align: center;
-}
-
-.trust-bar {
-  width: 200px;
-  height: 8px;
-  background: rgba(244, 208, 63, 0.2);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-}
-
-.trust-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #f4d03f 0%, #f39c12 100%);
-  transition: width 0.5s ease;
-}
-
-.trust-label {
-  font-size: 0.9rem;
-  color: #666;
-  letter-spacing: 0.1em;
-}
-
-.rose-actions {
-  display: flex;
-  gap: 1rem;
-}
-
-.rose-action-btn {
-  padding: 1rem 1.5rem;
-  background: rgba(244, 208, 63, 0.1);
-  border: 1px solid rgba(244, 208, 63, 0.3);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.rose-action-btn:hover:not(:disabled) {
-  background: rgba(244, 208, 63, 0.2);
-  transform: translateY(-2px);
-}
-
-.rose-action-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.action-icon {
-  width: 30px;
-  height: 30px;
-}
-
-.rose-dialogue {
-  position: absolute;
-  bottom: 20%;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 1.5rem 2rem;
-  border-radius: 8px;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.rose-dialogue p {
-  font-size: 1.1rem;
-  color: #1a1a1a;
-  line-height: 1.8;
-  margin: 0;
-  font-style: italic;
-}
-
-/* === 狐狸章节 === */
-.chapter-fox {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-bottom: 3rem;
   position: relative;
+  z-index: 10;
+  padding-top: 6rem;
+  transition: filter 0.6s ease;
 }
 
-.wheat-field-canvas {
+.universe-header.blurred {
+  filter: blur(8px);
+  opacity: 0.3;
+}
+
+.header-decoration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.thick-line {
+  width: 120px;
+  height: 4px;
+  background: #000000;
+}
+
+.small-square {
+  width: 12px;
+  height: 12px;
+  border: 3px solid #000000;
+}
+
+.universe-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #000000;
+  margin-bottom: 1rem;
+}
+
+.universe-subtitle {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.15em;
+  color: #525252;
+}
+
+/* ========== 几何画布 ========== */
+.geometric-canvas {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  height: 700px;
+  margin: 0 auto;
+  z-index: 10;
+  transition: filter 0.6s ease;
+}
+
+.geometric-canvas.blurred {
+  filter: blur(3px);
+}
+
+.connections-layer {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  pointer-events: none;
 }
 
-.fox-scene {
+.connection-line {
+  stroke: #000000;
+  stroke-width: 1;
+  opacity: 0.08;
+}
+
+/* ========== 几何节点 ========== */
+.geometric-node {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  animation: float 12s ease-in-out infinite;
+  animation-delay: var(--delay);
+}
+
+.geometric-node.node-dimmed {
+  opacity: 0.15;
+  filter: blur(2px);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(-50%, -50%) translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(-8px) rotate(3deg);
+  }
+}
+
+.geometric-node:hover:not(.node-dimmed) {
+  z-index: 100;
+}
+
+.geometric-node:hover:not(.node-dimmed) .geometry-shape {
+  transform: scale(1.15);
+}
+
+.geometry-shape {
+  width: 80px;
+  height: 80px;
+  color: #000000;
+  transition: all 0.4s ease;
+  animation: pulse-rotate 20s linear infinite;
+}
+
+@keyframes pulse-rotate {
+  0%, 100% {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: rotate(180deg) scale(1.05);
+    opacity: 0.85;
+  }
+}
+
+.node-label {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.label-number {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: #000000;
+  opacity: 0.3;
+  margin-bottom: 0.25rem;
+}
+
+.label-name {
+  display: block;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #000000;
+  letter-spacing: 0.05em;
+}
+
+/* ========== 几何展开叙事层 ========== */
+.expanded-geometry {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow-y: auto;
+  padding: 6rem 2rem 4rem;
+  /* 隐藏滚动条 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.expanded-geometry::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.geometry-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+.geometry-massive {
+  width: 100%;
+  height: 100%;
+  color: #000000;
+}
+
+.expanded-content {
   position: relative;
   z-index: 10;
+  width: 90%;
+  max-width: 900px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  cursor: default;
+  margin: auto;
 }
 
-.fox-wrapper {
+.center-geometry {
   width: 200px;
-  height: 150px;
-  transition: all 0.5s ease;
+  height: 200px;
+  margin-bottom: 2rem;
 }
 
-.fox-svg {
+.center-shape {
   width: 100%;
   height: 100%;
+  color: #000000;
+  filter: drop-shadow(0 0 30px rgba(0,0,0,0.1));
 }
 
-.fox-dialogue {
-  background: rgba(255, 255, 255, 0.95);
-  padding: 1.5rem 2rem;
-  border-radius: 8px;
-  max-width: 450px;
+/* 绘制动画 */
+.draw-animation {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: draw 1.5s ease forwards 0.3s;
+}
+
+.draw-animation-delayed {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: draw 1.5s ease forwards 0.6s;
+}
+
+.draw-animation-delayed-2 {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: draw 1.5s ease forwards 0.9s;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ========== 信息层 ========== */
+.info-layer {
   text-align: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
-.dialogue-text {
-  font-size: 1.1rem;
-  color: #1a1a1a;
-  line-height: 1.8;
-  margin: 0 0 1rem 0;
+.node-header {
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fade-up 0.6s ease forwards 0.8s;
 }
 
-.dialogue-hint {
-  font-size: 0.9rem;
-  color: #999;
+.node-number-large {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: #000000;
+  opacity: 0.4;
+  margin-bottom: 0.75rem;
+}
+
+.node-title-large {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400;
+  line-height: 1.1;
+  color: #000000;
   margin: 0;
 }
 
-.visit-fox-btn {
-  padding: 1rem 2.5rem;
-  background: rgba(244, 208, 63, 0.2);
-  border: 1px solid rgba(244, 208, 63, 0.5);
-  color: #1a1a1a;
-  font-family: 'Noto Serif SC', serif;
-  font-size: 1rem;
-  letter-spacing: 0.2em;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.theme-pulse {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 1.25rem;
+  border: 2px solid #000000;
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fade-up 0.6s ease forwards 1s;
 }
 
-.visit-fox-btn:hover {
-  background: rgba(244, 208, 63, 0.4);
-  transform: scale(1.05);
+.theme-dot {
+  width: 8px;
+  height: 8px;
+  background: #000000;
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
 }
 
-.fox-day-indicator {
-  font-size: 0.9rem;
-  color: #666;
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.7;
+  }
+}
+
+.theme-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
   letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #000000;
 }
 
-/* === 井章节 === */
-.chapter-well {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(180deg, #e8dcc8 0%, #d4c4a8 100%);
+.quote-container {
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fade-up 0.6s ease forwards 1.2s;
 }
 
-.well-scene {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-}
-
-.well-structure {
-  width: 300px;
-  height: 400px;
-}
-
-.well-svg {
-  width: 100%;
-  height: 100%;
-}
-
-.bucket-group {
-  cursor: pointer;
-  transition: filter 0.3s ease;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-.bucket-group:hover {
-  filter: drop-shadow(0 6px 12px rgba(244, 208, 63, 0.4));
-}
-
-.well-hint {
-  text-align: center;
-  min-height: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.well-hint p {
-  font-size: 1.2rem;
-  color: #1a1a1a;
-  margin: 0;
-  transition: all 0.5s ease;
-}
-
-.water-quote {
+.main-quote {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
   font-style: italic;
-  color: #f4d03f;
-  font-size: 1.3rem;
-  animation: quote-appear 1s ease;
+  line-height: 1.5;
+  color: #000000;
+  margin: 0;
+  max-width: 650px;
 }
 
-@keyframes quote-appear {
+.reflection-box {
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fade-up 0.6s ease forwards 1.4s;
+}
+
+.reflection-label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: #525252;
+  margin-bottom: 0.75rem;
+}
+
+.reflection-text {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #000000;
+  margin: 0;
+  font-style: italic;
+}
+
+.extended-container {
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fade-up 0.6s ease forwards;
+}
+
+.extended-divider {
+  height: 1px;
+  background: #000000;
+  width: 60px;
+  margin: 0 auto 1.5rem;
+  opacity: 0.3;
+}
+
+.extended-quote {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  margin-bottom: 1.25rem;
+  color: #525252;
+  font-style: italic;
+  animation: fade-up 0.6s ease forwards;
+  animation-delay: calc(var(--index) * 0.1s);
+  opacity: 0;
+}
+
+.action-zone {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+  opacity: 0;
+  animation: fade-up 0.6s ease forwards 1.6s;
+}
+
+.toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  border: 2px solid #000000;
+  background: #FFFFFF;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.1s;
+  color: #000000;
+}
+
+.toggle-btn:hover {
+  background: #000000;
+  color: #FFFFFF;
+}
+
+.toggle-btn svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease;
+}
+
+.expanded-close-btn {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 2rem;
+  background: #FFFFFF;
+  border: 2px solid #000000;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.1s;
+  z-index: 100;
+  color: #000000;
+}
+
+.expanded-close-btn:hover {
+  background: #000000;
+  color: #FFFFFF;
+}
+
+.expanded-close-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ========== 动画 ========== */
+@keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -1502,291 +1203,90 @@ onUnmounted(() => {
   }
 }
 
-.stars-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 50%;
-  pointer-events: none;
+.geometry-expand-enter-active {
+  transition: opacity 0.6s ease;
 }
 
-.collected-star {
-  position: absolute;
-  font-size: 2.5rem;
-  animation: star-twinkle 3s ease-in-out infinite;
-  cursor: help;
-  pointer-events: auto;
-  filter: drop-shadow(0 0 10px rgba(244, 208, 63, 0.3));
-  transition: all 0.3s ease;
-}
-
-.collected-star:hover {
-  transform: scale(1.2);
-  filter: drop-shadow(0 0 20px rgba(244, 208, 63, 0.6));
-}
-
-.star-message {
-  position: absolute;
-  bottom: calc(100% + 12px);
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, rgba(244, 208, 63, 0.95) 0%, rgba(243, 156, 18, 0.95) 100%);
-  color: #1a1a1a;
-  padding: 0.75rem 1.25rem;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  white-space: nowrap;
+.geometry-expand-enter-from {
   opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(244, 208, 63, 0.3);
-  pointer-events: none;
-  letter-spacing: 0.05em;
 }
 
-.star-message::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-top-color: rgba(243, 156, 18, 0.95);
+.geometry-expand-leave-active {
+  transition: opacity 0.4s ease;
 }
 
-.collected-star:hover .star-message {
-  opacity: 1;
-  visibility: visible;
-  bottom: calc(100% + 8px);
+.geometry-expand-leave-to {
+  opacity: 0;
 }
 
-@keyframes star-twinkle {
-  0%, 100% {
-    opacity: 0.7;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-}
-
-/* === 告别章节 === */
-.chapter-goodbye {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(180deg, rgba(244, 208, 63, 0.1) 0%, transparent 100%);
-}
-
-.goodbye-scene {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3rem;
-  padding: 2rem;
-}
-
-.golden-snake {
-  width: 150px;
-  height: 150px;
-}
-
-.snake-svg {
-  width: 100%;
-  height: 100%;
-}
-
-.memory-review {
-  text-align: center;
-}
-
-.memory-review h3 {
-  font-size: 1.5rem;
-  color: #1a1a1a;
-  margin-bottom: 2rem;
-  letter-spacing: 0.15em;
-}
-
-.memory-cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-}
-
-.memory-card {
-  background: rgba(255, 255, 255, 0.8);
-  padding: 1.5rem;
-  border-radius: 8px;
-  text-align: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-.memory-icon {
-  font-size: 2rem;
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.memory-card p {
-  font-size: 0.9rem;
-  color: #666;
-  margin: 0;
-}
-
-.final-message {
-  text-align: center;
-}
-
-.final-message p {
-  font-size: 1.5rem;
-  color: #1a1a1a;
-  line-height: 1.8;
-  margin: 0;
-  letter-spacing: 0.1em;
-}
-
-.farewell-btn {
-  padding: 1rem 2.5rem;
-  background: rgba(244, 208, 63, 0.2);
-  border: 1px solid rgba(244, 208, 63, 0.5);
-  color: #1a1a1a;
-  font-family: 'Noto Serif SC', serif;
-  font-size: 1rem;
-  letter-spacing: 0.2em;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.farewell-btn:hover {
-  background: rgba(244, 208, 63, 0.4);
-  transform: scale(1.05);
-}
-
-/* === 回归章节 === */
-.chapter-return {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.return-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.return-scene {
-  position: relative;
-  z-index: 10;
-  text-align: center;
-  padding: 2rem;
-}
-
-.return-title {
-  font-size: clamp(2rem, 5vw, 3rem);
-  color: #1a1a1a;
-  margin-bottom: 2rem;
-  letter-spacing: 0.15em;
-}
-
-.return-message {
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 3rem;
-  line-height: 1.8;
-}
-
-.return-stats {
-  display: flex;
-  gap: 3rem;
-  margin-bottom: 3rem;
-}
-
-.stat-item {
-  text-align: center;
-}
-
-.stat-number {
-  display: block;
-  font-size: 2.5rem;
-  color: #f4d03f;
-  margin-bottom: 0.5rem;
-}
-
-.stat-label {
-  font-size: 0.9rem;
-  color: #666;
-  letter-spacing: 0.1em;
-}
-
-.return-actions {
-  display: flex;
-  gap: 1rem;
-}
-
-.revisit-btn {
-  padding: 0.875rem 1.5rem;
-  background: rgba(244, 208, 63, 0.1);
-  border: 1px solid rgba(244, 208, 63, 0.3);
-  color: #1a1a1a;
-  font-family: 'Noto Serif SC', serif;
-  font-size: 0.9rem;
-  letter-spacing: 0.15em;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.revisit-btn:hover {
-  background: rgba(244, 208, 63, 0.2);
-  transform: translateY(-2px);
-}
-
-/* === 对话过渡 === */
-.dialogue-enter-active,
-.dialogue-leave-active {
+.quotes-reveal-enter-active,
+.quotes-reveal-leave-active {
   transition: all 0.5s ease;
+  overflow: hidden;
 }
 
-.dialogue-enter-from {
+.quotes-reveal-enter-from,
+.quotes-reveal-leave-to {
+  max-height: 0;
   opacity: 0;
-  transform: translateY(20px);
 }
 
-.dialogue-leave-to {
-  opacity: 0;
-  transform: translateY(-20px);
+.quotes-reveal-enter-to,
+.quotes-reveal-leave-from {
+  max-height: 1000px;
+  opacity: 1;
 }
 
-/* === 响应式 === */
+/* ========== 响应式 ========== */
 @media (max-width: 768px) {
+  .left-decoration {
+    display: none;
+  }
+
+  .universe-header {
+    padding-top: 5rem;
+  }
+
   .exit-btn {
     top: 1rem;
     left: 1rem;
-    padding: 0.625rem 1rem;
-    font-size: 0.6rem;
+    padding: 0.75rem 1.5rem;
   }
 
-  .memory-cards {
-    grid-template-columns: 1fr;
+  .geometric-canvas {
+    height: 600px;
   }
 
-  .return-stats {
-    flex-direction: column;
-    gap: 1.5rem;
+  .geometry-shape {
+    width: 60px;
+    height: 60px;
   }
 
-  .return-actions {
-    flex-direction: column;
+  .center-geometry {
+    width: 200px;
+    height: 200px;
+  }
+
+  .node-title-large {
+    font-size: 2rem;
+  }
+
+  .main-quote {
+    font-size: 1.2rem;
+  }
+
+  .action-zone {
+    margin-top: 1.5rem;
+  }
+
+  .toggle-btn {
+    padding: 0.75rem 1.5rem;
+  }
+
+  .expanded-close-btn {
+    top: 1rem;
+    right: 1rem;
+    padding: 0.75rem 1.5rem;
   }
 }
 </style>
