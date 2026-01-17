@@ -518,8 +518,9 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem 6rem;
+  padding: 4rem 3rem;
   position: relative;
+  overflow-y: auto;
 }
 
 .chapter-content {
@@ -527,7 +528,8 @@ onMounted(() => {
   max-width: 900px;
   display: flex;
   flex-direction: column;
-  gap: 4rem;
+  gap: 2.5rem;
+  padding: 1rem 0;
 }
 
 /* 章节文本 */
@@ -537,20 +539,20 @@ onMounted(() => {
 
 .chapter-title {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(3rem, 6vw, 5rem);
+  font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 300;
   color: #1a1a1a;
   letter-spacing: 0.15em;
   margin-bottom: 0.5rem;
-  line-height: 1;
+  line-height: 1.1;
 }
 
 .chapter-subtitle {
   font-family: 'Inter', sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   letter-spacing: 0.3em;
   color: rgba(26, 26, 26, 0.5);
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem;
   text-transform: uppercase;
 }
 
@@ -602,19 +604,21 @@ onMounted(() => {
 }
 
 .character-tooltip {
-  position: absolute;
-  bottom: calc(100% + 10px);
+  position: fixed;
+  bottom: calc(100% + 15px);
   left: 50%;
   transform: translateX(-50%);
   background: #1a1a1a;
   color: #f7f5f2;
-  padding: 0.75rem 1rem;
+  padding: 0.6rem 0.8rem;
   border-radius: 4px;
   white-space: nowrap;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.2rem;
   pointer-events: none;
+  z-index: 1000;
+  max-width: 200px;
 }
 
 .character-name {
@@ -690,7 +694,11 @@ onMounted(() => {
 
   .content-area {
     width: 75%;
-    padding: 3rem 4rem;
+    padding: 3rem 2rem;
+  }
+
+  .chapter-content {
+    gap: 2rem;
   }
 
   .chapter-title {
@@ -725,11 +733,11 @@ onMounted(() => {
   .content-area {
     width: 100%;
     height: 85%;
-    padding: 2rem;
+    padding: 2rem 1.5rem;
   }
 
   .chapter-content {
-    gap: 2rem;
+    gap: 1.5rem;
   }
 
   .chapter-title {
