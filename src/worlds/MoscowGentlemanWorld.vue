@@ -98,9 +98,53 @@
           </div>
         </transition>
 
-        <!-- 阶段 5: 女儿（索菲亚） -->
+        <!-- 阶段 5: 尼娜 -->
         <transition name="stage-transition">
           <div v-if="currentStage === 5" class="stage-wrapper stage-5">
+            <div class="star-system-nina">
+              <!-- 星星轨迹 -->
+              <div class="star-trail star-trail-1"></div>
+              <div class="star-trail star-trail-2"></div>
+              <!-- 流星 -->
+              <div class="shooting-star"></div>
+              <!-- 双星 -->
+              <div class="binary-star">
+                <div class="star-main">
+                  <span class="star-label">伯爵</span>
+                </div>
+                <div class="star-companion star-nina">
+                  <span class="star-label">尼娜</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
+
+        <!-- 阶段 6: 安娜 -->
+        <transition name="stage-transition">
+          <div v-if="currentStage === 6" class="stage-wrapper stage-6">
+            <div class="stage-spotlight">
+              <!-- 聚光灯效果 -->
+              <div class="spotlight-beam"></div>
+              <!-- 安娜剪影 -->
+              <div class="actress-silhouette">
+                <div class="silhouette-inner">
+                  <span class="actress-label">安娜</span>
+                </div>
+              </div>
+              <!-- 星星 -->
+              <div class="stage-stars">
+                <div class="stage-star stage-star-1"></div>
+                <div class="stage-star stage-star-2"></div>
+                <div class="stage-star stage-star-3"></div>
+              </div>
+            </div>
+          </div>
+        </transition>
+
+        <!-- 阶段 7: 女儿（索菲亚） -->
+        <transition name="stage-transition">
+          <div v-if="currentStage === 7" class="stage-wrapper stage-7">
             <div class="orbit-system">
               <!-- 轨道 -->
               <div class="orbit-path"></div>
@@ -116,9 +160,9 @@
           </div>
         </transition>
 
-        <!-- 阶段 6: 自由（1954） -->
+        <!-- 阶段 8: 自由（1954） -->
         <transition name="stage-transition">
-          <div v-if="currentStage === 6" class="stage-wrapper stage-6">
+          <div v-if="currentStage === 8" class="stage-wrapper stage-8">
             <div class="freedom-rays">
               <div class="ray ray-1"></div>
               <div class="ray ray-2"></div>
@@ -158,10 +202,10 @@
       </div>
 
       <!-- 进度指示 -->
-      <div class="progress-container" v-if="currentStage < 6">
+      <div class="progress-container" v-if="currentStage < 8">
         <div class="progress-dots">
           <div
-            v-for="i in 6"
+            v-for="i in 8"
             :key="i"
             class="dot"
             :class="{ active: currentStage >= i }"
@@ -200,6 +244,14 @@ const quotes = [
     subtitle: '波尔斯餐厅 · 岁月沉淀'
   },
   {
+    words: ['有些人的出现', '就像流星', '照亮整个夜空'],
+    subtitle: '尼娜 · 老友重逢'
+  },
+  {
+    words: ['真正的优雅', '是即使在困境中', '依然保持微笑'],
+    subtitle: '安娜 · 舞台之下'
+  },
+  {
     words: ['一个人的价值', '不在于他拥有什么', '而在于他是什么'],
     subtitle: '索菲亚 · 父与女'
   },
@@ -216,7 +268,7 @@ const currentQuote = computed(() => {
 
 // 下一阶段
 const nextStage = () => {
-  if (currentStage.value < 6) {
+  if (currentStage.value < 8) {
     currentStage.value++
   } else {
     exitWorld()
@@ -753,7 +805,227 @@ onMounted(() => {
   white-space: nowrap;
 }
 
-/* 阶段 6: 自由（光芒） */
+/* 阶段 5: 尼娜（流星系统） */
+.star-system-nina {
+  position: relative;
+  width: 300px;
+  height: 300px;
+}
+
+.binary-star {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 60px;
+  animation: binary-rotate 8s linear infinite;
+}
+
+.star-main {
+  width: 70px;
+  height: 70px;
+  background: #d4af37;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 40px rgba(212, 175, 55, 0.5);
+  position: relative;
+}
+
+.star-companion {
+  width: 45px;
+  height: 45px;
+  background: #e8d5a3;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 30px rgba(232, 213, 163, 0.6);
+  position: relative;
+}
+
+.star-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: #f7f5f2;
+  position: absolute;
+  white-space: nowrap;
+}
+
+@keyframes binary-rotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.star-trail {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 250px;
+  height: 250px;
+  border: 1px dashed rgba(212, 175, 55, 0.15);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.star-trail-1 {
+  animation: trail-rotate-1 12s linear infinite;
+}
+
+.star-trail-2 {
+  width: 200px;
+  height: 200px;
+  animation: trail-rotate-2 9s linear infinite reverse;
+}
+
+@keyframes trail-rotate-1 {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes trail-rotate-2 {
+  from { transform: translate(-50%, -50%) rotate(360deg); }
+  to { transform: translate(-50%, -50%) rotate(0deg); }
+}
+
+.shooting-star {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #d4af37, transparent);
+  animation: shoot-across 4s ease-in-out infinite;
+  opacity: 0;
+}
+
+@keyframes shoot-across {
+  0% { top: 20%; left: 20%; opacity: 0; }
+  10% { opacity: 1; }
+  40% { top: 60%; left: 80%; opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* 阶段 6: 安娜（舞台聚光灯） */
+.stage-spotlight {
+  position: relative;
+  width: 300px;
+  height: 300px;
+}
+
+.spotlight-beam {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 200px;
+  background: linear-gradient(to bottom, rgba(212, 175, 55, 0.3), transparent);
+  clip-path: polygon(40% 0%, 60% 0%, 100% 100%, 0% 100%);
+  animation: beam-sway 5s ease-in-out infinite;
+}
+
+@keyframes beam-sway {
+  0%, 100% { transform: translateX(-50%) rotate(-5deg); }
+  50% { transform: translateX(-50%) rotate(5deg); }
+}
+
+.actress-silhouette {
+  position: absolute;
+  bottom: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 120px;
+  background: #1a1a1a;
+  clip-path: polygon(
+    50% 0%,
+    65% 15%,
+    70% 35%,
+    80% 50%,
+    70% 100%,
+    30% 100%,
+    20% 50%,
+    30% 35%,
+    35% 15%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.silhouette-inner {
+  width: 60px;
+  height: 60px;
+  background: #d4af37;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.6);
+  animation: actress-glow 3s ease-in-out infinite;
+}
+
+.actress-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: #f7f5f2;
+}
+
+@keyframes actress-glow {
+  0%, 100% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.6); }
+  50% { box-shadow: 0 0 50px rgba(212, 175, 55, 0.9); }
+}
+
+.stage-stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.stage-star {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #d4af37;
+  border-radius: 50%;
+  opacity: 0;
+  animation: stage-star-twinkle 2s ease-in-out infinite;
+}
+
+.stage-star-1 {
+  top: 10%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.stage-star-2 {
+  top: 15%;
+  right: 25%;
+  animation-delay: 0.7s;
+}
+
+.stage-star-3 {
+  top: 25%;
+  right: 15%;
+  animation-delay: 1.4s;
+}
+
+@keyframes stage-star-twinkle {
+  0%, 100% { opacity: 0; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.5); }
+}
+
+/* 阶段 8: 自由（光芒） */
 .freedom-rays {
   position: relative;
   width: 200px;
@@ -1042,6 +1314,14 @@ onMounted(() => {
 
   .chandelier-container {
     transform: scale(0.8);
+  }
+
+  .star-system-nina {
+    transform: scale(0.7);
+  }
+
+  .stage-spotlight {
+    transform: scale(0.75);
   }
 
   .orbit-system {
