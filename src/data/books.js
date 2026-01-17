@@ -375,7 +375,8 @@ export const booksData = [
     interactiveType: 'transformative',
     vibeDescription: '关于人性与自我认知的寓言',
     footerText: '李徵',
-    moodScore: 5.8
+    moodScore: 5.8,
+    worldComponent: 'MountainMoonWorld'
   },
   // VOL.017 - 射雕英雄传
   {

@@ -95,6 +95,11 @@ const routes = [
     path: '/world/q84',
     name: 'Q84World',
     component: () => import('../worlds/Q84World.vue')
+  },
+  {
+    path: '/world/mountain-moon',
+    name: 'MountainMoonWorld',
+    component: () => import('../worlds/MountainMoonWorld.vue')
   }
 ]
 
