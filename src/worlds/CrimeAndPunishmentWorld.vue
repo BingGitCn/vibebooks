@@ -20,95 +20,117 @@
 
     <!-- 主容器 -->
     <div class="main-container" @click="nextStage">
-      <!-- 几何符号背景层 -->
-      <div class="geometry-background">
-        <!-- 阶段 1: 孤立的黑圆 -->
-        <transition name="geometry-fade">
-          <div v-if="currentStage === 1" class="geometry-stage stage-1">
-            <div class="black-circle"></div>
-          </div>
-        </transition>
-
-        <!-- 阶段 2: 黑圆 + 白点 -->
-        <transition name="geometry-fade">
-          <div v-if="currentStage === 2" class="geometry-stage stage-2">
-            <div class="black-circle">
-              <div class="white-dot"></div>
+      <!-- 创意几何背景 -->
+      <div class="creative-background">
+        <!-- 阶段 1: 深渊 -->
+        <transition name="stage-transition">
+          <div v-if="currentStage === 1" class="stage-wrapper stage-1">
+            <div class="abyss-circle">
+              <div class="abyss-inner"></div>
             </div>
+            <!-- 呼吸光环 -->
+            <div class="breath-ring"></div>
+            <div class="breath-ring ring-delay-1"></div>
+            <div class="breath-ring ring-delay-2"></div>
           </div>
         </transition>
 
-        <!-- 阶段 3: 黑圆 + 三角形（斧头） -->
-        <transition name="geometry-fade">
-          <div v-if="currentStage === 3" class="geometry-stage stage-3">
-            <div class="black-circle"></div>
-            <div class="axe-triangle"></div>
-          </div>
-        </transition>
-
-        <!-- 阶段 4: 三角形刺入圆，红色裂痕 -->
-        <transition name="geometry-fade">
-          <div v-if="currentStage === 4" class="geometry-stage stage-4">
-            <div class="cracked-circle">
-              <svg class="crack-svg" viewBox="0 0 200 200">
-                <path
-                  d="M100,100 L100,20"
-                  stroke="#8B0000"
-                  stroke-width="0.5"
-                  fill="none"
-                  class="crack-line"
-                />
-                <path
-                  d="M100,100 L60,40"
-                  stroke="#8B0000"
-                  stroke-width="0.5"
-                  fill="none"
-                  class="crack-line crack-delay-1"
-                />
-                <path
-                  d="M100,100 L140,40"
-                  stroke="#8B0000"
-                  stroke-width="0.5"
-                  fill="none"
-                  class="crack-line crack-delay-2"
-                />
+        <!-- 阶段 2: 裂缝 -->
+        <transition name="stage-transition">
+          <div v-if="currentStage === 2" class="stage-wrapper stage-2">
+            <div class="mirror-circle">
+              <svg class="cracks-svg" viewBox="0 0 400 400">
+                <path class="crack crack-1" d="M200,200 L200,50" />
+                <path class="crack crack-2" d="M200,200 L80,80" />
+                <path class="crack crack-3" d="M200,200 L320,80" />
+                <path class="crack crack-4" d="M200,200 L50,200" />
+                <path class="crack crack-5" d="M200,200 L350,200" />
+                <path class="crack crack-6" d="M200,200 L100,320" />
+                <path class="crack crack-7" d="M200,200 L300,320" />
               </svg>
             </div>
-            <div class="axe-triangle axe-embedded"></div>
+            <!-- 金色闪光 -->
+            <div class="golden-flash"></div>
           </div>
         </transition>
 
-        <!-- 阶段 5: 双圆对立 -->
-        <transition name="geometry-fade">
-          <div v-if="currentStage === 5" class="geometry-stage stage-5">
-            <div class="dual-circle-container">
-              <div class="circle-black"></div>
-              <div class="circle-white"></div>
+        <!-- 阶段 3: 斧影 -->
+        <transition name="stage-transition">
+          <div v-if="currentStage === 3" class="stage-wrapper stage-3">
+            <div class="falling-axe">
+              <div class="axe-shadow"></div>
+              <div class="axe-triangle"></div>
             </div>
+            <!-- 红色残影轨迹 -->
+            <div class="blood-trail"></div>
           </div>
         </transition>
 
-        <!-- 阶段 6: 双圆融合，灰蓝色 -->
-        <transition name="geometry-fade">
-          <div v-if="currentStage === 6" class="geometry-stage stage-6">
-            <div class="merged-circle"></div>
+        <!-- 阶段 4: 破碎 -->
+        <transition name="stage-transition">
+          <div v-if="currentStage === 4" class="stage-wrapper stage-4">
+            <div class="shattered-container">
+              <div class="shard shard-1"></div>
+              <div class="shard shard-2"></div>
+              <div class="shard shard-3"></div>
+              <div class="shard shard-4"></div>
+              <div class="shard shard-5"></div>
+              <div class="shard shard-6"></div>
+              <div class="shard shard-7"></div>
+              <div class="shard shard-8"></div>
+            </div>
+            <!-- 红色雾气 -->
+            <div class="blood-mist"></div>
+          </div>
+        </transition>
+
+        <!-- 阶段 5: 对峙 -->
+        <transition name="stage-transition">
+          <div v-if="currentStage === 5" class="stage-wrapper stage-5">
+            <div class="confrontation-container">
+              <div class="confront-circle circle-theory">
+                <span class="circle-label">理论</span>
+              </div>
+              <div class="confront-circle circle-conscience">
+                <span class="circle-label">良知</span>
+              </div>
+            </div>
+            <!-- 碰撞波纹 -->
+            <div class="collision-wave"></div>
+          </div>
+        </transition>
+
+        <!-- 阶段 6: 光芒 -->
+        <transition name="stage-transition">
+          <div v-if="currentStage === 6" class="stage-wrapper stage-6">
+            <div class="redemption-container">
+              <div class="light-ray ray-1"></div>
+              <div class="light-ray ray-2"></div>
+              <div class="light-ray ray-3"></div>
+              <div class="light-ray ray-4"></div>
+              <div class="light-ray ray-5"></div>
+            </div>
+            <!-- 温暖光晕 -->
+            <div class="warm-glow"></div>
           </div>
         </transition>
       </div>
 
       <!-- 金句层 -->
-      <div class="quote-container">
-        <transition name="quote-fade" mode="out-in">
-          <div :key="currentStage" class="quote-content">
-            <!-- 金句逐行显示 -->
-            <p
-              v-for="(line, index) in currentQuote.lines"
-              :key="index"
-              class="quote-line"
-              :style="{ animationDelay: index * 0.3 + 's' }"
-            >
-              {{ line }}
-            </p>
+      <div class="quote-layer">
+        <transition name="quote-transition" mode="out-in">
+          <div :key="currentStage" class="quote-container">
+            <!-- 金句单词逐个出现 -->
+            <div class="quote-words">
+              <span
+                v-for="(word, index) in currentQuote.words"
+                :key="index"
+                class="quote-word"
+                :style="{ animationDelay: index * 0.15 + 's' }"
+              >
+                {{ word }}
+              </span>
+            </div>
 
             <!-- 副标题 -->
             <p class="quote-subtitle">{{ currentQuote.subtitle }}</p>
@@ -138,61 +160,38 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const showWarp = ref(true)
-const currentStage = ref(0)
+const currentStage = ref(1)
 
-// 金句数据
+// 金句数据（拆分为单词）
 const quotes = [
   {
-    lines: [
-      '你知道吗，杜尼娅，',
-      '我是一个可怕的人。'
-    ],
+    words: ['我', '是一个', '可怕的人'],
     subtitle: '圣彼得堡 · 闷热的夏天'
   },
   {
-    lines: [
-      '人分两类：',
-      '平凡人只能繁衍同类，',
-      '不平凡的人则有权力犯罪。'
-    ],
+    words: ['人分两类：', '平凡人', '只能', '繁衍同类'],
     subtitle: '超人理论 · 理性的陷阱'
   },
   {
-    lines: [
-      '我在问自己：',
-      '我是一只颤抖的生物，',
-      '还是我有权？'
-    ],
+    words: ['我', '是一只', '颤抖的生物', '还是', '我有权？'],
     subtitle: '老太婆 · 一个虱子'
   },
   {
-    lines: [
-      '那不是我杀了她，',
-      '是我的理论杀了她。'
-    ],
+    words: ['那不是我', '杀了她', '是我的', '理论', '杀了她'],
     subtitle: '心跳声 · 震耳欲聋'
   },
   {
-    lines: [
-      '最可怕的惩罚，',
-      '不是流放西伯利亚，',
-      '而是良心的谴责。'
-    ],
+    words: ['最可怕的惩罚', '是', '良心的谴责'],
     subtitle: '波尔菲里 · 心理博弈'
   },
   {
-    lines: [
-      '生命是上帝赐予的礼物，',
-      '我们没有权利剥夺它，',
-      '包括我们自己的。'
-    ],
+    words: ['生命', '是上帝', '赐予的礼物'],
     subtitle: '西伯利亚 · 新生'
   }
 ]
 
 // 当前金句
 const currentQuote = computed(() => {
-  if (currentStage.value === 0) return quotes[0]
   return quotes[currentStage.value - 1] || quotes[0]
 })
 
@@ -213,7 +212,6 @@ const exitWorld = () => {
 onMounted(() => {
   setTimeout(() => {
     showWarp.value = false
-    currentStage.value = 1
   }, 1800)
 })
 </script>
@@ -274,41 +272,15 @@ onMounted(() => {
 }
 
 @keyframes warp-expand {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    transform: scale(3);
-    opacity: 0;
-  }
+  0% { transform: scale(0); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: scale(3); opacity: 0; }
 }
 
 @keyframes warp-fade {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  50% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-.warp-enter-active,
-.warp-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.warp-enter-from,
-.warp-leave-to {
-  opacity: 0;
+  0% { opacity: 0; transform: translateY(20px); }
+  50% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; }
 }
 
 /* === 返回按钮 === */
@@ -356,8 +328,8 @@ onMounted(() => {
   cursor: pointer;
 }
 
-/* === 几何背景层 === */
-.geometry-background {
+/* === 创意背景层 === */
+.creative-background {
   position: absolute;
   top: 0;
   left: 0;
@@ -370,167 +342,478 @@ onMounted(() => {
   pointer-events: none;
 }
 
-.geometry-stage {
+.stage-wrapper {
   position: absolute;
-  top: 25%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* 阶段 1: 孤立的黑圆 */
-.black-circle {
-  width: 100px;
-  height: 100px;
+/* 阶段 1: 深渊 */
+.abyss-circle {
+  width: 150px;
+  height: 150px;
   background: #1a1a1a;
   border-radius: 50%;
-  animation: pulse-slow 4s ease-in-out infinite;
+  animation: abyss-pulse 3s ease-in-out infinite;
+  box-shadow: 0 0 60px rgba(26, 26, 26, 0.3);
 }
 
-/* 阶段 2: 黑圆 + 白点 */
-.white-dot {
+.abyss-inner {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 20px;
-  height: 20px;
-  background: #f7f5f2;
-  border-radius: 50%;
-  animation: pulse-inner 2s ease-in-out infinite;
-}
-
-/* 阶段 3: 斧头（三角形） */
-.axe-triangle {
-  position: absolute;
-  right: -40px;
-  width: 0;
-  height: 0;
-  border-left: 30px solid transparent;
-  border-right: 30px solid transparent;
-  border-bottom: 50px solid #1a1a1a;
-  transform: rotate(45deg);
-  animation: float-slow 6s ease-in-out infinite;
-}
-
-/* 阶段 4: 裂痕圆 */
-.cracked-circle {
   width: 100px;
   height: 100px;
-  background: #1a1a1a;
+  background: #0a0a0a;
   border-radius: 50%;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  animation: abyss-inner-pulse 3s ease-in-out infinite reverse;
 }
 
-.crack-svg {
+.breath-ring {
   position: absolute;
   width: 200px;
   height: 200px;
-  animation: crack-draw 1s ease-out forwards;
+  border: 1px solid rgba(26, 26, 26, 0.1);
+  border-radius: 50%;
+  animation: breath-expand 4s ease-out infinite;
 }
 
-.crack-line {
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  animation: crack-appear 0.8s ease-out forwards;
+.ring-delay-1 { animation-delay: 1s; }
+.ring-delay-2 { animation-delay: 2s; }
+
+@keyframes abyss-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.85); }
 }
 
-.crack-delay-1 {
-  animation-delay: 0.2s;
+@keyframes abyss-inner-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.15); }
 }
 
-.crack-delay-2 {
-  animation-delay: 0.4s;
+@keyframes breath-expand {
+  0% { transform: scale(1); opacity: 0; }
+  50% { opacity: 0.3; }
+  100% { transform: scale(2); opacity: 0; }
 }
 
-@keyframes crack-appear {
-  to {
-    stroke-dashoffset: 0;
-  }
+/* 阶段 2: 裂缝 */
+.mirror-circle {
+  width: 150px;
+  height: 150px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0 0 40px rgba(212, 175, 55, 0.2);
 }
 
-.axe-embedded {
+.cracks-svg {
   position: absolute;
-  border-bottom-color: #8B0000;
-  right: -30px;
-  transform: rotate(45deg) scale(0.8);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
 }
 
-/* 阶段 5: 双圆对立 */
-.dual-circle-container {
+.crack {
+  stroke: #d4af37;
+  stroke-width: 1;
+  fill: none;
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: crack-draw 1.5s ease-out forwards;
+}
+
+.crack-1 { animation-delay: 0s; }
+.crack-2 { animation-delay: 0.2s; }
+.crack-3 { animation-delay: 0.4s; }
+.crack-4 { animation-delay: 0.6s; }
+.crack-5 { animation-delay: 0.8s; }
+.crack-6 { animation-delay: 1s; }
+.crack-7 { animation-delay: 1.2s; }
+
+@keyframes crack-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+.golden-flash {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.3) 0%, transparent 70%);
+  animation: flash-pulse 2s ease-in-out infinite;
+}
+
+@keyframes flash-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* 阶段 3: 斧影 */
+.falling-axe {
+  position: relative;
+  width: 100px;
+  height: 150px;
+}
+
+.axe-triangle {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 40px solid transparent;
+  border-right: 40px solid transparent;
+  border-bottom: 70px solid #1a1a1a;
+  animation: axe-fall 3s ease-in-out infinite;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+}
+
+.axe-shadow {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 40px solid transparent;
+  border-right: 40px solid transparent;
+  border-bottom: 70px solid rgba(0, 0, 0, 0.2);
+  animation: axe-shadow-fall 3s ease-in-out infinite;
+}
+
+.blood-trail {
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 200px;
+  background: linear-gradient(to bottom, transparent, rgba(139, 0, 0, 0.3));
+  animation: trail-drip 3s ease-in-out infinite;
+}
+
+@keyframes axe-fall {
+  0%, 100% { transform: translateX(-50%) translateY(-50px); }
+  50% { transform: translateX(-50%) translateY(50px); }
+}
+
+@keyframes axe-shadow-fall {
+  0%, 100% { transform: translateX(-50%) translateY(-50px); opacity: 0.2; }
+  50% { transform: translateX(-50%) translateY(50px); opacity: 0.4; }
+}
+
+@keyframes trail-drip {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* 阶段 4: 破碎 */
+.shattered-container {
   position: relative;
   width: 200px;
-  height: 100px;
+  height: 200px;
+}
+
+.shard {
+  position: absolute;
+  background: #1a1a1a;
+  opacity: 0.9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.shard-1 {
+  width: 40px;
+  height: 40px;
+  top: 30%;
+  left: 30%;
+  transform: rotate(0deg);
+  animation: shard-fall-1 4s ease-in-out infinite;
+}
+
+.shard-2 {
+  width: 30px;
+  height: 50px;
+  top: 20%;
+  right: 25%;
+  transform: rotate(45deg);
+  animation: shard-fall-2 4.5s ease-in-out infinite;
+}
+
+.shard-3 {
+  width: 35px;
+  height: 35px;
+  bottom: 30%;
+  left: 20%;
+  transform: rotate(-30deg);
+  animation: shard-fall-3 5s ease-in-out infinite;
+}
+
+.shard-4 {
+  width: 45px;
+  height: 25px;
+  bottom: 25%;
+  right: 30%;
+  transform: rotate(15deg);
+  animation: shard-fall-4 4.2s ease-in-out infinite;
+}
+
+.shard-5 {
+  width: 25px;
+  height: 55px;
+  top: 40%;
+  left: 40%;
+  transform: rotate(60deg);
+  animation: shard-fall-5 5.5s ease-in-out infinite;
+}
+
+.shard-6 {
+  width: 38px;
+  height: 32px;
+  top: 25%;
+  left: 50%;
+  transform: rotate(-15deg);
+  animation: shard-fall-6 4.8s ease-in-out infinite;
+}
+
+.shard-7 {
+  width: 28px;
+  height: 42px;
+  bottom: 35%;
+  right: 40%;
+  transform: rotate(30deg);
+  animation: shard-fall-7 5.2s ease-in-out infinite;
+}
+
+.shard-8 {
+  width: 33px;
+  height: 38px;
+  top: 35%;
+  right: 20%;
+  transform: rotate(-45deg);
+  animation: shard-fall-8 4.6s ease-in-out infinite;
+}
+
+.blood-mist {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(139, 0, 0, 0.1) 0%, transparent 70%);
+  animation: mist-pulse 6s ease-in-out infinite;
+}
+
+@keyframes shard-fall-1 {
+  0%, 100% { transform: rotate(0deg) translateY(0); opacity: 0.9; }
+  50% { transform: rotate(180deg) translateY(20px); opacity: 0.6; }
+}
+
+@keyframes shard-fall-2 {
+  0%, 100% { transform: rotate(45deg) translateY(0); opacity: 0.9; }
+  50% { transform: rotate(225deg) translateY(30px); opacity: 0.5; }
+}
+
+@keyframes shard-fall-3 {
+  0%, 100% { transform: rotate(-30deg) translateY(0); opacity: 0.9; }
+  50% { transform: rotate(-210deg) translateY(25px); opacity: 0.7; }
+}
+
+@keyframes shard-fall-4 {
+  0%, 100% { transform: rotate(15deg) translateY(0); opacity: 0.9; }
+  50% { transform: rotate(195deg) translateY(15px); opacity: 0.8; }
+}
+
+@keyframes shard-fall-5 {
+  0%, 100% { transform: rotate(60deg) translateY(0); opacity: 0.9; }
+  50% { transform: rotate(240deg) translateY(35px); opacity: 0.4; }
+}
+
+@keyframes shard-fall-6 {
+  0%, 100% { transform: rotate(-15deg) translateY(0); opacity: 0.9; }
+  50% { transform: rotate(-195deg) translateY(20px); opacity: 0.6; }
+}
+
+@keyframes shard-fall-7 {
+  0%, 100% { transform: rotate(30deg) translateY(0); opacity: 0.9; }
+  50% { transform: rotate(210deg) translateY(28px); opacity: 0.5; }
+}
+
+@keyframes shard-fall-8 {
+  0%, 100% { transform: rotate(-45deg) translateY(0); opacity: 0.9; }
+  50% { transform: rotate(-225deg) translateY(22px); opacity: 0.7; }
+}
+
+@keyframes mist-pulse {
+  0%, 100% { opacity: 0.1; transform: scale(1); }
+  50% { opacity: 0.3; transform: scale(1.1); }
+}
+
+/* 阶段 5: 对峙 */
+.confrontation-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 40px;
 }
 
-.circle-black {
-  width: 80px;
-  height: 80px;
+.confront-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.circle-theory {
   background: #1a1a1a;
-  border-radius: 50%;
-  animation: pulse-opposite 4s ease-in-out infinite;
+  animation: confront-push-left 2s ease-in-out infinite;
 }
 
-.circle-white {
-  width: 80px;
-  height: 80px;
+.circle-conscience {
   background: #f7f5f2;
-  border: 2px solid #1a1a1a;
-  border-radius: 50%;
-  animation: pulse-opposite 4s ease-in-out infinite reverse;
+  border: 3px solid #1a1a1a;
+  animation: confront-push-right 2s ease-in-out infinite;
 }
 
-/* 阶段 6: 融合圆 */
-.merged-circle {
-  width: 120px;
-  height: 120px;
-  background: radial-gradient(circle, #4a7c9f 0%, #1a1a1a 100%);
+.circle-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.8;
+}
+
+.circle-theory .circle-label {
+  color: #f7f5f2;
+}
+
+.circle-conscience .circle-label {
+  color: #1a1a1a;
+}
+
+.collision-wave {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border: 2px solid rgba(139, 0, 0, 0.2);
   border-radius: 50%;
-  animation: merge-pulse 6s ease-in-out infinite;
+  animation: wave-expand 2s ease-out infinite;
+}
+
+@keyframes confront-push-left {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(20px); }
+}
+
+@keyframes confront-push-right {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-20px); }
+}
+
+@keyframes wave-expand {
+  0% { transform: scale(0.5); opacity: 0.5; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+/* 阶段 6: 光芒 */
+.redemption-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.light-ray {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 100px;
+  background: linear-gradient(to bottom, #4a7c9f, transparent);
+  transform-origin: top center;
+  opacity: 0.6;
+}
+
+.ray-1 { transform: translate(-50%, -50%) rotate(0deg); }
+.ray-2 { transform: translate(-50%, -50%) rotate(72deg); }
+.ray-3 { transform: translate(-50%, -50%) rotate(144deg); }
+.ray-4 { transform: translate(-50%, -50%) rotate(216deg); }
+.ray-5 { transform: translate(-50%, -50%) rotate(288deg); }
+
+.light-ray {
+  animation: ray-pulse 4s ease-in-out infinite;
+}
+
+.ray-1 { animation-delay: 0s; }
+.ray-2 { animation-delay: 0.8s; }
+.ray-3 { animation-delay: 1.6s; }
+.ray-4 { animation-delay: 2.4s; }
+.ray-5 { animation-delay: 3.2s; }
+
+@keyframes ray-pulse {
+  0%, 100% { opacity: 0.3; height: 80px; }
+  50% { opacity: 0.8; height: 120px; }
+}
+
+.warm-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(74, 124, 159, 0.2) 0%, transparent 70%);
+  animation: warm-breathe 6s ease-in-out infinite;
+}
+
+@keyframes warm-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 1; }
 }
 
 /* === 金句层 === */
-.quote-container {
-  position: relative;
+.quote-layer {
+  position: absolute;
+  bottom: 25%;
+  left: 0;
+  right: 0;
   z-index: 10;
-  max-width: 900px;
-  padding: 2rem;
-  text-align: center;
-  margin-top: 15vh;
-}
-
-.quote-content {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  justify-content: center;
+  padding: 0 2rem;
 }
 
-.quote-line {
+.quote-container {
+  text-align: center;
+  max-width: 900px;
+}
+
+.quote-words {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5em;
+  margin-bottom: 2rem;
+}
+
+.quote-word {
   font-family: 'Source Serif 4', serif;
   font-size: clamp(1.8rem, 4vw, 3rem);
   font-weight: 300;
   line-height: 1.6;
   letter-spacing: 0.1em;
   color: #1a1a1a;
-  margin: 0;
   opacity: 0;
-  animation: line-fade-in 1s ease-out forwards;
+  animation: word-fade-in 0.8s ease-out forwards;
 }
 
-@keyframes line-fade-in {
+@keyframes word-fade-in {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -544,22 +827,19 @@ onMounted(() => {
   letter-spacing: 0.3em;
   color: rgba(26, 26, 26, 0.5);
   text-transform: uppercase;
-  margin-top: 2rem;
-  margin-bottom: 0;
+  margin: 0;
   opacity: 0;
   animation: subtitle-fade-in 1s ease-out 0.5s forwards;
 }
 
 @keyframes subtitle-fade-in {
-  to {
-    opacity: 1;
-  }
+  to { opacity: 1; }
 }
 
 /* === 进度指示 === */
 .progress-container {
   position: absolute;
-  bottom: 10%;
+  bottom: 8%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -596,108 +876,63 @@ onMounted(() => {
   margin: 0;
 }
 
-/* === 动画关键帧 === */
-@keyframes pulse-slow {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-}
-
-@keyframes pulse-inner {
-  0%, 100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.2);
-    opacity: 1;
-  }
-}
-
-@keyframes float-slow {
-  0%, 100% {
-    transform: rotate(45deg) translateY(0);
-  }
-  50% {
-    transform: rotate(45deg) translateY(-10px);
-  }
-}
-
-@keyframes pulse-opposite {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-}
-
-@keyframes merge-pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.9;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 1;
-  }
-}
-
 /* === 过渡动画 === */
-.geometry-fade-enter-active,
-.geometry-fade-leave-active {
+.stage-transition-enter-active,
+.stage-transition-leave-active {
   transition: all 0.8s ease;
 }
 
-.geometry-fade-enter-from {
+.stage-transition-enter-from {
   opacity: 0;
   transform: scale(0.8);
 }
 
-.geometry-fade-leave-to {
+.stage-transition-leave-to {
   opacity: 0;
   transform: scale(1.2);
 }
 
-.quote-fade-enter-active,
-.quote-fade-leave-active {
+.quote-transition-enter-active,
+.quote-transition-leave-active {
   transition: all 0.6s ease;
 }
 
-.quote-fade-enter-from {
+.quote-transition-enter-from {
   opacity: 0;
   transform: translateY(20px);
 }
 
-.quote-fade-leave-to {
+.quote-transition-leave-to {
   opacity: 0;
   transform: translateY(-20px);
 }
 
+.warp-enter-active,
+.warp-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.warp-enter-from,
+.warp-leave-to {
+  opacity: 0;
+}
+
 /* === 响应式 === */
 @media (max-width: 1024px) {
-  .quote-line {
+  .quote-word {
     font-size: clamp(1.5rem, 3.5vw, 2.5rem);
   }
 
-  .black-circle,
-  .cracked-circle {
+  .abyss-circle,
+  .mirror-circle {
+    width: 120px;
+    height: 120px;
+  }
+
+  .confront-circle {
     width: 80px;
     height: 80px;
-  }
-
-  .circle-black,
-  .circle-white {
-    width: 60px;
-    height: 60px;
-  }
-
-  .merged-circle {
-    width: 100px;
-    height: 100px;
+    gap: 30px;
   }
 }
 
@@ -709,7 +944,7 @@ onMounted(() => {
     font-size: 0.6rem;
   }
 
-  .quote-line {
+  .quote-word {
     font-size: clamp(1.2rem, 4vw, 2rem);
     letter-spacing: 0.05em;
   }
@@ -719,27 +954,24 @@ onMounted(() => {
     margin-top: 1.5rem;
   }
 
-  .black-circle,
-  .cracked-circle {
-    width: 60px;
-    height: 60px;
+  .quote-layer {
+    bottom: 20%;
   }
 
-  .circle-black,
-  .circle-white {
-    width: 50px;
-    height: 50px;
-  }
-
-  .merged-circle {
+  .abyss-circle,
+  .mirror-circle {
     width: 80px;
     height: 80px;
   }
 
-  .axe-triangle {
-    border-left-width: 20px;
-    border-right-width: 20px;
-    border-bottom-width: 35px;
+  .confront-circle {
+    width: 60px;
+    height: 60px;
+    gap: 20px;
+  }
+
+  .circle-label {
+    font-size: 0.55rem;
   }
 
   .warp-circle {
@@ -754,6 +986,10 @@ onMounted(() => {
 
   .warp-text {
     font-size: 0.7rem;
+  }
+
+  .shard {
+    transform: scale(0.7);
   }
 }
 </style>
