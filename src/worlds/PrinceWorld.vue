@@ -1,580 +1,537 @@
 <template>
-  <div class="prince-universe">
-    <!-- 噪点纹理层 -->
-    <div class="noise-texture"></div>
+  <div class="sketchbook-world">
+    <!-- Paper Texture Background -->
+    <div class="paper-texture"></div>
 
-    <!-- 水平线纹理层 -->
-    <div class="lines-texture"></div>
-
-    <!-- 跃迁动画遮罩 -->
+    <!-- Warp Transition Animation -->
     <transition name="warp">
       <div v-if="showWarp" class="warp-overlay">
-        <div class="warp-circle">
-          <div class="warp-circle-inner"></div>
-        </div>
+        <div class="warp-circle"></div>
         <div class="warp-text">小王子</div>
       </div>
     </transition>
 
-    <!-- 左侧装饰文字 -->
-    <aside class="left-decoration">
-      <div class="vertical-text">LE PETIT PRINCE</div>
-      <div class="vertical-subtext">1943 · Antoine de Saint-Exupéry</div>
-    </aside>
+    <!-- Header Section -->
+    <header class="sketchbook-header">
+      <button class="back-btn wobbly-border" @click="exitWorld">
+        ← 返回宇宙
+      </button>
 
-    <!-- 返回按钮 -->
-    <button class="exit-btn" @click="exitWorld">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M19 12H5M12 19l-7-7 7-7"/>
-      </svg>
-      <span>Return</span>
-    </button>
-
-    <!-- 标题区 -->
-    <header class="universe-header" :class="{ blurred: selectedNode }">
-      <div class="header-decoration">
-        <div class="thick-line"></div>
-        <div class="small-square"></div>
+      <div class="title-section">
+        <h1 class="sketchbook-title">小王子</h1>
+        <p class="sketchbook-subtitle">Le Petit Prince · 1943</p>
+        <div class="hand-drawn-underline"></div>
       </div>
-      <h1 class="universe-title">小王子</h1>
-      <p class="universe-subtitle">几何宇宙 · 七种人生</p>
     </header>
 
-    <!-- 几何网络画布 -->
-    <div class="geometric-canvas" :class="{ blurred: selectedNode }">
-      <svg class="connections-layer" :viewBox="`0 0 ${canvasWidth} ${canvasHeight}`">
-        <line
-          v-for="conn in connections"
-          :key="conn.id"
-          :x1="conn.x1"
-          :y1="conn.y1"
-          :x2="conn.x2"
-          :y2="conn.y2"
-          class="connection-line"
-        />
-      </svg>
-
-      <!-- 几何节点 -->
-      <div
-        v-for="node in nodes"
-        :key="node.id"
-        class="geometric-node"
-        :class="{ 'node-dimmed': selectedNode && selectedNode.id !== node.id }"
-        :style="{
-          left: node.x + '%',
-          top: node.y + '%',
-          '--delay': node.animationDelay + 's'
-        }"
-        @click="selectNode(node)"
-      >
-        <svg class="geometry-shape" viewBox="0 0 100 100">
-          <template v-if="node.type === 'triangle'">
-            <polygon
-              points="50,15 85,85 15,85"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            />
-          </template>
-          <template v-else-if="node.type === 'square'">
-            <rect
-              x="20"
-              y="20"
-              width="60"
-              height="60"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            />
-          </template>
-          <template v-else-if="node.type === 'hexagon'">
-            <polygon
-              points="50,15 80,32.5 80,67.5 50,85 20,67.5 20,32.5"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            />
-          </template>
-          <template v-else-if="node.type === 'concentric'">
-            <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" stroke-width="2"/>
-            <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="1.5"/>
-          </template>
-          <template v-else-if="node.type === 'grid'">
-            <line x1="20" y1="35" x2="80" y2="35" stroke="currentColor" stroke-width="1.5"/>
-            <line x1="20" y1="50" x2="80" y2="50" stroke="currentColor" stroke-width="1.5"/>
-            <line x1="20" y1="65" x2="80" y2="65" stroke="currentColor" stroke-width="1.5"/>
-            <line x1="35" y1="20" x2="35" y2="80" stroke="currentColor" stroke-width="1.5"/>
-            <line x1="50" y1="20" x2="50" y2="80" stroke="currentColor" stroke-width="1.5"/>
-            <line x1="65" y1="20" x2="65" y2="80" stroke="currentColor" stroke-width="1.5"/>
-          </template>
-          <template v-else-if="node.type === 'diamond'">
-            <polygon
-              points="50,15 85,50 50,85 15,50"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            />
-          </template>
-          <template v-else-if="node.type === 'spiral'">
-            <path
-              d="M50,50 Q50,30 65,35 T80,50 T65,65 T50,80 T35,65 T20,50 T35,35 T50,20"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-          </template>
-          <template v-else-if="node.type === 'wave'">
-            <path d="M20,50 Q35,20 50,50 T80,50" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <path d="M20,35 Q35,5 50,35 T80,35" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
-            <path d="M20,65 Q35,35 50,65 T80,65" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
-          </template>
-        </svg>
-
-        <div class="node-label">
-          <span class="label-number">0{{ node.number }}</span>
-          <span class="label-name">{{ node.name }}</span>
-        </div>
+    <!-- Category Tabs -->
+    <div class="category-section">
+      <div class="tabs-container">
+        <button
+          v-for="category in categories"
+          :key="category.id"
+          class="category-tab wobbly-border"
+          :class="{ active: currentCategory === category.id }"
+          @click="switchCategory(category.id)"
+        >
+          <span class="tab-icon">{{ category.icon }}</span>
+          <span class="tab-label">{{ category.label }}</span>
+          <span class="tab-count">[{{ category.count }}]</span>
+        </button>
       </div>
     </div>
 
-    <!-- 几何展开叙事层 -->
-    <transition name="geometry-expand">
-      <div v-if="selectedNode" class="expanded-geometry" @click="closeExpanded">
-        <!-- 背景几何网格 -->
-        <div class="geometry-background">
-          <svg class="geometry-massive" viewBox="0 0 100 100">
-            <template v-if="selectedNode.type === 'triangle'">
-              <polygon
-                points="50,15 85,85 15,85"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="0.3"
-              />
-              <polygon
-                points="50,30 70,75 30,75"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="0.2"
-                opacity="0.5"
-              />
-              <polygon
-                points="50,45 55,65 45,65"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="0.1"
-                opacity="0.3"
-              />
-            </template>
-            <template v-else-if="selectedNode.type === 'square'">
-              <rect x="20" y="20" width="60" height="60" fill="none" stroke="currentColor" stroke-width="0.3"/>
-              <rect x="30" y="30" width="40" height="40" fill="none" stroke="currentColor" stroke-width="0.2" opacity="0.5"/>
-              <rect x="40" y="40" width="20" height="20" fill="none" stroke="currentColor" stroke-width="0.1" opacity="0.3"/>
-            </template>
-            <template v-else-if="selectedNode.type === 'hexagon'">
-              <polygon points="50,15 80,32.5 80,67.5 50,85 20,67.5 20,32.5" fill="none" stroke="currentColor" stroke-width="0.3"/>
-              <polygon points="50,30 65,40 65,60 50,70 35,60 35,40" fill="none" stroke="currentColor" stroke-width="0.2" opacity="0.5"/>
-            </template>
-            <template v-else-if="selectedNode.type === 'concentric'">
-              <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" stroke-width="0.3"/>
-              <circle cx="50" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="0.2" opacity="0.5"/>
-              <circle cx="50" cy="50" r="15" fill="none" stroke="currentColor" stroke-width="0.1" opacity="0.3"/>
-              <circle cx="50" cy="50" r="5" fill="currentColor" opacity="0.2"/>
-            </template>
-            <template v-else-if="selectedNode.type === 'grid'">
-              <line x1="20" y1="35" x2="80" y2="35" stroke="currentColor" stroke-width="0.3"/>
-              <line x1="20" y1="50" x2="80" y2="50" stroke="currentColor" stroke-width="0.3"/>
-              <line x1="20" y1="65" x2="80" y2="65" stroke="currentColor" stroke-width="0.3"/>
-              <line x1="35" y1="20" x2="35" y2="80" stroke="currentColor" stroke-width="0.3"/>
-              <line x1="50" y1="20" x2="50" y2="80" stroke="currentColor" stroke-width="0.3"/>
-              <line x1="65" y1="20" x2="65" y2="80" stroke="currentColor" stroke-width="0.3"/>
-            </template>
-            <template v-else-if="selectedNode.type === 'diamond'">
-              <polygon points="50,15 85,50 50,85 15,50" fill="none" stroke="currentColor" stroke-width="0.3"/>
-              <polygon points="50,30 70,50 50,70 30,50" fill="none" stroke="currentColor" stroke-width="0.2" opacity="0.5"/>
-            </template>
-            <template v-else-if="selectedNode.type === 'spiral'">
-              <path d="M50,50 Q50,30 65,35 T80,50 T65,65 T50,80 T35,65 T20,50 T35,35 T50,20" fill="none" stroke="currentColor" stroke-width="0.3" stroke-linecap="round"/>
-              <path d="M50,40 Q50,30 60,32 T70,40 T60,48 T50,45" fill="none" stroke="currentColor" stroke-width="0.2" opacity="0.5" stroke-linecap="round"/>
-            </template>
-            <template v-else-if="selectedNode.type === 'wave'">
-              <path d="M20,50 Q35,20 50,50 T80,50" fill="none" stroke="currentColor" stroke-width="0.3" stroke-linecap="round"/>
-              <path d="M20,35 Q35,5 50,35 T80,35" fill="none" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" opacity="0.5"/>
-              <path d="M20,65 Q35,35 50,65 T80,65" fill="none" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" opacity="0.5"/>
-            </template>
-          </svg>
-        </div>
+    <!-- Main Content Area -->
+    <main class="sketchbook-main">
+      <transition name="card-transition" mode="out-in">
+        <div
+          :key="`${currentCategory}-${currentIndex}`"
+          class="sketch-card-container"
+        >
+          <!-- Sketch Card -->
+          <div
+            class="sketch-card"
+            :class="cardColorClass"
+            @click="handleCardClick"
+          >
+            <!-- Tape Decorations -->
+            <div class="tape tape-top-left"></div>
+            <div class="tape tape-top-right"></div>
 
-        <!-- 内容容器 -->
-        <div class="expanded-content" @click.stop>
-          <!-- 中心几何标记 -->
-          <div class="center-geometry">
-            <svg class="center-shape" viewBox="0 0 100 100">
-              <template v-if="selectedNode.type === 'triangle'">
-                <polygon
-                  points="50,15 85,85 15,85"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  class="draw-animation"
-                />
-              </template>
-              <template v-else-if="selectedNode.type === 'square'">
-                <rect
-                  x="20"
-                  y="20"
-                  width="60"
-                  height="60"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  class="draw-animation"
-                />
-              </template>
-              <template v-else-if="selectedNode.type === 'hexagon'">
-                <polygon
-                  points="50,15 80,32.5 80,67.5 50,85 20,67.5 20,32.5"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  class="draw-animation"
-                />
-              </template>
-              <template v-else-if="selectedNode.type === 'concentric'">
-                <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" stroke-width="1.5" class="draw-animation"/>
-                <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="1" class="draw-animation-delayed"/>
-              </template>
-              <template v-else-if="selectedNode.type === 'grid'">
-                <line x1="20" y1="35" x2="80" y2="35" stroke="currentColor" stroke-width="1.5" class="draw-animation"/>
-                <line x1="20" y1="50" x2="80" y2="50" stroke="currentColor" stroke-width="1.5" class="draw-animation-delayed"/>
-                <line x1="20" y1="65" x2="80" y2="65" stroke="currentColor" stroke-width="1.5" class="draw-animation-delayed-2"/>
-                <line x1="35" y1="20" x2="35" y2="80" stroke="currentColor" stroke-width="1.5" class="draw-animation"/>
-                <line x1="50" y1="20" x2="50" y2="80" stroke="currentColor" stroke-width="1.5" class="draw-animation-delayed"/>
-                <line x1="65" y1="20" x2="65" y2="80" stroke="currentColor" stroke-width="1.5" class="draw-animation-delayed-2"/>
-              </template>
-              <template v-else-if="selectedNode.type === 'diamond'">
-                <polygon
-                  points="50,15 85,50 50,85 15,50"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  class="draw-animation"
-                />
-              </template>
-              <template v-else-if="selectedNode.type === 'spiral'">
-                <path
-                  d="M50,50 Q50,30 65,35 T80,50 T65,65 T50,80 T35,65 T20,50 T35,35 T50,20"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  class="draw-animation"
-                />
-              </template>
-              <template v-else-if="selectedNode.type === 'wave'">
-                <path d="M20,50 Q35,20 50,50 T80,50" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" class="draw-animation"/>
-                <path d="M20,35 Q35,5 50,35 T80,35" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5" class="draw-animation-delayed"/>
-                <path d="M20,65 Q35,35 50,65 T80,65" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.5" class="draw-animation-delayed-2"/>
-              </template>
-            </svg>
-          </div>
+            <!-- Tack Pin -->
+            <div class="tack-pin"></div>
 
-          <!-- 信息层 -->
-          <div class="info-layer">
-            <!-- 编号和名称 -->
-            <div class="node-header">
-              <span class="node-number-large">0{{ selectedNode.number }}</span>
-              <h2 class="node-title-large">{{ selectedNode.name }}</h2>
+            <!-- Card Header -->
+            <div class="card-header">
+              <span class="card-number">#{{ String(currentIndex + 1).padStart(2, '0') }}</span>
+              <div class="hand-drawn-divider"></div>
             </div>
 
-            <!-- 主题标签 -->
-            <div class="theme-pulse">
-              <span class="theme-dot"></span>
-              <span class="theme-text">{{ selectedNode.theme }}</span>
-            </div>
+            <!-- Card Content -->
+            <div class="card-content">
+              <!-- Symbol/Icon -->
+              <div class="card-symbol" :class="{ animated: symbolAnimated }">
+                {{ currentItem.symbol }}
+              </div>
 
-            <!-- 金句 -->
-            <div class="quote-container">
-              <p class="main-quote">{{ selectedNode.quote }}</p>
-            </div>
+              <!-- Title -->
+              <h2 class="card-title">{{ currentItem.title }}</h2>
 
-            <!-- 小王子的困惑 -->
-            <div class="reflection-box">
-              <span class="reflection-label">小王子的困惑</span>
-              <p class="reflection-text">{{ selectedNode.reflection }}</p>
-            </div>
-
-            <!-- 更多金句 -->
-            <transition name="quotes-reveal">
-              <div v-if="showExtended" class="extended-container">
-                <div class="extended-divider"></div>
-                <p
-                  v-for="(q, i) in selectedNode.extendedQuotes"
+              <!-- Tags -->
+              <div class="card-tags" v-if="currentItem.tags">
+                <span
+                  v-for="(tag, i) in currentItem.tags"
                   :key="i"
-                  class="extended-quote"
-                  :style="{ '--index': i }"
+                  class="tag wobbly-border"
                 >
-                  {{ q }}
+                  {{ tag }}
+                </span>
+              </div>
+
+              <!-- Main Quote -->
+              <div class="quote-section">
+                <p class="main-quote">{{ currentItem.quote }}</p>
+              </div>
+
+              <!-- Additional Content -->
+              <div v-if="currentItem.content" class="additional-content">
+                <p
+                  v-for="(line, i) in currentItem.content"
+                  :key="i"
+                  class="content-line"
+                  :style="{ '--delay': `${i * 0.1}s` }"
+                >
+                  {{ line }}
                 </p>
               </div>
-            </transition>
 
-            <!-- 操作区 -->
-            <div class="action-zone">
-              <button
-                class="toggle-btn"
-                @click="showExtended = !showExtended"
-              >
-                <span>{{ showExtended ? 'Show Less' : 'Explore More' }}</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path :d="showExtended ? 'M19 15l-7 7-7-7' : 'M19 9l-7 7-7-7'"/>
-                </svg>
-              </button>
+              <!-- Reflection for Characters -->
+              <div v-if="currentItem.reflection" class="reflection-box wobbly-border">
+                <span class="reflection-label">小王子的困惑</span>
+                <p class="reflection-text">{{ currentItem.reflection }}</p>
+              </div>
             </div>
 
-            <!-- 返回按钮 - 右上角固定 -->
-            <button class="expanded-close-btn" @click="closeExpanded">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            <!-- Post-it Note (Special) -->
+            <div v-if="currentItem.postit" class="postit-note">
+              <p class="postit-text">{{ currentItem.postit }}</p>
+            </div>
+
+            <!-- Arrow Doodle -->
+            <div v-if="currentItem.hasNext" class="arrow-doodle">
+              <svg viewBox="0 0 100 50">
+                <path d="M 10 25 Q 50 25 70 25 M 60 15 L 75 25 L 60 35" stroke="#2d2d2d" stroke-width="2" fill="none" stroke-linecap="round"/>
               </svg>
-              <span>Back</span>
-            </button>
+              <span class="arrow-text">点击继续</span>
+            </div>
           </div>
         </div>
+      </transition>
+    </main>
+
+    <!-- Navigation -->
+    <nav class="sketchbook-nav">
+      <button
+        class="nav-btn wobbly-border"
+        :disabled="currentIndex === 0"
+        @click="prevItem"
+      >
+        <svg viewBox="0 0 24 24" width="20" height="20">
+          <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" fill="none"/>
+        </svg>
+        <span>PREV</span>
+      </button>
+
+      <!-- Progress Indicators -->
+      <div class="progress-dots">
+        <div
+          v-for="i in currentItems.length"
+          :key="i"
+          class="progress-dot"
+          :class="{ active: currentIndex === i - 1 }"
+          @click="goToItem(i - 1)"
+        ></div>
       </div>
-    </transition>
+
+      <button
+        class="nav-btn wobbly-border"
+        :disabled="currentIndex === currentItems.length - 1"
+        @click="nextItem"
+      >
+        <span>NEXT</span>
+        <svg viewBox="0 0 24 24" width="20" height="20">
+          <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" fill="none"/>
+        </svg>
+      </button>
+    </nav>
+
+    <!-- Footer -->
+    <footer class="sketchbook-footer">
+      <div class="footer-number">VOL.034</div>
+      <div class="footer-dots">···</div>
+    </footer>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const selectedNode = ref(null)
-const showExtended = ref(false)
 const showWarp = ref(true)
+const currentCategory = ref('characters')
+const currentIndex = ref(0)
+const symbolAnimated = ref(false)
 
-const canvasWidth = 1000
-const canvasHeight = 700
+// Categories
+const categories = [
+  { id: 'characters', label: '人物', icon: '👤', count: 8 },
+  { id: 'planets', label: '星系', icon: '🪐', count: 4 },
+  { id: 'quotes', label: '金句', icon: '💭', count: 6 }
+]
 
-const nodes = [
+// Character Data (8)
+const characters = [
   {
-    id: 'prince',
-    number: 1,
-    name: '小王子',
-    type: 'triangle',
-    x: 50,
-    y: 50,
-    animationDelay: 0,
-    theme: '纯真 · 探索',
+    symbol: '△',
+    title: '小王子',
+    tags: ['纯真', '探索', '孤独'],
     quote: '所有的大人都曾经是小孩，虽然，只有少数人记得',
-    reflection: '我不懂为什么大人这么奇怪',
-    extendedQuotes: [
-      '有一天，我看了四十四次日落。',
-      '如果你说你在下午四点来，从三点钟开始，我就开始感觉很快乐，时间越临近，我就越来越感到快乐。',
+    content: [
+      '有一天，我看了四十四次日落',
       '真正重要的东西，用眼睛是看不见的',
-      '人只有用心灵才能看得清事物本质',
-      '你为你的玫瑰花费的时间，让她变得重要',
-      '驯服就是建立联系',
-      '星星发亮是为了让每一个人有一天都能找到属于自己的星星',
-      '在这个世界上，只有心灵才能洞察一切，肉眼是看不到本质的'
-    ]
+      '你为你的玫瑰花费的时间，让她变得重要'
+    ],
+    reflection: '我不懂为什么大人这么奇怪',
+    color: 'neutral'
   },
   {
-    id: 'king',
-    number: 2,
-    name: '国王',
-    type: 'square',
-    x: 20,
-    y: 25,
-    animationDelay: -1.5,
-    theme: '权威 · 控制',
+    symbol: '▢',
+    title: '国王',
+    tags: ['权威', '控制', '命令'],
     quote: '我只能命令我也能做到的事',
-    reflection: '为什么他不能命令太阳落下？',
-    extendedQuotes: [
-      '权威必须建立在能力之上',
+    content: [
       '审判自己比审判别人难多了',
-      '命令要有道理，否则没人会听'
-    ]
+      '权威必须建立在能力之上',
+      '如果我不命令太阳落下，它会在6点43分落下吗？'
+    ],
+    reflection: '为什么他不能命令太阳落下？',
+    color: 'neutral'
   },
   {
-    id: 'vain',
-    number: 3,
-    name: '爱慕虚荣的人',
-    type: 'hexagon',
-    x: 80,
-    y: 20,
-    animationDelay: -3,
-    theme: '虚荣 · 表面',
+    symbol: '⬡',
+    title: '爱慕虚荣的人',
+    tags: ['虚荣', '表面', '赞美'],
     quote: '啊！你崇拜我？',
-    reflection: '大人们真奇怪',
-    extendedQuotes: [
-      '虚荣就是只听得进赞美',
+    content: [
       '只有在别人面前，我才算得上真正英俊',
+      '虚荣就是只听得进赞美',
       '大人们只关心数字和外表'
-    ]
+    ],
+    reflection: '大人们真奇怪',
+    color: 'neutral'
   },
   {
-    id: 'drunkard',
-    number: 4,
-    name: '酒鬼',
-    type: 'concentric',
-    x: 15,
-    y: 60,
-    animationDelay: -4.5,
-    theme: '逃避 · 循环',
+    symbol: '◎',
+    title: '酒鬼',
+    tags: ['逃避', '循环', '遗忘'],
     quote: '我喝酒是为了遗忘',
-    reflection: '这比国王更奇怪',
-    extendedQuotes: [
+    content: [
       '我喝酒是为了遗忘我的羞愧',
       '遗忘什么？遗忘我喝酒这件事',
       '成人的世界充满了逃避'
-    ]
+    ],
+    reflection: '这比国王更奇怪',
+    color: 'neutral'
   },
   {
-    id: 'businessman',
-    number: 5,
-    name: '商人',
-    type: 'grid',
-    x: 85,
-    y: 55,
-    animationDelay: -6,
-    theme: '占有 · 计算',
+    symbol: '▦',
+    title: '商人',
+    tags: ['占有', '计算', '数字'],
     quote: '这颗星星属于我',
-    reflection: '拥有有什么用？',
-    extendedQuotes: [
+    content: [
       '我有五百三十二万一千六百二十七颗星星',
       '拥有不代表有用',
       '严肃的人只关心数字'
-    ]
+    ],
+    reflection: '拥有有什么用？',
+    color: 'neutral'
   },
   {
-    id: 'fox',
-    number: 6,
-    name: '狐狸',
-    type: 'diamond',
-    x: 50,
-    y: 85,
-    animationDelay: -7.5,
-    theme: '驯服 · 联结',
+    symbol: '◇',
+    title: '狐狸',
+    tags: ['驯服', '联结', '秘密'],
     quote: '驯服就是建立联系',
-    reflection: '我终于明白玫瑰对我的意义',
-    extendedQuotes: [
+    content: [
       '只有用心才能看清事物本质',
       '你永远要对你驯服过的东西负责',
       '正是你为玫瑰花费的时间，让她变得重要'
-    ]
+    ],
+    reflection: '我终于明白玫瑰对我的意义',
+    postit: '请你驯服我吧',
+    color: 'yellow'
   },
   {
-    id: 'rose',
-    number: 7,
-    name: '玫瑰',
-    type: 'spiral',
-    x: 75,
-    y: 75,
-    animationDelay: -9,
-    theme: '爱 · 骄傲',
+    symbol: '◌',
+    title: '玫瑰',
+    tags: ['爱', '骄傲', '刺'],
     quote: '我不笨，但我太骄傲了',
-    reflection: '我不懂怎么爱她',
-    extendedQuotes: [
+    content: [
       '你驯服了我，现在我们互相不可缺少',
       '骄傲是爱的敌人',
       '我要用我的刺来保护自己'
-    ]
+    ],
+    reflection: '我不懂怎么爱她',
+    color: 'red'
   },
   {
-    id: 'snake',
-    number: 8,
-    name: '蛇',
-    type: 'wave',
-    x: 25,
-    y: 80,
-    animationDelay: -10.5,
-    theme: '离别 · 永恒',
+    symbol: '〰',
+    title: '蛇',
+    tags: ['离别', '永恒', '回归'],
     quote: '如果你想念我，就看看星星',
-    reflection: '我要回到我的星球了',
-    extendedQuotes: [
+    content: [
       '对于真心喜爱的人，星星是会笑的',
-      '所有的大人都曾经是小孩',
-      '身体的重量太轻了，带不动这个身体'
-    ]
+      '身体的重量太轻了，带不动这个身体',
+      '我太远了，我无法带着这个身体'
+    ],
+    reflection: '我要回到我的星球了',
+    color: 'neutral'
   }
 ]
 
-const connections = [
-  { id: '1-2', x1: 500, y1: 350, x2: 200, y2: 175 },
-  { id: '1-3', x1: 500, y1: 350, x2: 800, y2: 140 },
-  { id: '1-4', x1: 500, y1: 350, x2: 150, y2: 420 },
-  { id: '1-5', x1: 500, y1: 350, x2: 850, y2: 385 },
-  { id: '1-6', x1: 500, y1: 350, x2: 500, y2: 595 },
-  { id: '6-7', x1: 500, y1: 595, x2: 750, y2: 525 },
-  { id: '6-8', x1: 500, y1: 595, x2: 250, y2: 560 }
+// Planet Data (4)
+const planets = [
+  {
+    symbol: 'B-612',
+    title: '小王子的星球',
+    tags: ['家园', '玫瑰', '日落'],
+    quote: '在这个小小的星球上，只要挪动椅子，一天就能看四十四次日落',
+    content: [
+      '星球上有两座活火山，一座死火山',
+      '有可怕的猴面包树，必须及时清除',
+      '还有一朵骄傲的玫瑰',
+      '那么小，那么孤单，却又那么温暖'
+    ],
+    color: 'neutral'
+  },
+  {
+    symbol: '325',
+    title: '国王的星球',
+    tags: ['权威', '命令', '空旷'],
+    quote: '审判自己比审判别人难多了',
+    content: [
+      '星球上只有国王一个人',
+      '他以为自己统治着宇宙',
+      '但他连命令太阳落下的能力都没有'
+    ],
+    color: 'neutral'
+  },
+  {
+    symbol: '∞',
+    title: '商人的星球',
+    tags: ['计算', '占有', '星星'],
+    quote: '我有五百三十二万一千六百二十七颗星星',
+    content: [
+      '他忙着计算星星的数量',
+      '以为在纸上写下数字就拥有了星星',
+      '但从来不曾真正欣赏过星空'
+    ],
+    color: 'neutral'
+  },
+  {
+    symbol: '🌍',
+    title: '地球',
+    tags: ['人类', '花园', '相遇'],
+    quote: '沙漠之所以美丽，是因为在某个角落藏着一口水井',
+    content: [
+      '这里有五千朵玫瑰',
+      '这里有会说话的狐狸',
+      '这里有让你流泪的铁路列车',
+      '这里有需要用心去发现的一切'
+    ],
+    color: 'neutral'
+  }
 ]
 
-const selectNode = (node) => {
-  selectedNode.value = node
-  showExtended.value = false
+// Quote Data (6)
+const quotes = [
+  {
+    symbol: '🌹',
+    title: '关于爱',
+    quote: '你为你的玫瑰花费的时间，让她变得重要',
+    content: [
+      '正是你为玫瑰花费的时间，让她变得重要',
+      '你要永远为你驯服过的东西负责',
+      '你要为你玫瑰负责'
+    ],
+    color: 'red'
+  },
+  {
+    symbol: '🦊',
+    title: '关于驯服',
+    quote: '驯服就是建立联系',
+    content: [
+      '驯服的意思是"建立关系"',
+      '驯服之前，你只是一个小男孩，和其他成千上万的小男孩没有区别',
+      '驯服之后，你就是世界上唯一的了'
+    ],
+    color: 'yellow'
+  },
+  {
+    symbol: '👁️',
+    title: '关于本质',
+    quote: '只有用心才能看得清，本质的东西用眼睛是看不见的',
+    content: [
+      '真正重要的东西，用眼睛是看不见的',
+      '人只有用心灵才能看得清事物本质',
+      '眼睛是盲目的，要用心去寻找'
+    ],
+    color: 'neutral'
+  },
+  {
+    symbol: '⭐',
+    title: '关于星星',
+    quote: '星星发亮是为了让每一个人有一天都能找到属于自己的星星',
+    content: [
+      '对于爱星空的人，星星是会笑的',
+      '对于爱旅行的人，星星是向导',
+      '对于学者，星星是难题',
+      '对于商人，星星是财富',
+      '但对于小王子，星星就是玫瑰'
+    ],
+    color: 'neutral'
+  },
+  {
+    symbol: '🌅',
+    title: '关于孤独',
+    quote: '有一天，我看了四十四次日落',
+    content: [
+      '人在难过的时候，就爱看日落',
+      '你看过四十四次日落吗？',
+      '那时候的我太年轻，不懂得怎么去爱'
+    ],
+    color: 'neutral'
+  },
+  {
+    symbol: '👶',
+    title: '关于长大',
+    quote: '所有的大人都曾经是小孩，虽然，只有少数人记得',
+    content: [
+      '大人只关心数字、年龄、金钱、权力',
+      '他们从来不问："他说话的声音好听吗？他喜欢捉蝴蝶吗？"',
+      '如果你对大人说你看到一栋粉红色的砖房，窗户边有天竺葵，屋顶有鸽子',
+      '他们想象不出来',
+      '但如果你说："我看到了一栋价值十万法郎的房子"',
+      '他们会惊叹："多美啊！"'
+    ],
+    color: 'neutral'
+  }
+]
+
+// Computed
+const currentItems = computed(() => {
+  switch (currentCategory.value) {
+    case 'characters': return characters
+    case 'planets': return planets
+    case 'quotes': return quotes
+    default: return characters
+  }
+})
+
+const currentItem = computed(() => {
+  return currentItems.value[currentIndex.value] || characters[0]
+})
+
+const cardColorClass = computed(() => {
+  if (!currentItem.value.color) return ''
+  return `color-${currentItem.value.color}`
+})
+
+// Methods
+const switchCategory = (categoryId) => {
+  currentCategory.value = categoryId
+  currentIndex.value = 0
+  symbolAnimated.value = false
+  setTimeout(() => {
+    symbolAnimated.value = true
+  }, 100)
 }
 
-const closeExpanded = () => {
-  selectedNode.value = null
-  showExtended.value = false
+const nextItem = () => {
+  if (currentIndex.value < currentItems.value.length - 1) {
+    currentIndex.value++
+    triggerSymbolAnimation()
+  }
+}
+
+const prevItem = () => {
+  if (currentIndex.value > 0) {
+    currentIndex.value--
+    triggerSymbolAnimation()
+  }
+}
+
+const goToItem = (index) => {
+  currentIndex.value = index
+  triggerSymbolAnimation()
+}
+
+const handleCardClick = () => {
+  if (currentItem.value.hasNext) {
+    nextItem()
+  }
+}
+
+const triggerSymbolAnimation = () => {
+  symbolAnimated.value = false
+  setTimeout(() => {
+    symbolAnimated.value = true
+  }, 100)
 }
 
 const exitWorld = () => {
   router.push('/universe')
 }
 
-// 页面加载时的跃迁动画
 onMounted(() => {
   setTimeout(() => {
     showWarp.value = false
   }, 1800)
+
+  setTimeout(() => {
+    symbolAnimated.value = true
+  }, 2000)
 })
 </script>
 
 <style scoped>
-.prince-universe {
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Patrick+Hand&display=swap');
+
+/* ========== Base Layout ========== */
+.sketchbook-world {
   min-height: 100vh;
-  background: #f7f5f2;
+  background: #fdfbf7;
   position: relative;
   overflow-x: hidden;
+  font-family: 'Patrick Hand', cursive;
 }
 
-/* ========== 纹理层 ========== */
-.noise-texture {
+/* Paper Texture Background */
+.paper-texture {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  background-image:
+    radial-gradient(circle, #e5e0d8 1px, transparent 1px),
+    linear-gradient(to right, rgba(0,0,0,0.02) 1px, transparent 1px);
+  background-size: 24px 24px, 100% 2px;
   pointer-events: none;
-  z-index: 1;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  opacity: 0.02;
+  z-index: 0;
 }
 
-.lines-texture {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 2;
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 1px,
-    #000 1px,
-    #000 2px
-  );
-  background-size: 100% 4px;
-  opacity: 0.015;
-}
-
-/* ========== 跃迁动画 ========== */
+/* ========== Warp Animation ========== */
 .warp-overlay {
   position: fixed;
   top: 0;
@@ -585,74 +542,45 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  background: #f7f5f2;
+  background: #fdfbf7;
 }
 
 .warp-circle {
   width: 300px;
   height: 300px;
-  border: 1px solid rgba(26, 26, 26, 0.2);
+  border: 3px solid #2d2d2d;
   border-radius: 50%;
-  position: relative;
-  animation: warp-expand 1.5s ease-out forwards;
-}
-
-.warp-circle-inner {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 200px;
-  height: 200px;
-  border: 1px solid rgba(26, 26, 26, 0.3);
-  border-radius: 50%;
-  animation: warp-pulse 1s ease-in-out infinite;
+  animation: wobble-expand 1.5s ease-out forwards;
 }
 
 .warp-text {
   position: absolute;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 0.9rem;
-  letter-spacing: 0.3em;
-  color: rgba(26, 26, 26, 0.8);
-  animation: warp-fade 1.5s ease-out forwards;
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #2d2d2d;
+  animation: fade-in-out 1.5s ease-out forwards;
 }
 
-@keyframes warp-expand {
+@keyframes wobble-expand {
   0% {
-    transform: scale(0);
+    transform: scale(0) rotate(0deg);
     opacity: 0;
   }
   50% {
     opacity: 1;
+    transform: scale(0.5) rotate(180deg);
   }
   100% {
-    transform: scale(3);
+    transform: scale(3) rotate(360deg);
     opacity: 0;
   }
 }
 
-@keyframes warp-pulse {
-  0%, 100% {
-    transform: translate(-50%, -50%) scale(1);
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.1);
-  }
-}
-
-@keyframes warp-fade {
-  0% {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  50% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  100% {
-    opacity: 0;
-  }
+@keyframes fade-in-out {
+  0% { opacity: 0; transform: translateY(20px); }
+  50% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; }
 }
 
 .warp-enter-active,
@@ -665,537 +593,323 @@ onMounted(() => {
   opacity: 0;
 }
 
-/* ========== 装饰文字 ========== */
-.left-decoration {
-  position: fixed;
-  top: 50%;
-  left: 2rem;
-  transform: translateY(-50%);
-  z-index: 5;
-  pointer-events: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
+/* ========== Header ========== */
+.sketchbook-header {
+  position: relative;
+  z-index: 10;
+  padding: 2rem;
+  text-align: center;
 }
 
-.vertical-text {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.3em;
-  color: #000000;
-  opacity: 0.12;
-  text-transform: uppercase;
-}
-
-.vertical-subtext {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  font-family: 'Source Serif 4', Georgia, serif;
-  font-size: 0.6rem;
-  font-weight: 400;
-  font-style: italic;
-  letter-spacing: 0.15em;
-  color: #525252;
-  opacity: 0.15;
-}
-
-/* ========== 返回按钮 ========== */
-.exit-btn {
+.back-btn {
   position: fixed;
   top: 2rem;
   left: 2rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 2rem;
-  background: #000000;
-  border: none;
-  color: #FFFFFF;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  padding: 0.75rem 1.5rem;
+  background: #fff9c4;
+  border: 3px solid #2d2d2d;
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #2d2d2d;
   cursor: pointer;
-  transition: all 0.1s;
+  box-shadow: 4px 4px 0px 0px #2d2d2d;
+  transition: all 100ms;
   z-index: 100;
 }
 
-.exit-btn:hover {
-  background: #FFFFFF;
-  color: #000000;
-  box-shadow: inset 0 0 0 2px #000000;
+.back-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px #2d2d2d;
 }
 
-.exit-btn svg {
-  width: 18px;
-  height: 18px;
+.title-section {
+  margin-top: 4rem;
 }
 
-/* ========== 标题区 ========== */
-.universe-header {
-  text-align: center;
-  margin-bottom: 3rem;
-  position: relative;
-  z-index: 10;
-  padding-top: 6rem;
-  transition: filter 0.6s ease;
-}
-
-.universe-header.blurred {
-  filter: blur(8px);
-  opacity: 0.3;
-}
-
-.header-decoration {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.thick-line {
-  width: 120px;
-  height: 4px;
-  background: #000000;
-}
-
-.small-square {
-  width: 12px;
-  height: 12px;
-  border: 3px solid #000000;
-}
-
-.universe-title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(2.5rem, 6vw, 4rem);
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: #000000;
-  margin-bottom: 1rem;
-}
-
-.universe-subtitle {
-  font-family: 'Source Serif 4', Georgia, serif;
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  font-weight: 400;
-  font-style: italic;
-  letter-spacing: 0.15em;
-  color: #525252;
-}
-
-/* ========== 几何画布 ========== */
-.geometric-canvas {
-  position: relative;
-  width: 100%;
-  max-width: 1000px;
-  height: 700px;
-  margin: 0 auto;
-  z-index: 10;
-  transition: filter 0.6s ease;
-}
-
-.geometric-canvas.blurred {
-  filter: blur(3px);
-}
-
-.connections-layer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.connection-line {
-  stroke: #000000;
-  stroke-width: 1;
-  opacity: 0.08;
-}
-
-/* ========== 几何节点 ========== */
-.geometric-node {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  cursor: pointer;
-  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-  animation: float 12s ease-in-out infinite;
-  animation-delay: var(--delay);
-}
-
-.geometric-node.node-dimmed {
-  opacity: 0.15;
-  filter: blur(2px);
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translate(-50%, -50%) translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translate(-50%, -50%) translateY(-8px) rotate(3deg);
-  }
-}
-
-.geometric-node:hover:not(.node-dimmed) {
-  z-index: 100;
-}
-
-.geometric-node:hover:not(.node-dimmed) .geometry-shape {
-  transform: scale(1.15);
-}
-
-.geometry-shape {
-  width: 80px;
-  height: 80px;
-  color: #000000;
-  transition: all 0.4s ease;
-  animation: pulse-rotate 20s linear infinite;
-}
-
-@keyframes pulse-rotate {
-  0%, 100% {
-    transform: rotate(0deg) scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: rotate(180deg) scale(1.05);
-    opacity: 0.85;
-  }
-}
-
-.node-label {
-  position: absolute;
-  bottom: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  white-space: nowrap;
-}
-
-.label-number {
-  display: block;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.55rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  color: #000000;
-  opacity: 0.3;
-  margin-bottom: 0.25rem;
-}
-
-.label-name {
-  display: block;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: #000000;
+.sketchbook-title {
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  font-size: clamp(3rem, 8vw, 5rem);
+  color: #2d2d2d;
+  margin: 0 0 0.5rem 0;
   letter-spacing: 0.05em;
 }
 
-/* ========== 几何展开叙事层 ========== */
-.expanded-geometry {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  overflow-y: auto;
-  padding: 6rem 2rem 4rem;
-  /* 隐藏滚动条 */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+.sketchbook-subtitle {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 1.3rem;
+  color: #5a5a5a;
+  margin: 0 0 1.5rem 0;
+  font-style: italic;
 }
 
-.expanded-geometry::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+.hand-drawn-underline {
+  width: 200px;
+  height: 3px;
+  background: #2d2d2d;
+  margin: 0 auto;
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  animation: wobble 3s ease-in-out infinite;
 }
 
-.geometry-background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.03;
-  pointer-events: none;
+@keyframes wobble {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(1.05); }
 }
 
-.geometry-massive {
-  width: 100%;
-  height: 100%;
-  color: #000000;
-}
-
-.expanded-content {
+/* ========== Category Tabs ========== */
+.category-section {
   position: relative;
   z-index: 10;
-  width: 90%;
-  max-width: 900px;
+  padding: 2rem;
+}
+
+.tabs-container {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.category-tab {
+  display: flex;
   align-items: center;
-  cursor: default;
-  margin: auto;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  background: #ffffff;
+  border: 3px solid #2d2d2d;
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #2d2d2d;
+  cursor: pointer;
+  box-shadow: 4px 4px 0px 0px #2d2d2d;
+  transition: all 100ms;
 }
 
-.center-geometry {
-  width: 200px;
-  height: 200px;
-  margin-bottom: 2rem;
+.category-tab:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px #2d2d2d;
 }
 
-.center-shape {
-  width: 100%;
-  height: 100%;
-  color: #000000;
-  filter: drop-shadow(0 0 30px rgba(0,0,0,0.1));
+.category-tab.active {
+  background: #fff9c4;
+  transform: rotate(-1deg);
 }
 
-/* 绘制动画 */
-.draw-animation {
-  stroke-dasharray: 300;
-  stroke-dashoffset: 300;
-  animation: draw 1.5s ease forwards 0.3s;
+.tab-icon {
+  font-size: 1.3rem;
 }
 
-.draw-animation-delayed {
-  stroke-dasharray: 300;
-  stroke-dashoffset: 300;
-  animation: draw 1.5s ease forwards 0.6s;
+.tab-label {
+  font-size: 1.1rem;
 }
 
-.draw-animation-delayed-2 {
-  stroke-dasharray: 300;
-  stroke-dashoffset: 300;
-  animation: draw 1.5s ease forwards 0.9s;
+.tab-count {
+  font-size: 0.9rem;
+  opacity: 0.6;
 }
 
-@keyframes draw {
-  to {
-    stroke-dashoffset: 0;
-  }
+/* ========== Wobbly Border Utility ========== */
+.wobbly-border {
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
 }
 
-/* ========== 信息层 ========== */
-.info-layer {
-  text-align: center;
-  width: 100%;
+/* ========== Main Content ========== */
+.sketchbook-main {
+  position: relative;
+  z-index: 10;
+  padding: 2rem;
+  min-height: 500px;
 }
 
-.node-header {
-  margin-bottom: 1.5rem;
-  opacity: 0;
-  animation: fade-up 0.6s ease forwards 0.8s;
+.sketch-card-container {
+  max-width: 700px;
+  margin: 0 auto;
 }
 
-.node-number-large {
-  display: block;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.3em;
-  color: #000000;
-  opacity: 0.4;
-  margin-bottom: 0.75rem;
+.sketch-card {
+  position: relative;
+  background: #ffffff;
+  border: 3px solid #2d2d2d;
+  padding: 3rem 2.5rem;
+  box-shadow: 8px 8px 0px 0px #2d2d2d;
+  transition: all 100ms;
+  cursor: pointer;
 }
 
-.node-title-large {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 400;
-  line-height: 1.1;
-  color: #000000;
-  margin: 0;
+.sketch-card:hover {
+  transform: rotate(1deg) translate(-2px, -2px);
+  box-shadow: 10px 10px 0px 0px #2d2d2d;
 }
 
-.theme-pulse {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.6rem 1.25rem;
-  border: 2px solid #000000;
-  margin-bottom: 2rem;
-  opacity: 0;
-  animation: fade-up 0.6s ease forwards 1s;
+.sketch-card.color-yellow {
+  background: #fff9c4;
 }
 
-.theme-dot {
-  width: 8px;
-  height: 8px;
-  background: #000000;
+.sketch-card.color-red {
+  background: #ffebee;
+}
+
+/* Tape Decorations */
+.tape {
+  position: absolute;
+  width: 80px;
+  height: 30px;
+  background: rgba(255, 235, 59, 0.7);
+  opacity: 0.8;
+}
+
+.tape-top-left {
+  top: -15px;
+  left: 30px;
+  transform: rotate(-5deg);
+}
+
+.tape-top-right {
+  top: -15px;
+  right: 30px;
+  transform: rotate(3deg);
+}
+
+/* Tack Pin */
+.tack-pin {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 20px;
+  height: 20px;
+  background: #ff4d4d;
   border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
+  box-shadow: 2px 2px 0px 0px #2d2d2d;
+  transform: rotate(15deg);
 }
 
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.3);
-    opacity: 0.7;
-  }
+.tack-pin::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  background: #2d2d2d;
+  border-radius: 50%;
 }
 
-.theme-text {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #000000;
-}
-
-.quote-container {
+/* Card Header */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 2rem;
-  opacity: 0;
-  animation: fade-up 0.6s ease forwards 1.2s;
+}
+
+.card-number {
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #5a5a5a;
+  letter-spacing: 0.1em;
+}
+
+.hand-drawn-divider {
+  flex: 1;
+  height: 2px;
+  background: repeating-linear-gradient(
+    to right,
+    #2d2d2d 0px,
+    #2d2d2d 8px,
+    transparent 8px,
+    transparent 12px
+  );
+  margin-left: 1rem;
+}
+
+/* Card Content */
+.card-content {
+  text-align: center;
+}
+
+.card-symbol {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.card-symbol.animated {
+  animation: bounce-in 0.6s ease;
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.card-title {
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  font-size: 2.5rem;
+  color: #2d2d2d;
+  margin: 0 0 1.5rem 0;
+}
+
+.card-tags {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.tag {
+  padding: 0.5rem 1rem;
+  background: #ffffff;
+  border: 2px solid #2d2d2d;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 0.95rem;
+  color: #2d2d2d;
+  box-shadow: 2px 2px 0px 0px #2d2d2d;
+}
+
+.quote-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 10px;
 }
 
 .main-quote {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-  font-style: italic;
-  line-height: 1.5;
-  color: #000000;
-  margin: 0;
-  max-width: 650px;
-}
-
-.reflection-box {
-  margin-bottom: 2rem;
-  opacity: 0;
-  animation: fade-up 0.6s ease forwards 1.4s;
-}
-
-.reflection-label {
-  display: block;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.15em;
-  color: #525252;
-  margin-bottom: 0.75rem;
-}
-
-.reflection-text {
-  font-family: 'Source Serif 4', Georgia, serif;
-  font-size: 1rem;
+  font-family: 'Patrick Hand', cursive;
+  font-size: 1.5rem;
   line-height: 1.6;
-  color: #000000;
+  color: #2d2d2d;
   margin: 0;
   font-style: italic;
 }
 
-.extended-container {
+.additional-content {
   margin-bottom: 2rem;
-  opacity: 0;
-  animation: fade-up 0.6s ease forwards;
+  text-align: left;
 }
 
-.extended-divider {
-  height: 1px;
-  background: #000000;
-  width: 60px;
-  margin: 0 auto 1.5rem;
-  opacity: 0.3;
-}
-
-.extended-quote {
-  font-family: 'Source Serif 4', Georgia, serif;
-  font-size: 0.95rem;
+.content-line {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 1.2rem;
   line-height: 1.8;
-  margin-bottom: 1.25rem;
-  color: #525252;
-  font-style: italic;
-  animation: fade-up 0.6s ease forwards;
-  animation-delay: calc(var(--index) * 0.1s);
+  color: #5a5a5a;
+  margin: 0 0 0.75rem 0;
   opacity: 0;
+  animation: fade-in-up 0.5s ease forwards;
+  animation-delay: var(--delay);
 }
 
-.action-zone {
-  display: flex;
-  justify-content: center;
-  margin-top: 1.5rem;
-  opacity: 0;
-  animation: fade-up 0.6s ease forwards 1.6s;
-}
-
-.toggle-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.875rem 2rem;
-  border: 2px solid #000000;
-  background: #FFFFFF;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.1s;
-  color: #000000;
-}
-
-.toggle-btn:hover {
-  background: #000000;
-  color: #FFFFFF;
-}
-
-.toggle-btn svg {
-  width: 16px;
-  height: 16px;
-  transition: transform 0.3s ease;
-}
-
-.expanded-close-btn {
-  position: fixed;
-  top: 2rem;
-  right: 2rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 2rem;
-  background: #FFFFFF;
-  border: 2px solid #000000;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.1s;
-  z-index: 100;
-  color: #000000;
-}
-
-.expanded-close-btn:hover {
-  background: #000000;
-  color: #FFFFFF;
-}
-
-.expanded-close-btn svg {
-  width: 18px;
-  height: 18px;
-}
-
-/* ========== 动画 ========== */
-@keyframes fade-up {
+@keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -1203,71 +917,225 @@ onMounted(() => {
   }
 }
 
-.geometry-expand-enter-active {
-  transition: opacity 0.6s ease;
+/* Reflection Box */
+.reflection-box {
+  padding: 1.5rem;
+  background: #ffffff;
+  border: 2px dashed #2d2d2d;
+  margin-top: 1.5rem;
 }
 
-.geometry-expand-enter-from {
+.reflection-label {
+  display: block;
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #ff4d4d;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.1em;
+}
+
+.reflection-text {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #2d2d2d;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Post-it Note */
+.postit-note {
+  position: absolute;
+  bottom: -20px;
+  right: -20px;
+  width: 150px;
+  background: #fff9c4;
+  padding: 1rem;
+  transform: rotate(3deg);
+  box-shadow: 3px 3px 0px 0px #2d2d2d;
+}
+
+.postit-text {
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #2d2d2d;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Arrow Doodle */
+.arrow-doodle {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.arrow-doodle svg {
+  width: 100px;
+  height: 50px;
+  animation: arrow-wiggle 2s ease-in-out infinite;
+}
+
+@keyframes arrow-wiggle {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+
+.arrow-text {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 0.9rem;
+  color: #5a5a5a;
+}
+
+/* ========== Navigation ========== */
+.sketchbook-nav {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #ffffff;
+  border: 3px solid #2d2d2d;
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #2d2d2d;
+  cursor: pointer;
+  box-shadow: 4px 4px 0px 0px #2d2d2d;
+  transition: all 100ms;
+}
+
+.nav-btn:hover:not(:disabled) {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px 0px #2d2d2d;
+}
+
+.nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: 2px 2px 0px 0px #2d2d2d;
+}
+
+.nav-btn span {
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+
+.progress-dots {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.progress-dot {
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border: 2px solid #2d2d2d;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 200ms;
+}
+
+.progress-dot:hover {
+  transform: scale(1.2);
+}
+
+.progress-dot.active {
+  background: #2d2d2d;
+  transform: scale(1.3);
+}
+
+/* ========== Footer ========== */
+.sketchbook-footer {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  font-family: 'Kalam', cursive;
+}
+
+.footer-number {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #5a5a5a;
+  letter-spacing: 0.15em;
+}
+
+.footer-dots {
+  font-size: 1.2rem;
+  color: #2d2d2d;
+}
+
+/* ========== Transitions ========== */
+.card-transition-enter-active,
+.card-transition-leave-active {
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.card-transition-enter-from {
   opacity: 0;
+  transform: translateY(30px) rotate(-2deg);
 }
 
-.geometry-expand-leave-active {
-  transition: opacity 0.4s ease;
-}
-
-.geometry-expand-leave-to {
+.card-transition-leave-to {
   opacity: 0;
+  transform: translateY(-30px) rotate(2deg);
 }
 
-.quotes-reveal-enter-active,
-.quotes-reveal-leave-active {
-  transition: all 0.5s ease;
-  overflow: hidden;
-}
-
-.quotes-reveal-enter-from,
-.quotes-reveal-leave-to {
-  max-height: 0;
-  opacity: 0;
-}
-
-.quotes-reveal-enter-to,
-.quotes-reveal-leave-from {
-  max-height: 1000px;
-  opacity: 1;
-}
-
-/* ========== 响应式 ========== */
+/* ========== Responsive ========== */
 @media (max-width: 768px) {
-  .left-decoration {
-    display: none;
-  }
-
-  .universe-header {
-    padding-top: 5rem;
-  }
-
-  .exit-btn {
+  .back-btn {
     top: 1rem;
     left: 1rem;
-    padding: 0.75rem 1.5rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
   }
 
-  .geometric-canvas {
-    height: 600px;
+  .sketchbook-title {
+    font-size: 2.5rem;
   }
 
-  .geometry-shape {
-    width: 60px;
-    height: 60px;
+  .sketchbook-subtitle {
+    font-size: 1.1rem;
   }
 
-  .center-geometry {
-    width: 200px;
-    height: 200px;
+  .tabs-container {
+    gap: 1rem;
   }
 
-  .node-title-large {
+  .category-tab {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .tab-icon {
+    font-size: 1.1rem;
+  }
+
+  .sketch-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .card-title {
     font-size: 2rem;
   }
 
@@ -1275,18 +1143,20 @@ onMounted(() => {
     font-size: 1.2rem;
   }
 
-  .action-zone {
-    margin-top: 1.5rem;
+  .postit-note {
+    width: 120px;
+    right: -10px;
+    bottom: -15px;
   }
 
-  .toggle-btn {
-    padding: 0.75rem 1.5rem;
+  .nav-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
   }
 
-  .expanded-close-btn {
-    top: 1rem;
-    right: 1rem;
-    padding: 0.75rem 1.5rem;
+  .progress-dot {
+    width: 10px;
+    height: 10px;
   }
 }
 </style>
