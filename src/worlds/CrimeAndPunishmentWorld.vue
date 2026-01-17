@@ -923,6 +923,10 @@ onMounted(() => {
     font-size: clamp(1.5rem, 3.5vw, 2.5rem);
   }
 
+  .quote-layer {
+    bottom: 30%;
+  }
+
   .abyss-circle,
   .mirror-circle {
     width: 120px;
@@ -933,6 +937,11 @@ onMounted(() => {
     width: 80px;
     height: 80px;
     gap: 30px;
+  }
+
+  .breath-ring {
+    width: 160px;
+    height: 160px;
   }
 }
 
@@ -955,7 +964,7 @@ onMounted(() => {
   }
 
   .quote-layer {
-    bottom: 20%;
+    bottom: 35%;
   }
 
   .abyss-circle,
@@ -964,10 +973,24 @@ onMounted(() => {
     height: 80px;
   }
 
+  .abyss-inner {
+    width: 60px;
+    height: 60px;
+  }
+
+  .breath-ring {
+    width: 120px;
+    height: 120px;
+  }
+
   .confront-circle {
     width: 60px;
     height: 60px;
     gap: 20px;
+  }
+
+  .confrontation-container {
+    gap: 30px;
   }
 
   .circle-label {
@@ -989,7 +1012,50 @@ onMounted(() => {
   }
 
   .shard {
-    transform: scale(0.7);
+    transform: scale(0.6);
+  }
+
+  .shattered-container {
+    width: 160px;
+    height: 160px;
+  }
+
+  .blood-mist {
+    width: 240px;
+    height: 240px;
+  }
+
+  .falling-axe {
+    transform: scale(0.8);
+  }
+
+  .redemption-container {
+    width: 160px;
+    height: 160px;
+  }
+
+  .light-ray {
+    height: 80px;
+  }
+
+  .warm-glow {
+    width: 240px;
+    height: 240px;
+  }
+}
+
+/* 处理页面缩放（zoom） */
+@media (max-height: 600px) {
+  .quote-layer {
+    bottom: 40%;
+  }
+
+  .creative-background {
+    top: 20%;
+  }
+
+  .quote-word {
+    font-size: clamp(1rem, 2.5vw, 1.8rem);
   }
 }
 </style>
