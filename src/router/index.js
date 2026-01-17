@@ -105,6 +105,11 @@ const routes = [
     path: '/world/shooting-hero',
     name: 'ShootingHeroWorld',
     component: () => import('../worlds/ShootingHeroWorld.vue')
+  },
+  {
+    path: '/world/moon-and-sixpence',
+    name: 'MoonAndSixpenceWorld',
+    component: () => import('../worlds/MoonAndSixpenceWorld.vue')
   }
 ]
 
