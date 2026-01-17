@@ -1,860 +1,755 @@
 <template>
   <div class="crime-and-punishment-world">
-    <!-- 开场文字 -->
-    <transition name="fade-in">
-      <div v-if="showIntro" class="intro-text">
-        <h1 class="intro-title">罪与罚</h1>
-        <p class="intro-subtitle">这不是一个故事</p>
-        <p class="intro-subtitle">这是一场灵魂的审判</p>
+    <!-- 跃迁动画 -->
+    <transition name="warp">
+      <div v-if="showWarp" class="warp-overlay">
+        <div class="warp-circle">
+          <div class="warp-circle-inner"></div>
+        </div>
+        <div class="warp-text">罪与罚</div>
       </div>
     </transition>
 
-    <!-- 主画布（抽象视觉） -->
-    <canvas ref="canvas" class="main-canvas"></canvas>
+    <!-- 返回按钮 -->
+    <button class="exit-btn" @click="exitWorld">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      <span>Return</span>
+    </button>
 
-    <!-- 章节文字层 -->
-    <transition name="text-fade">
-      <div v-if="currentText" class="chapter-text">
-        <p class="text-content" v-html="currentText"></p>
+    <!-- 主容器 -->
+    <div class="main-container" @click="nextStage">
+      <!-- 几何符号背景层 -->
+      <div class="geometry-background">
+        <!-- 阶段 1: 孤立的黑圆 -->
+        <transition name="geometry-fade">
+          <div v-if="currentStage === 1" class="geometry-stage stage-1">
+            <div class="black-circle"></div>
+          </div>
+        </transition>
+
+        <!-- 阶段 2: 黑圆 + 白点 -->
+        <transition name="geometry-fade">
+          <div v-if="currentStage === 2" class="geometry-stage stage-2">
+            <div class="black-circle">
+              <div class="white-dot"></div>
+            </div>
+          </div>
+        </transition>
+
+        <!-- 阶段 3: 黑圆 + 三角形（斧头） -->
+        <transition name="geometry-fade">
+          <div v-if="currentStage === 3" class="geometry-stage stage-3">
+            <div class="black-circle"></div>
+            <div class="axe-triangle"></div>
+          </div>
+        </transition>
+
+        <!-- 阶段 4: 三角形刺入圆，红色裂痕 -->
+        <transition name="geometry-fade">
+          <div v-if="currentStage === 4" class="geometry-stage stage-4">
+            <div class="cracked-circle">
+              <svg class="crack-svg" viewBox="0 0 200 200">
+                <path
+                  d="M100,100 L100,20"
+                  stroke="#8B0000"
+                  stroke-width="0.5"
+                  fill="none"
+                  class="crack-line"
+                />
+                <path
+                  d="M100,100 L60,40"
+                  stroke="#8B0000"
+                  stroke-width="0.5"
+                  fill="none"
+                  class="crack-line crack-delay-1"
+                />
+                <path
+                  d="M100,100 L140,40"
+                  stroke="#8B0000"
+                  stroke-width="0.5"
+                  fill="none"
+                  class="crack-line crack-delay-2"
+                />
+              </svg>
+            </div>
+            <div class="axe-triangle axe-embedded"></div>
+          </div>
+        </transition>
+
+        <!-- 阶段 5: 双圆对立 -->
+        <transition name="geometry-fade">
+          <div v-if="currentStage === 5" class="geometry-stage stage-5">
+            <div class="dual-circle-container">
+              <div class="circle-black"></div>
+              <div class="circle-white"></div>
+            </div>
+          </div>
+        </transition>
+
+        <!-- 阶段 6: 双圆融合，灰蓝色 -->
+        <transition name="geometry-fade">
+          <div v-if="currentStage === 6" class="geometry-stage stage-6">
+            <div class="merged-circle"></div>
+          </div>
+        </transition>
       </div>
-    </transition>
 
-    <!-- 继续/结束按钮 -->
-    <transition name="btn-fade">
-      <button
-        v-if="showContinueBtn"
-        @click="nextChapter"
-        class="continue-btn"
-        :class="{ 'is-end': isLastChapter }"
-      >
-        {{ isLastChapter ? '结束' : '继续' }}
-      </button>
-    </transition>
+      <!-- 金句层 -->
+      <div class="quote-container">
+        <transition name="quote-fade" mode="out-in">
+          <div :key="currentStage" class="quote-content">
+            <!-- 金句逐行显示 -->
+            <p
+              v-for="(line, index) in currentQuote.lines"
+              :key="index"
+              class="quote-line"
+              :style="{ animationDelay: index * 0.3 + 's' }"
+            >
+              {{ line }}
+            </p>
 
-    <!-- 结尾文字 -->
-    <transition name="fade-in">
-      <div v-if="showOutro" class="outro-text">
-        <p class="outro-line">罪与罚，不在外面</p>
-        <p class="outro-line">而在里面</p>
-        <p class="outro-author">陀思妥耶夫斯基</p>
-        <p class="outro-year">1866</p>
+            <!-- 副标题 -->
+            <p class="quote-subtitle">{{ currentQuote.subtitle }}</p>
+          </div>
+        </transition>
       </div>
-    </transition>
+
+      <!-- 进度指示 -->
+      <div class="progress-container" v-if="currentStage < 6">
+        <div class="progress-dots">
+          <div
+            v-for="i in 6"
+            :key="i"
+            class="dot"
+            :class="{ active: currentStage >= i }"
+          ></div>
+        </div>
+        <p class="click-hint">点击继续</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const canvas = ref(null)
+const showWarp = ref(true)
+const currentStage = ref(0)
 
-// 状态管理
-const currentChapter = ref(0)
-const showIntro = ref(true)
-const showOutro = ref(false)
-const showContinueBtn = ref(false)
-const currentText = ref('')
-
-// 动画控制
-let animationFrame = null
-let chapterTimeout = null
-let canvasCtx = null
-let animationStartTime = 0
-
-// 章节配置
-const chapters = [
-  { name: '第一章：房间', duration: 15000, hasContinueBtn: false },
-  { name: '第二章：理论', duration: 20000, hasContinueBtn: true },
-  { name: '第三章：斧头', duration: 10000, hasContinueBtn: false },
-  { name: '第四章：追逐', duration: 15000, hasContinueBtn: true },
-  { name: '第五章：崩溃', duration: 20000, hasContinueBtn: false },
-  { name: '第六章：相遇', duration: 15000, hasContinueBtn: true },
-  { name: '第七章：复活', duration: 20000, hasContinueBtn: true }
+// 金句数据
+const quotes = [
+  {
+    lines: [
+      '你知道吗，杜尼娅，',
+      '我是一个可怕的人。'
+    ],
+    subtitle: '圣彼得堡 · 闷热的夏天'
+  },
+  {
+    lines: [
+      '人分两类：',
+      '平凡人只能繁衍同类，',
+      '不平凡的人则有权力犯罪。'
+    ],
+    subtitle: '超人理论 · 理性的陷阱'
+  },
+  {
+    lines: [
+      '我在问自己：',
+      '我是一只颤抖的生物，',
+      '还是我有权？'
+    ],
+    subtitle: '老太婆 · 一个虱子'
+  },
+  {
+    lines: [
+      '那不是我杀了她，',
+      '是我的理论杀了她。'
+    ],
+    subtitle: '心跳声 · 震耳欲聋'
+  },
+  {
+    lines: [
+      '最可怕的惩罚，',
+      '不是流放西伯利亚，',
+      '而是良心的谴责。'
+    ],
+    subtitle: '波尔菲里 · 心理博弈'
+  },
+  {
+    lines: [
+      '生命是上帝赐予的礼物，',
+      '我们没有权利剥夺它，',
+      '包括我们自己的。'
+    ],
+    subtitle: '西伯利亚 · 新生'
+  }
 ]
 
-// 计算属性
-const isLastChapter = ref(false)
+// 当前金句
+const currentQuote = computed(() => {
+  if (currentStage.value === 0) return quotes[0]
+  return quotes[currentStage.value - 1] || quotes[0]
+})
 
-// 方法
-const nextChapter = () => {
-  if (isLastChapter.value) {
-    // 结束体验
-    endExperience()
+// 下一阶段
+const nextStage = () => {
+  if (currentStage.value < 6) {
+    currentStage.value++
   } else {
-    currentChapter.value++
-    startChapter()
+    exitWorld()
   }
 }
 
-const startChapter = () => {
-  // 清理之前的动画
-  if (animationFrame) {
-    cancelAnimationFrame(animationFrame)
-  }
-  if (chapterTimeout) {
-    clearTimeout(chapterTimeout)
-  }
-
-  const chapterIndex = currentChapter.value
-  const chapter = chapters[chapterIndex]
-
-  // 更新状态
-  showContinueBtn.value = chapter.hasContinueBtn
-  isLastChapter.value = chapterIndex === chapters.length - 1
-
-  // 开始动画
-  animationStartTime = Date.now()
-  animate()
-
-  // 自动切换到下一章
-  if (!chapter.hasContinueBtn && chapterIndex < chapters.length - 1) {
-    chapterTimeout = setTimeout(() => {
-      nextChapter()
-    }, chapter.duration)
-  }
-}
-
-const animate = () => {
-  if (!canvasCtx || !canvas.value) return
-
-  const chapterIndex = currentChapter.value
-  const elapsed = Date.now() - animationStartTime
-  const progress = Math.min(elapsed / chapters[chapterIndex].duration, 1)
-
-  // 清空画布
-  canvasCtx.fillStyle = '#000000'
-  canvasCtx.fillRect(0, 0, canvas.value.width, canvas.value.height)
-
-  // 根据章节绘制不同的抽象场景
-  switch (chapterIndex) {
-    case 0:
-      drawChapter1Room(progress)
-      break
-    case 1:
-      drawChapter2Theory(progress)
-      break
-    case 2:
-      drawChapter3Axe(progress)
-      break
-    case 3:
-      drawChapter4Chase(progress)
-      break
-    case 4:
-      drawChapter5Breakdown(progress)
-      break
-    case 5:
-      drawChapter6Encounter(progress)
-      break
-    case 6:
-      drawChapter7Resurrection(progress)
-      break
-  }
-
-  // 继续动画
-  if (progress < 1) {
-    animationFrame = requestAnimationFrame(animate)
-  }
-}
-
-// 绘制第一章：房间
-const drawChapter1Room = (progress) => {
-  const { width, height } = canvas.value
-  const centerX = width / 2
-  const centerY = height / 2
-
-  // 房间矩形（逐渐缩小）
-  const baseSize = Math.min(width, height) * 0.5
-  const shrinkProgress = progress * 0.6 // 缩小到 40%
-  const size = baseSize * (1 - shrinkProgress)
-
-  // 颤抖效果（progress 越大，颤抖越明显）
-  const trembleIntensity = progress * 3
-  const trembleX = Math.sin(Date.now() / 50) * trembleIntensity
-  const trembleY = Math.cos(Date.now() / 50) * trembleIntensity
-
-  // 绘制矩形
-  canvasCtx.save()
-  canvasCtx.translate(centerX + trembleX, centerY + trembleY)
-
-  // 黄色边缘（霉菌般蔓延）
-  const moldProgress = progress * 0.7
-  if (moldProgress > 0) {
-    canvasCtx.strokeStyle = `rgba(240, 230, 140, ${moldProgress * 0.5})`
-    canvasCtx.lineWidth = 5 + moldProgress * 10
-    canvasCtx.strokeRect(-size / 2, -size / 2, size, size)
-  }
-
-  // 矩形主体
-  canvasCtx.fillStyle = '#1a1a1a'
-  canvasCtx.fillRect(-size / 2, -size / 2, size, size)
-
-  // 矩形边框
-  canvasCtx.strokeStyle = `rgba(255, 255, 255, ${0.3 - progress * 0.2})`
-  canvasCtx.lineWidth = 2
-  canvasCtx.strokeRect(-size / 2, -size / 2, size, size)
-
-  canvasCtx.restore()
-
-  // 文字
-  if (progress > 0.3) {
-    const textOpacity = Math.min((progress - 0.3) / 0.2, 1)
-    currentText.value = `<span style="opacity: ${textOpacity}">三尺见方的房间<br>装得下整个世界的罪恶</span>`
-  }
-}
-
-// 绘制第二章：理论
-const drawChapter2Theory = (progress) => {
-  const { width, height } = canvas.value
-  const centerX = width / 2
-  const centerY = height / 2
-
-  // 白色背景
-  canvasCtx.fillStyle = '#ffffff'
-  canvasCtx.fillRect(0, 0, width, height)
-
-  // 完美的几何图形（正方形）
-  const size = Math.min(width, height) * 0.25
-  const rotation = progress * Math.PI * 2
-
-  canvasCtx.save()
-  canvasCtx.translate(centerX, centerY)
-  canvasCtx.rotate(rotation)
-
-  // 金色边框
-  canvasCtx.strokeStyle = '#d4af37'
-  canvasCtx.lineWidth = 3
-  canvasCtx.strokeRect(-size / 2, -size / 2, size, size)
-
-  // 裂痕
-  if (progress > 0.5) {
-    const crackProgress = (progress - 0.5) / 0.5
-    canvasCtx.strokeStyle = `rgba(139, 0, 0, ${crackProgress})`
-    canvasCtx.lineWidth = 2
-
-    // 绘制裂痕
-    for (let i = 0; i < 5; i++) {
-      const angle = (i / 5) * Math.PI * 2
-      const crackLength = crackProgress * size * 0.4
-      const startX = Math.cos(angle) * size / 2
-      const startY = Math.sin(angle) * size / 2
-      const endX = Math.cos(angle) * (size / 2 + crackLength)
-      const endY = Math.sin(angle) * (size / 2 + crackLength)
-
-      canvasCtx.beginPath()
-      canvasCtx.moveTo(startX, startY)
-      canvasCtx.lineTo(endX, endY)
-      canvasCtx.stroke()
-    }
-  }
-
-  // 红色渗出
-  if (progress > 0.7) {
-    const bleedProgress = (progress - 0.7) / 0.3
-    canvasCtx.fillStyle = `rgba(139, 0, 0, ${bleedProgress * 0.3})`
-    canvasCtx.fillRect(-size / 2, -size / 2, size, size)
-  }
-
-  canvasCtx.restore()
-
-  // 文字
-  if (progress > 0.2) {
-    const textOpacity = Math.min((progress - 0.2) / 0.3, 1)
-    currentText.value = `<span style="color: #1a1a1a; opacity: ${textOpacity}">有些人有权越过法律<br>我就是这样的人吗？</span>`
-  }
-}
-
-// 绘制第三章：斧头
-const drawChapter3Axe = (progress) => {
-  const { width, height } = canvas.value
-  const centerX = width / 2
-  const centerY = height / 2
-
-  // 纯黑背景
-  canvasCtx.fillStyle = '#000000'
-  canvasCtx.fillRect(0, 0, width, height)
-
-  // 金色线条
-  const lineLength = Math.min(width, height) * 0.4
-  const lineWidth = 3
-
-  // 下降动画
-  const dropProgress = Math.min(progress * 2, 1) // 前50%时间下降
-  const y = -lineLength / 2 + dropProgress * lineLength
-
-  // 断裂点（progress > 0.5）
-  const isBroken = progress > 0.5
-  const breakProgress = isBroken ? (progress - 0.5) / 0.5 : 0
-
-  canvasCtx.save()
-  canvasCtx.translate(centerX, centerY)
-
-  if (!isBroken) {
-    // 完整的金线
-    canvasCtx.strokeStyle = '#d4af37'
-    canvasCtx.lineWidth = lineWidth
-    canvasCtx.beginPath()
-    canvasCtx.moveTo(0, y - lineLength / 2)
-    canvasCtx.lineTo(0, y + lineLength / 2)
-    canvasCtx.stroke()
-  } else {
-    // 断裂的两段
-    const gap = breakProgress * 50
-    canvasCtx.strokeStyle = '#d4af37'
-    canvasCtx.lineWidth = lineWidth
-
-    // 上半段
-    canvasCtx.beginPath()
-    canvasCtx.moveTo(0, y - lineLength / 2)
-    canvasCtx.lineTo(0, y - gap)
-    canvasCtx.stroke()
-
-    // 下半段
-    canvasCtx.beginPath()
-    canvasCtx.moveTo(0, y + gap)
-    canvasCtx.lineTo(0, y + lineLength / 2)
-    canvasCtx.stroke()
-
-    // 红色脉冲
-    if (breakProgress > 0) {
-      const pulseRadius = breakProgress * Math.max(width, height)
-      const pulseOpacity = breakProgress * 0.8
-
-      const gradient = canvasCtx.createRadialGradient(0, y, 0, 0, y, pulseRadius)
-      gradient.addColorStop(0, `rgba(139, 0, 0, ${pulseOpacity})`)
-      gradient.addColorStop(1, 'rgba(139, 0, 0, 0)')
-
-      canvasCtx.fillStyle = gradient
-      canvasCtx.fillRect(-width / 2, -height / 2, width, height)
-
-      // 黑屏（最后阶段）
-      if (breakProgress > 0.8) {
-        const blackProgress = (breakProgress - 0.8) / 0.2
-        canvasCtx.fillStyle = `rgba(0, 0, 0, ${blackProgress})`
-        canvasCtx.fillRect(-width / 2, -height / 2, width, height)
-      }
-    }
-  }
-
-  canvasCtx.restore()
-}
-
-// 绘制第四章：追逐
-const drawChapter4Chase = (progress) => {
-  const { width, height } = canvas.value
-  const centerX = width / 2
-  const centerY = height / 2
-
-  // 黑色背景
-  canvasCtx.fillStyle = '#000000'
-  canvasCtx.fillRect(0, 0, width, height)
-
-  // 眼睛数量逐渐增加
-  const eyeCount = Math.floor(progress * 30) + 5
-
-  // 屏幕收缩
-  const shrinkProgress = progress * 0.4
-  const currentWidth = width * (1 - shrinkProgress)
-  const currentHeight = height * (1 - shrinkProgress)
-
-  canvasCtx.save()
-  canvasCtx.translate(centerX, centerY)
-
-  // 绘制眼睛
-  for (let i = 0; i < eyeCount; i++) {
-    const angle = (i / eyeCount) * Math.PI * 2 + progress
-    const distance = 100 + Math.random() * 200
-    const x = Math.cos(angle) * distance
-    const y = Math.sin(angle) * distance
-
-    const eyeSize = 10 + Math.random() * 20
-
-    // 眼睛外圈
-    canvasCtx.beginPath()
-    canvasCtx.arc(x, y, eyeSize, 0, Math.PI * 2)
-    canvasCtx.fillStyle = `rgba(255, 255, 255, ${0.1 + Math.random() * 0.2})`
-    canvasCtx.fill()
-
-    // 眼睛中心（注视或闭合）
-    if (Math.random() > 0.3) {
-      canvasCtx.beginPath()
-      canvasCtx.arc(x, y, eyeSize * 0.3, 0, Math.PI * 2)
-      canvasCtx.fillStyle = `rgba(139, 0, 0, ${0.3 + Math.random() * 0.5})`
-      canvasCtx.fill()
-    }
-  }
-
-  // 屏幕收缩效果
-  canvasCtx.fillStyle = `rgba(0, 0, 0, ${progress * 0.5})`
-  canvasCtx.fillRect(-currentWidth / 2, -currentHeight / 2, currentWidth, currentHeight)
-
-  canvasCtx.restore()
-
-  // 文字（快速闪现）
-  if (progress > 0.3 && progress < 0.8) {
-    const texts = ['他知道', '他们都知道', '你无法隐藏', '你无法宽恕']
-    const textIndex = Math.floor(progress * 10) % texts.length
-    const showText = texts[textIndex]
-
-    currentText.value = `<span style="opacity: ${0.7}">${showText}</span>`
-  }
-}
-
-// 绘制第五章：崩溃
-const drawChapter5Breakdown = (progress) => {
-  const { width, height } = canvas.value
-
-  // 混乱背景
-  const chaosColors = ['#1a0000', '#000000', '#2a2a2a', '#3a0a0a']
-
-  for (let i = 0; i < 20; i++) {
-    canvasCtx.fillStyle = chaosColors[i % chaosColors.length]
-    const x = Math.random() * width
-    const y = Math.random() * height
-    const w = Math.random() * 200 + 50
-    const h = Math.random() * 200 + 50
-    canvasCtx.fillRect(x, y, w, h)
-  }
-
-  // 破碎的镜子形状
-  const shardCount = 10 + Math.floor(progress * 20)
-  for (let i = 0; i < shardCount; i++) {
-    canvasCtx.save()
-    const x = Math.random() * width
-    const y = Math.random() * height
-    const rotation = Math.random() * Math.PI * 2
-    const size = Math.random() * 100 + 50
-
-    canvasCtx.translate(x, y)
-    canvasCtx.rotate(rotation)
-
-    canvasCtx.fillStyle = `rgba(139, 0, 0, ${0.1 + Math.random() * 0.3})`
-    canvasCtx.fillRect(-size / 2, -size / 2, size, size)
-
-    canvasCtx.strokeStyle = `rgba(255, 255, 255, ${0.1 + Math.random() * 0.2})`
-    canvasCtx.lineWidth = 1
-    canvasCtx.strokeRect(-size / 2, -size / 2, size, size)
-
-    canvasCtx.restore()
-  }
-
-  // 闪烁的微光（中心）
-  const centerX = width / 2
-  const centerY = height / 2
-  const flickerIntensity = 0.5 + Math.sin(Date.now() / 100) * 0.5
-
-  canvasCtx.beginPath()
-  canvasCtx.arc(centerX, centerY, 20, 0, Math.PI * 2)
-  canvasCtx.fillStyle = `rgba(255, 255, 255, ${flickerIntensity * 0.3})`
-  canvasCtx.fill()
-
-  // 文字
-  if (progress > 0.4) {
-    const textOpacity = Math.min((progress - 0.4) / 0.3, 1)
-    currentText.value = `<span style="opacity: ${textOpacity}">灵魂在尖叫<br>但没有人听见</span>`
-  }
-}
-
-// 绘制第六章：相遇
-const drawChapter6Encounter = (progress) => {
-  const { width, height } = canvas.value
-  const centerX = width / 2
-  const centerY = height / 2
-
-  // 从混乱到平静
-  const chaosToPeace = progress
-
-  // 背景（逐渐变暗）
-  const bgOpacity = 1 - progress * 0.8
-  canvasCtx.fillStyle = `rgba(26, 0, 0, ${bgOpacity})`
-  canvasCtx.fillRect(0, 0, width, height)
-
-  // 温暖的橙色曲线
-  if (progress > 0) {
-    const curveProgress = Math.min(progress * 2, 1)
-    const curveIntensity = Math.sin(progress * Math.PI) * 20
-
-    canvasCtx.beginPath()
-    canvasCtx.strokeStyle = `rgba(255, 165, 0, ${curveProgress * 0.6})`
-    canvasCtx.lineWidth = 5
-
-    // 绘制心形曲线
-    for (let i = 0; i < 360; i += 5) {
-      const angle = (i * Math.PI) / 180
-      const r = 50 + Math.sin(angle * 3) * 30 + curveIntensity
-      const x = centerX + r * Math.cos(angle)
-      const y = centerY + r * Math.sin(angle) * 0.8
-
-      if (i === 0) {
-        canvasCtx.moveTo(x, y)
-      } else {
-        canvasCtx.lineTo(x, y)
-      }
-    }
-
-    canvasCtx.closePath()
-    canvasCtx.stroke()
-
-    // 填充（淡淡的橙色光晕）
-    if (progress > 0.5) {
-      canvasCtx.fillStyle = `rgba(255, 165, 0, ${curveProgress * 0.1})`
-      canvasCtx.fill()
-    }
-  }
-
-  // 文字
-  if (progress > 0.3) {
-    const textOpacity = Math.min((progress - 0.3) / 0.4, 1)
-    currentText.value = `<span style="opacity: ${textOpacity}; color: #ffa500;">接受苦难<br>通过苦难获得救赎</span>`
-  }
-}
-
-// 绘制第七章：复活
-const drawChapter7Resurrection = (progress) => {
-  const { width, height } = canvas.value
-  const centerX = width / 2
-  const centerY = height / 2
-
-  // 蓝白色背景（逐渐出现）
-  canvasCtx.fillStyle = `rgba(230, 243, 255, ${progress})`
-  canvasCtx.fillRect(0, 0, width, height)
-
-  // 地平线
-  if (progress > 0) {
-    const horizonY = height * 0.7
-    canvasCtx.beginPath()
-    canvasCtx.moveTo(0, horizonY)
-
-    // 弯曲的地平线
-    for (let x = 0; x <= width; x += 10) {
-      const y = horizonY + Math.sin(x / 100 + progress * Math.PI) * 20
-      canvasCtx.lineTo(x, y)
-    }
-
-    canvasCtx.strokeStyle = `rgba(44, 62, 80, ${0.3})`
-    canvasCtx.lineWidth = 2
-    canvasCtx.stroke()
-  }
-
-  // 不完美的圆
-  if (progress > 0.3) {
-    const circleProgress = (progress - 0.3) / 0.7
-    const baseRadius = Math.min(width, height) * 0.15
-    const radius = baseRadius * circleProgress
-
-    // 圆形主体
-    canvasCtx.beginPath()
-    canvasCtx.arc(centerX, centerY, radius, 0, Math.PI * 2)
-    canvasCtx.fillStyle = `rgba(255, 255, 255, ${circleProgress * 0.8})`
-    canvasCtx.fill()
-    canvasCtx.strokeStyle = `rgba(255, 255, 255, ${circleProgress})`
-    canvasCtx.lineWidth = 3
-    canvasCtx.stroke()
-
-    // 缺口（透出光）
-    if (circleProgress > 0.5) {
-      const gapAngle = Math.PI / 6
-      const gapStart = Math.PI
-      const gapEnd = gapStart + gapAngle
-
-      canvasCtx.save()
-      canvasCtx.translate(centerX, centerY)
-
-      // 光从缺口透出
-      const gradient = canvasCtx.createRadialGradient(
-        centerX + Math.cos(gapStart + gapAngle / 2) * radius,
-        centerY + Math.sin(gapStart + gapAngle / 2) * radius,
-        0,
-        centerX + Math.cos(gapStart + gapAngle / 2) * radius,
-        centerY + Math.sin(gapStart + gapAngle / 2) * radius,
-        100
-      )
-      gradient.addColorStop(0, `rgba(255, 255, 200, ${circleProgress * 0.8})`)
-      gradient.addColorStop(1, 'rgba(255, 255, 200, 0)')
-
-      canvasCtx.fillStyle = gradient
-      canvasCtx.fill()
-
-      canvasCtx.restore()
-    }
-  }
-
-  // 文字
-  if (progress > 0.6) {
-    const textOpacity = Math.min((progress - 0.6) / 0.3, 1)
-    const mainText = `<span style="opacity: ${textOpacity}; font-size: 1.5em;">我复活了</span>`
-    const russianText = `<span style="opacity: ${textOpacity * 0.7}; font-size: 1em; font-style: italic;">Воскресение</span>`
-
-    currentText.value = `${mainText}<br><br>${russianText}`
-  }
-}
-
-const endExperience = () => {
-  // 显示结尾文字
-  showOutro.value = true
-  showContinueBtn.value = false
-
-  // 8秒后返回
-  setTimeout(() => {
-    router.push('/universe')
-  }, 8000)
-}
-
-const startExperience = () => {
-  // 隐藏开场，开始第一章
-  showIntro.value = false
-  currentChapter.value = 0
-  startChapter()
-}
-
-// 初始化Canvas
-const initCanvas = () => {
-  if (!canvas.value) return
-
-  canvasCtx = canvas.value.getContext('2d')
-  canvas.value.width = window.innerWidth
-  canvas.value.height = window.innerHeight
-
-  // 开场文字显示时间
-  setTimeout(() => {
-    startExperience()
-  }, 5000)
+// 退出
+const exitWorld = () => {
+  router.push('/universe')
 }
 
 onMounted(() => {
-  initCanvas()
-
-  window.addEventListener('resize', () => {
-    if (canvas.value) {
-      canvas.value.width = window.innerWidth
-      canvas.value.height = window.innerHeight
-    }
-  })
-})
-
-onUnmounted(() => {
-  if (animationFrame) {
-    cancelAnimationFrame(animationFrame)
-  }
-  if (chapterTimeout) {
-    clearTimeout(chapterTimeout)
-  }
+  setTimeout(() => {
+    showWarp.value = false
+    currentStage.value = 1
+  }, 1800)
 })
 </script>
 
 <style scoped>
 .crime-and-punishment-world {
-  min-height: 100vh;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #f7f5f2;
   overflow: hidden;
-  font-family: 'Inter', 'Microsoft YaHei', sans-serif;
-  background: #000;
+  font-family: 'Source Serif 4', Georgia, serif;
 }
 
-/* === 画布 === */
-.main-canvas {
-  position: fixed;
+/* === 跃迁动画 === */
+.warp-overlay {
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
-}
-
-/* === 开场文字 === */
-.intro-text {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  background: #f7f5f2;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 10;
-  background: #000;
+  z-index: 5000;
 }
 
-.intro-title {
-  font-size: clamp(3rem, 8vw, 6rem);
-  font-weight: 200;
-  color: #fff;
-  margin-bottom: 2rem;
-  letter-spacing: 0.5em;
-  animation: titleFadeIn 2s ease;
+.warp-circle {
+  width: 300px;
+  height: 300px;
+  border: 1px solid rgba(26, 26, 26, 0.2);
+  border-radius: 50%;
+  position: relative;
+  animation: warp-expand 1.5s ease-out forwards;
 }
 
-.intro-subtitle {
-  font-size: clamp(1.2rem, 3vw, 1.8rem);
-  font-weight: 300;
-  color: #fff;
-  margin-bottom: 0.5rem;
-  opacity: 0;
-  animation: subtitleFadeIn 1s ease 0.5s forwards;
-}
-
-.intro-subtitle:nth-child(3) {
-  animation-delay: 1s;
-}
-
-@keyframes titleFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes subtitleFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 0.8;
-  }
-}
-
-/* === 章节文字 === */
-.chapter-text {
-  position: fixed;
+.warp-circle-inner {
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 10;
-  max-width: 800px;
-  text-align: center;
-  pointer-events: none;
+  width: 200px;
+  height: 200px;
+  border: 1px solid rgba(26, 26, 26, 0.3);
+  border-radius: 50%;
 }
 
-.text-content {
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
-  font-weight: 300;
-  line-height: 2;
-  color: #fff;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+.warp-text {
+  position: absolute;
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.5em;
+  color: rgba(26, 26, 26, 0.8);
+  animation: warp-fade 1.5s ease-out forwards;
 }
 
-/* === 继续按钮 === */
-.continue-btn {
-  position: fixed;
-  bottom: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
-  padding: 1rem 3rem;
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 50px;
+@keyframes warp-expand {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+@keyframes warp-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.warp-enter-active,
+.warp-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.warp-enter-from,
+.warp-leave-to {
+  opacity: 0;
+}
+
+/* === 返回按钮 === */
+.exit-btn {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  background: rgba(26, 26, 26, 0.03);
+  border: 1px solid rgba(26, 26, 26, 0.08);
   color: #1a1a1a;
+  backdrop-filter: blur(10px);
   font-family: 'Inter', sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+  z-index: 3000;
 }
 
-.continue-btn:hover {
-  background: #1a1a1a;
-  color: #fff;
-  transform: translateX(-50%) scale(1.05);
+.exit-btn:hover {
+  background: rgba(26, 26, 26, 0.9);
+  color: #f7f5f2;
+  transform: translateX(-3px);
 }
 
-.continue-btn.is-end {
-  background: rgba(255, 255, 255, 0.9);
+.exit-btn svg {
+  width: 16px;
+  height: 16px;
 }
 
-/* === 结尾文字 === */
-.outro-text {
-  position: fixed;
+/* === 主容器 === */
+.main-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* === 几何背景层 === */
+.geometry-background {
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 100;
-  background: #000;
+  z-index: 1;
+  pointer-events: none;
 }
 
-.outro-line {
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
+.geometry-stage {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 阶段 1: 孤立的黑圆 */
+.black-circle {
+  width: 100px;
+  height: 100px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  animation: pulse-slow 4s ease-in-out infinite;
+}
+
+/* 阶段 2: 黑圆 + 白点 */
+.white-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  background: #f7f5f2;
+  border-radius: 50%;
+  animation: pulse-inner 2s ease-in-out infinite;
+}
+
+/* 阶段 3: 斧头（三角形） */
+.axe-triangle {
+  position: absolute;
+  right: -40px;
+  width: 0;
+  height: 0;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  border-bottom: 50px solid #1a1a1a;
+  transform: rotate(45deg);
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+/* 阶段 4: 裂痕圆 */
+.cracked-circle {
+  width: 100px;
+  height: 100px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crack-svg {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  animation: crack-draw 1s ease-out forwards;
+}
+
+.crack-line {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: crack-appear 0.8s ease-out forwards;
+}
+
+.crack-delay-1 {
+  animation-delay: 0.2s;
+}
+
+.crack-delay-2 {
+  animation-delay: 0.4s;
+}
+
+@keyframes crack-appear {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.axe-embedded {
+  position: absolute;
+  border-bottom-color: #8B0000;
+  right: -30px;
+  transform: rotate(45deg) scale(0.8);
+}
+
+/* 阶段 5: 双圆对立 */
+.dual-circle-container {
+  position: relative;
+  width: 200px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.circle-black {
+  width: 80px;
+  height: 80px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  animation: pulse-opposite 4s ease-in-out infinite;
+}
+
+.circle-white {
+  width: 80px;
+  height: 80px;
+  background: #f7f5f2;
+  border: 2px solid #1a1a1a;
+  border-radius: 50%;
+  animation: pulse-opposite 4s ease-in-out infinite reverse;
+}
+
+/* 阶段 6: 融合圆 */
+.merged-circle {
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, #4a7c9f 0%, #1a1a1a 100%);
+  border-radius: 50%;
+  animation: merge-pulse 6s ease-in-out infinite;
+}
+
+/* === 金句层 === */
+.quote-container {
+  position: relative;
+  z-index: 10;
+  max-width: 900px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.quote-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.quote-line {
+  font-family: 'Source Serif 4', serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
   font-weight: 300;
-  color: #fff;
-  margin-bottom: 1rem;
+  line-height: 1.6;
+  letter-spacing: 0.1em;
+  color: #1a1a1a;
+  margin: 0;
   opacity: 0;
-  animation: outroFadeIn 1.5s ease forwards;
+  animation: line-fade-in 1s ease-out forwards;
 }
 
-.outro-line:nth-child(1) {
-  animation-delay: 0.5s;
-}
-
-.outro-line:nth-child(2) {
-  animation-delay: 2s;
-}
-
-.outro-author {
-  font-size: clamp(1rem, 2.5vw, 1.5rem);
-  font-weight: 300;
-  color: #fff;
-  margin-bottom: 0.5rem;
-  opacity: 0;
-  animation: outroFadeIn 1.5s ease 3.5s forwards;
-}
-
-.outro-year {
-  font-size: clamp(0.9rem, 2vw, 1.2rem);
-  font-weight: 200;
-  color: #888;
-  opacity: 0;
-  animation: outroFadeIn 1.5s ease 4.5s forwards;
-}
-
-@keyframes outroFadeIn {
+@keyframes line-fade-in {
   from {
     opacity: 0;
+    transform: translateY(20px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.quote-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: rgba(26, 26, 26, 0.5);
+  text-transform: uppercase;
+  margin-top: 2rem;
+  margin-bottom: 0;
+  opacity: 0;
+  animation: subtitle-fade-in 1s ease-out 0.5s forwards;
+}
+
+@keyframes subtitle-fade-in {
   to {
     opacity: 1;
   }
 }
 
-/* === 转场动画 === */
-.fade-in-enter-active,
-.fade-in-leave-active {
-  transition: opacity 1s ease;
+/* === 进度指示 === */
+.progress-container {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  z-index: 100;
 }
 
-.fade-in-enter-from,
-.fade-in-leave-to {
+.progress-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(26, 26, 26, 0.2);
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  background: #1a1a1a;
+  transform: scale(1.3);
+}
+
+.click-hint {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: rgba(26, 26, 26, 0.4);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* === 动画关键帧 === */
+@keyframes pulse-slow {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes pulse-inner {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: rotate(45deg) translateY(0);
+  }
+  50% {
+    transform: rotate(45deg) translateY(-10px);
+  }
+}
+
+@keyframes pulse-opposite {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes merge-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+/* === 过渡动画 === */
+.geometry-fade-enter-active,
+.geometry-fade-leave-active {
+  transition: all 0.8s ease;
+}
+
+.geometry-fade-enter-from {
   opacity: 0;
+  transform: scale(0.8);
 }
 
-.text-fade-enter-active,
-.text-fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.text-fade-enter-from,
-.text-fade-leave-to {
+.geometry-fade-leave-to {
   opacity: 0;
+  transform: scale(1.2);
 }
 
-.btn-fade-enter-active,
-.btn-fade-leave-active {
-  transition: opacity 0.3s ease;
+.quote-fade-enter-active,
+.quote-fade-leave-active {
+  transition: all 0.6s ease;
 }
 
-.btn-fade-enter-from,
-.btn-fade-leave-to {
+.quote-fade-enter-from {
   opacity: 0;
+  transform: translateY(20px);
+}
+
+.quote-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+/* === 响应式 === */
+@media (max-width: 1024px) {
+  .quote-line {
+    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+  }
+
+  .black-circle,
+  .cracked-circle {
+    width: 80px;
+    height: 80px;
+  }
+
+  .circle-black,
+  .circle-white {
+    width: 60px;
+    height: 60px;
+  }
+
+  .merged-circle {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .exit-btn {
+    top: 1rem;
+    left: 1rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.6rem;
+  }
+
+  .quote-line {
+    font-size: clamp(1.2rem, 4vw, 2rem);
+    letter-spacing: 0.05em;
+  }
+
+  .quote-subtitle {
+    font-size: 0.65rem;
+    margin-top: 1.5rem;
+  }
+
+  .black-circle,
+  .cracked-circle {
+    width: 60px;
+    height: 60px;
+  }
+
+  .circle-black,
+  .circle-white {
+    width: 50px;
+    height: 50px;
+  }
+
+  .merged-circle {
+    width: 80px;
+    height: 80px;
+  }
+
+  .axe-triangle {
+    border-left-width: 20px;
+    border-right-width: 20px;
+    border-bottom-width: 35px;
+  }
+
+  .warp-circle {
+    width: 200px;
+    height: 200px;
+  }
+
+  .warp-circle-inner {
+    width: 140px;
+    height: 140px;
+  }
+
+  .warp-text {
+    font-size: 0.7rem;
+  }
 }
 </style>
