@@ -1,848 +1,399 @@
 <template>
-  <div class="sahara-world" @click="handleSceneClick">
-    <canvas ref="canvas"></canvas>
-
-    <!-- 开场文字 -->
-    <transition name="fade">
-      <div v-if="showIntro" class="intro-text" @click.stop="handleIntroClick">
-        <p class="quote">"每想你一次，天上飘落一粒沙"</p>
-        <p class="quote-sub">从此形成了撒哈拉</p>
-        <p class="click-hint">点击进入 →</p>
+  <div class="sahara-world">
+    <!-- 跃迁动画 -->
+    <transition name="warp">
+      <div v-if="showWarp" class="warp-overlay">
+        <div class="warp-circle">
+          <div class="warp-circle-inner"></div>
+        </div>
+        <div class="warp-text">撒哈拉的故事</div>
       </div>
     </transition>
 
-    <!-- 章节文字 -->
-    <transition name="fade">
-      <div v-if="showChapterText && currentChapterText" class="chapter-text">
-        <p v-html="currentChapterText"></p>
-      </div>
-    </transition>
+    <!-- 返回按钮 -->
+    <button class="exit-btn" @click="exitWorld">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      <span>Return</span>
+    </button>
 
-    <!-- 跳过提示 -->
-    <transition name="fade">
-      <div v-if="showSkipHint" class="skip-hint">
-        <p>点击跳过 →</p>
+    <!-- 主内容区 -->
+    <div class="main-container">
+      <!-- 阶段1：思念的开始 -->
+      <div v-if="stage === 1" class="stage-container" @click="nextStage">
+        <svg class="sand-grain" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="4" fill="#d97706" opacity="0.8"/>
+        </svg>
+        <p class="quote-text">"每想你一次，天上飘落一粒沙"</p>
+        <p class="click-hint">点击继续</p>
+        <div class="stage-progress">
+          <div v-for="i in 6" :key="i" class="progress-dot" :class="{ active: stage >= i }"></div>
+        </div>
       </div>
-    </transition>
 
-    <!-- 继续/结束按钮 -->
-    <transition name="fade">
-      <button v-if="showButton" @click.stop="handleButtonClick" class="continue-btn">
-        {{ isLastChapter ? '重新开始' : '继续 →' }}
-      </button>
-    </transition>
-
-    <!-- 结尾文字 -->
-    <transition name="fade">
-      <div v-if="showOutro" class="outro-text" @click.stop="restart">
-        <p class="quote">"不要问我从哪里来"</p>
-        <p class="quote-sub">我的故乡在远方</p>
-        <p class="author">— 三毛</p>
-        <p class="click-hint">点击重新开始 →</p>
+      <!-- 阶段2：沙漠的形成 -->
+      <div v-if="stage === 2" class="stage-container" @click="nextStage">
+        <svg class="dune-curves" viewBox="0 0 200 200">
+          <path d="M0,120 Q50,80 100,100 T200,90" stroke="#d97706" stroke-width="1.5" fill="none" opacity="0.6"/>
+          <path d="M0,140 Q50,100 100,120 T200,110" stroke="#d97706" stroke-width="1.5" fill="none" opacity="0.5"/>
+          <path d="M0,160 Q50,120 100,140 T200,130" stroke="#d97706" stroke-width="1.5" fill="none" opacity="0.4"/>
+        </svg>
+        <p class="quote-text">"从此形成了撒哈拉"</p>
+        <p class="click-hint">点击继续</p>
+        <div class="stage-progress">
+          <div v-for="i in 6" :key="i" class="progress-dot" :class="{ active: stage >= i }"></div>
+        </div>
       </div>
-    </transition>
+
+      <!-- 阶段3：生命的力量 -->
+      <div v-if="stage === 3" class="stage-container" @click="nextStage">
+        <svg class="life-emerges" viewBox="0 0 200 200">
+          <path d="M0,130 Q50,90 100,110 T200,100" stroke="#d97706" stroke-width="1.5" fill="none" opacity="0.5"/>
+          <path d="M0,150 Q50,110 100,130 T200,120" stroke="#d97706" stroke-width="1.5" fill="none" opacity="0.4"/>
+          <circle cx="70" cy="105" r="2" fill="#d97706" opacity="0.6"/>
+          <circle cx="130" cy="95" r="2.5" fill="#d97706" opacity="0.55"/>
+          <circle cx="100" cy="115" r="1.8" fill="#d97706" opacity="0.5"/>
+        </svg>
+        <p class="quote-text">"生命，在这样荒僻的地方，一样欣欣向荣"</p>
+        <p class="click-hint">点击继续</p>
+        <div class="stage-progress">
+          <div v-for="i in 6" :key="i" class="progress-dot" :class="{ active: stage >= i }"></div>
+        </div>
+      </div>
+
+      <!-- 阶段4：永恒的姿态 -->
+      <div v-if="stage === 4" class="stage-container" @click="nextStage">
+        <svg class="tree-eternal" viewBox="0 0 200 200">
+          <line x1="100" y1="180" x2="100" y2="60" stroke="#d97706" stroke-width="2" opacity="0.6"/>
+          <line x1="100" y1="140" x2="70" y2="110" stroke="#d97706" stroke-width="1.5" opacity="0.5"/>
+          <line x1="100" y1="120" x2="130" y2="90" stroke="#d97706" stroke-width="1.5" opacity="0.5"/>
+          <line x1="100" y1="100" x2="65" y2="75" stroke="#d97706" stroke-width="1.5" opacity="0.45"/>
+          <line x1="100" y1="100" x2="135" y2="70" stroke="#d97706" stroke-width="1.5" opacity="0.45"/>
+          <circle cx="100" cy="180" r="4" fill="#d97706" opacity="0.7"/>
+        </svg>
+        <p class="quote-text">"如果有来生，要做一棵树，站成永恒"</p>
+        <p class="click-hint">点击继续</p>
+        <div class="stage-progress">
+          <div v-for="i in 6" :key="i" class="progress-dot" :class="{ active: stage >= i }"></div>
+        </div>
+      </div>
+
+      <!-- 阶段5：时间的流逝 -->
+      <div v-if="stage === 5" class="stage-container" @click="nextStage">
+        <svg class="time-layers" viewBox="0 0 200 200">
+          <path d="M0,80 Q50,100 100,90 T200,85" stroke="#d97706" stroke-width="1" fill="none" opacity="0.35"/>
+          <path d="M0,100 Q50,120 100,110 T200,105" stroke="#d97706" stroke-width="1" fill="none" opacity="0.3"/>
+          <path d="M0,120 Q50,140 100,130 T200,125" stroke="#d97706" stroke-width="1" fill="none" opacity="0.25"/>
+          <path d="M0,140 Q50,160 100,150 T200,145" stroke="#d97706" stroke-width="1" fill="none" opacity="0.2"/>
+        </svg>
+        <p class="quote-text">"流去的种种，化为一层层沙漠"</p>
+        <p class="click-hint">点击继续</p>
+        <div class="stage-progress">
+          <div v-for="i in 6" :key="i" class="progress-dot" :class="{ active: stage >= i }"></div>
+        </div>
+      </div>
+
+      <!-- 阶段6：内心的宽广 -->
+      <div v-if="stage === 6" class="stage-container">
+        <svg class="vast-heart" viewBox="0 0 200 200">
+          <line x1="100" y1="180" x2="100" y2="20" stroke="#d97706" stroke-width="0.5" opacity="0.15"/>
+          <circle cx="100" cy="100" r="60" stroke="#d97706" stroke-width="0.5" fill="none" opacity="0.1"/>
+        </svg>
+        <p class="quote-text">"我的心地是这样宽敞，没有忧伤"</p>
+        <button class="back-to-contents" @click="exitWorld">返回宇宙</button>
+        <div class="stage-progress">
+          <div v-for="i in 6" :key="i" class="progress-dot" :class="{ active: stage >= i }"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
-const canvas = ref(null)
-let ctx = null
-let animationId = null
+const router = useRouter()
+const showWarp = ref(true)
+const stage = ref(1)
 
-// 状态管理
-const showIntro = ref(true)
-const showOutro = ref(false)
-const showChapterText = ref(false)
-const showSkipHint = ref(false)
-const showButton = ref(false)
-const currentChapterIndex = ref(0)
-const currentChapterText = ref('')
-const isLastChapter = ref(false)
-
-// 章节配置
-const chapters = [
-  { name: '起风', duration: 15000, text: '风，从远方吹来', hasButton: false },
-  { name: '流动', duration: 18000, text: '沙粒开始流动<br>形成大地的形状', hasButton: false },
-  { name: '安家', duration: 15000, text: '在这片荒凉中<br>我们建起了家', hasButton: true },
-  { name: '生活', duration: 20000, text: '生命的过程<br>无论是阳春白雪，还是青菜豆腐', hasButton: false },
-  { name: '远行', duration: 18000, text: '为何流浪<br>远方有我的梦', hasButton: true },
-  { name: '橄榄树', duration: 15000, text: '不要问我从哪里来<br>不要问我到哪里去', hasButton: false },
-  { name: '归宿', duration: 20000, text: '', hasButton: true }
-]
-
-// 鼠标位置（用于沙粒跟随效果）
-const mousePos = ref({ x: 0, y: 0 })
-
-// 沙粒系统
-let sandParticles = []
-const SAND_COUNT = 500
-
-// 脚印系统
-let footprints = []
-
-// 时间跟踪
-let chapterStartTime = 0
-let globalTime = 0
-
-// 初始化沙粒
-const initSandParticles = () => {
-  sandParticles = []
-  for (let i = 0; i < SAND_COUNT; i++) {
-    sandParticles.push({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      size: Math.random() * 2 + 1,
-      speedX: (Math.random() - 0.5) * 0.5,
-      speedY: Math.random() * 0.5 + 0.2,
-      opacity: Math.random() * 0.5 + 0.3
-    })
+const nextStage = () => {
+  if (stage.value < 6) {
+    stage.value++
   }
 }
 
-// 调整 Canvas 大小
-const resizeCanvas = () => {
-  if (canvas.value) {
-    canvas.value.width = window.innerWidth
-    canvas.value.height = window.innerHeight
-  }
-}
-
-// 绘制第一章：起风
-const drawChapter1Falling = (progress) => {
-  // 米色渐变背景
-  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.value.height)
-  gradient.addColorStop(0, '#f5e6d3')
-  gradient.addColorStop(1, '#d4a574')
-  ctx.fillStyle = gradient
-  ctx.fillRect(0, 0, canvas.value.width, canvas.value.height)
-
-  // 沙粒从天而降
-  const fallingProgress = progress * 0.8
-  const activeCount = Math.floor(SAND_COUNT * fallingProgress)
-
-  for (let i = 0; i < activeCount; i++) {
-    const p = sandParticles[i]
-    const fallDistance = progress * canvas.value.height * 0.7
-    const y = (p.y - fallDistance) % canvas.value.height
-
-    ctx.beginPath()
-    ctx.arc(p.x, y, p.size, 0, Math.PI * 2)
-    ctx.fillStyle = `rgba(139, 90, 43, ${p.opacity})`
-    ctx.fill()
-  }
-
-  // 风的纹理
-  if (progress > 0.3) {
-    const windOpacity = (progress - 0.3) / 0.7 * 0.15
-    ctx.strokeStyle = `rgba(139, 90, 43, ${windOpacity})`
-    ctx.lineWidth = 1
-
-    for (let i = 0; i < 20; i++) {
-      const y = (i / 20) * canvas.value.height
-      ctx.beginPath()
-      ctx.moveTo(0, y)
-      ctx.lineTo(canvas.value.width, y + Math.sin(globalTime / 1000 + i) * 20)
-      ctx.stroke()
-    }
-  }
-}
-
-// 绘制第二章：流动
-const drawChapter2Flowing = (progress) => {
-  // 背景渐变
-  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.value.height)
-  gradient.addColorStop(0, '#f5e6d3')
-  gradient.addColorStop(1, '#c9a067')
-  ctx.fillStyle = gradient
-  ctx.fillRect(0, 0, canvas.value.width, canvas.value.height)
-
-  // 沙丘形状
-  const duneProgress = Math.min(progress * 1.5, 1)
-  const waveOffset = globalTime / 2000
-
-  // 多层沙丘
-  for (let layer = 0; layer < 3; layer++) {
-    const layerOffset = layer * 100
-    const layerOpacity = 0.3 - layer * 0.08
-    const yBase = canvas.value.height * 0.6 + layer * 80
-
-    ctx.beginPath()
-    ctx.moveTo(0, canvas.value.height)
-
-    for (let x = 0; x <= canvas.value.width; x += 10) {
-      const wave = Math.sin((x + layerOffset) / 300 + waveOffset) * 50
-      const y = yBase + wave * duneProgress
-      ctx.lineTo(x, y)
-    }
-
-    ctx.lineTo(canvas.value.width, canvas.value.height)
-    ctx.closePath()
-
-    ctx.fillStyle = `rgba(180, 130, 70, ${layerOpacity})`
-    ctx.fill()
-  }
-
-  // 沙粒流动效果
-  const flowOpacity = progress * 0.6
-  for (let i = 0; i < SAND_COUNT; i++) {
-    const p = sandParticles[i]
-    const flowX = (p.x + globalTime / 50) % (canvas.value.width + 100) - 50
-    const flowY = p.y + Math.sin(globalTime / 1000 + i) * 20
-
-    ctx.beginPath()
-    ctx.arc(flowX, flowY, p.size, 0, Math.PI * 2)
-    ctx.fillStyle = `rgba(139, 90, 43, ${p.opacity * flowOpacity})`
-    ctx.fill()
-  }
-}
-
-// 绘制第三章：安家
-const drawChapter3Home = (progress) => {
-  // 沙漠背景
-  ctx.fillStyle = '#d4a574'
-  ctx.fillRect(0, 0, canvas.value.width, canvas.value.height)
-
-  // 地平线
-  ctx.fillStyle = '#c9965f'
-  ctx.fillRect(0, canvas.value.height * 0.6, canvas.value.width, canvas.value.height * 0.4)
-
-  // 太阳
-  if (progress > 0.2) {
-    const sunOpacity = Math.min((progress - 0.2) / 0.3, 1)
-    const sunY = canvas.value.height * 0.3 - progress * 50
-
-    const sunGradient = ctx.createRadialGradient(
-      canvas.value.width * 0.7, sunY, 0,
-      canvas.value.width * 0.7, sunY, 80
-    )
-    sunGradient.addColorStop(0, `rgba(255, 200, 100, ${sunOpacity})`)
-    sunGradient.addColorStop(1, 'rgba(255, 200, 100, 0)')
-
-    ctx.fillStyle = sunGradient
-    ctx.beginPath()
-    ctx.arc(canvas.value.width * 0.7, sunY, 80, 0, Math.PI * 2)
-    ctx.fill()
-  }
-
-  // 几何小屋
-  const houseOpacity = Math.min(progress * 2, 1)
-  if (houseOpacity > 0) {
-    const houseX = canvas.value.width * 0.4
-    const houseY = canvas.value.height * 0.55
-    const houseSize = 100
-
-    // 房屋主体
-    ctx.fillStyle = `rgba(255, 250, 240, ${houseOpacity})`
-    ctx.fillRect(houseX - houseSize / 2, houseY - houseSize / 2, houseSize, houseSize)
-
-    // 屋顶
-    ctx.beginPath()
-    ctx.moveTo(houseX - houseSize / 2 - 20, houseY - houseSize / 2)
-    ctx.lineTo(houseX, houseY - houseSize / 2 - 60)
-    ctx.lineTo(houseX + houseSize / 2 + 20, houseY - houseSize / 2)
-    ctx.closePath()
-    ctx.fillStyle = `rgba(200, 150, 100, ${houseOpacity})`
-    ctx.fill()
-
-    // 窗户
-    ctx.fillStyle = `rgba(255, 165, 0, ${houseOpacity * 0.8})`
-    ctx.fillRect(houseX - 20, houseY - 10, 40, 40)
-  }
-
-  // 沙粒细节
-  for (let i = 0; i < 100; i++) {
-    const p = sandParticles[i]
-    ctx.beginPath()
-    ctx.arc(p.x, p.y + canvas.value.height * 0.6, p.size * 0.8, 0, Math.PI * 2)
-    ctx.fillStyle = `rgba(139, 90, 43, ${p.opacity * 0.3})`
-    ctx.fill()
-  }
-}
-
-// 绘制第四章：生活
-const drawChapter4Life = (progress) => {
-  // 温暖的橙色背景
-  const gradient = ctx.createRadialGradient(
-    canvas.value.width / 2, canvas.value.height / 2, 0,
-    canvas.value.width / 2, canvas.value.height / 2, canvas.value.width / 2
-  )
-  const warmIntensity = progress * 0.5
-  gradient.addColorStop(0, `rgba(255, 200, 150, ${warmIntensity})`)
-  gradient.addColorStop(1, '#d4a574')
-
-  ctx.fillStyle = gradient
-  ctx.fillRect(0, 0, canvas.value.width, canvas.value.height)
-
-  // 温暖的光晕
-  const lightCount = 5
-  for (let i = 0; i < lightCount; i++) {
-    const lightProgress = Math.min((progress - i * 0.15) * 2, 1)
-    if (lightProgress > 0) {
-      const x = canvas.value.width * (0.3 + i * 0.15)
-      const y = canvas.value.height * (0.4 + Math.sin(i) * 0.2)
-      const radius = 100 + Math.sin(globalTime / 1500 + i) * 30
-
-      const lightGradient = ctx.createRadialGradient(x, y, 0, x, y, radius)
-      lightGradient.addColorStop(0, `rgba(255, 165, 0, ${lightProgress * 0.4})`)
-      lightGradient.addColorStop(1, 'rgba(255, 165, 0, 0)')
-
-      ctx.fillStyle = lightGradient
-      ctx.beginPath()
-      ctx.arc(x, y, radius, 0, Math.PI * 2)
-      ctx.fill()
-    }
-  }
-
-  // 生活物品的抽象几何
-  const items = [
-    { type: 'circle', x: 0.25, y: 0.35, size: 30 },
-    { type: 'rect', x: 0.65, y: 0.45, size: 40 },
-    { type: 'triangle', x: 0.45, y: 0.6, size: 35 }
-  ]
-
-  items.forEach((item, index) => {
-    const itemOpacity = Math.min((progress - index * 0.1) * 3, 1) * 0.6
-    if (itemOpacity > 0) {
-      ctx.fillStyle = `rgba(255, 250, 240, ${itemOpacity})`
-      const x = item.x * canvas.value.width
-      const y = item.y * canvas.value.height
-
-      if (item.type === 'circle') {
-        ctx.beginPath()
-        ctx.arc(x, y, item.size, 0, Math.PI * 2)
-        ctx.fill()
-      } else if (item.type === 'rect') {
-        ctx.fillRect(x - item.size / 2, y - item.size / 2, item.size, item.size)
-      } else if (item.type === 'triangle') {
-        ctx.beginPath()
-        ctx.moveTo(x, y - item.size)
-        ctx.lineTo(x + item.size, y + item.size)
-        ctx.lineTo(x - item.size, y + item.size)
-        ctx.closePath()
-        ctx.fill()
-      }
-    }
-  })
-}
-
-// 绘制第五章：远行
-const drawChapter5Journey = (progress) => {
-  // 沙漠背景
-  ctx.fillStyle = '#d4a574'
-  ctx.fillRect(0, 0, canvas.value.width, canvas.value.height)
-
-  // 远方地平线
-  const horizonY = canvas.value.height * 0.55
-  ctx.fillStyle = '#c9965f'
-  ctx.fillRect(0, horizonY, canvas.value.width, canvas.value.height - horizonY)
-
-  // 脚印
-  const footprintCount = 8
-  for (let i = 0; i < footprintCount; i++) {
-    const footprintProgress = (progress - i * 0.08) / 0.3
-    if (footprintProgress > 0 && footprintProgress <= 1) {
-      const x = canvas.value.width * (0.15 + i * 0.1)
-      const y = horizonY + 50 + i * 30
-      const size = 15 + i * 3
-      const opacity = (1 - footprintProgress) * 0.6
-
-      // 左脚印
-      ctx.beginPath()
-      ctx.ellipse(x - 15, y, size * 0.6, size, 0, 0, Math.PI * 2)
-      ctx.fillStyle = `rgba(139, 90, 43, ${opacity})`
-      ctx.fill()
-
-      // 右脚印
-      ctx.beginPath()
-      ctx.ellipse(x + 15, y + 40, size * 0.6, size, 0, 0, Math.PI * 2)
-      ctx.fill()
-    }
-  }
-
-  // 风沙
-  const sandOpacity = Math.min(progress * 1.5, 1) * 0.3
-  ctx.fillStyle = `rgba(212, 165, 116, ${sandOpacity})`
-  for (let i = 0; i < 20; i++) {
-    const x = (globalTime / 20 + i * 100) % (canvas.value.width + 200) - 100
-    const y = horizonY + Math.random() * 200
-    const width = 100 + Math.random() * 100
-    const height = 2 + Math.random() * 3
-    ctx.fillRect(x, y, width, height)
-  }
-
-  // 远方的虚线（象征远方）
-  ctx.strokeStyle = `rgba(255, 255, 255, ${progress * 0.5})`
-  ctx.lineWidth = 2
-  ctx.setLineDash([10, 10])
-  ctx.beginPath()
-  ctx.moveTo(canvas.value.width * 0.9, horizonY)
-  ctx.lineTo(canvas.value.width * 0.95, horizonY - 100)
-  ctx.stroke()
-  ctx.setLineDash([])
-}
-
-// 绘制第六章：橄榄树
-const drawChapter6OliveTree = (progress) => {
-  // 深蓝夜空
-  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.value.height)
-  gradient.addColorStop(0, '#1a3a5c')
-  gradient.addColorStop(1, '#2d4a6c')
-  ctx.fillStyle = gradient
-  ctx.fillRect(0, 0, canvas.value.width, canvas.value.height)
-
-  // 星星
-  const starCount = 50
-  for (let i = 0; i < starCount; i++) {
-    const x = Math.random() * canvas.value.width
-    const y = Math.random() * canvas.value.height * 0.6
-    const size = Math.random() * 2 + 1
-    const twinkle = Math.sin(globalTime / 500 + i) * 0.3 + 0.7
-
-    ctx.beginPath()
-    ctx.arc(x, y, size, 0, Math.PI * 2)
-    ctx.fillStyle = `rgba(255, 255, 255, ${twinkle * progress})`
-    ctx.fill()
-  }
-
-  // 橄榄树轮廓（虚线）
-  const treeOpacity = progress
-  ctx.strokeStyle = `rgba(255, 255, 255, ${treeOpacity * 0.6})`
-  ctx.lineWidth = 3
-  ctx.setLineDash([8, 12])
-
-  // 树干
-  ctx.beginPath()
-  ctx.moveTo(canvas.value.width / 2 - 10, canvas.value.height * 0.9)
-  ctx.lineTo(canvas.value.width / 2, canvas.value.height * 0.6)
-  ctx.lineTo(canvas.value.width / 2 + 10, canvas.value.height * 0.9)
-  ctx.stroke()
-
-  // 树冠（多个椭圆）
-  const canopyY = canvas.value.height * 0.5
-  ctx.beginPath()
-  ctx.ellipse(canvas.value.width / 2 - 30, canopyY, 40, 50, 0, 0, Math.PI * 2)
-  ctx.stroke()
-
-  ctx.beginPath()
-  ctx.ellipse(canvas.value.width / 2 + 30, canopyY, 45, 55, 0, 0, Math.PI * 2)
-  ctx.stroke()
-
-  ctx.beginPath()
-  ctx.ellipse(canvas.value.width / 2, canopyY - 40, 35, 40, 0, 0, Math.PI * 2)
-  ctx.stroke()
-
-  ctx.setLineDash([])
-
-  // 叶子飘落
-  const leafCount = 15
-  for (let i = 0; i < leafCount; i++) {
-    const leafProgress = (progress - i * 0.05) / 0.5
-    if (leafProgress > 0 && leafProgress <= 1) {
-      const x = canvas.value.width * (0.3 + i * 0.05) + Math.sin(globalTime / 1000 + i) * 30
-      const y = canvas.value.height * (0.3 + leafProgress * 0.6)
-      const size = 8
-      const rotation = globalTime / 500 + i
-
-      ctx.save()
-      ctx.translate(x, y)
-      ctx.rotate(rotation)
-      ctx.beginPath()
-      ctx.ellipse(0, 0, size, size / 2, 0, 0, Math.PI * 2)
-      ctx.fillStyle = `rgba(100, 150, 100, ${leafProgress * 0.7})`
-      ctx.fill()
-      ctx.restore()
-    }
-  }
-}
-
-// 绘制第七章：归宿
-const drawChapter7Return = (progress) => {
-  // 渐变到米白色
-  const bgProgress = Math.min(progress * 2, 1)
-  ctx.fillStyle = `rgba(245, 230, 211, ${bgProgress})`
-  ctx.fillRect(0, 0, canvas.value.width, canvas.value.height)
-
-  // 沙粒平静下来
-  const calmProgress = progress
-  for (let i = 0; i < SAND_COUNT; i++) {
-    const p = sandParticles[i]
-    const settleY = p.y * 0.8 + canvas.value.height * 0.2
-    const currentY = p.y + (settleY - p.y) * calmProgress
-    const opacity = p.opacity * (1 - calmProgress * 0.5)
-
-    ctx.beginPath()
-    ctx.arc(p.x, currentY, p.size, 0, Math.PI * 2)
-    ctx.fillStyle = `rgba(180, 140, 90, ${opacity})`
-    ctx.fill()
-  }
-
-  // 远方的记忆印记
-  if (progress > 0.5) {
-    const memoryOpacity = (progress - 0.5) / 0.5 * 0.4
-    ctx.fillStyle = `rgba(212, 165, 116, ${memoryOpacity})`
-
-    // 房屋印记
-    const houseSize = 60
-    ctx.fillRect(
-      canvas.value.width * 0.4 - houseSize / 2,
-      canvas.value.height * 0.45 - houseSize / 2,
-      houseSize,
-      houseSize
-    )
-
-    // 橄榄树印记
-    ctx.beginPath()
-    ctx.arc(canvas.value.width * 0.65, canvas.value.height * 0.45, 40, 0, Math.PI * 2)
-    ctx.fill()
-  }
-
-  // 留下的淡淡印记
-  if (progress > 0.7) {
-    const markOpacity = (progress - 0.7) / 0.3 * 0.3
-    ctx.strokeStyle = `rgba(139, 90, 43, ${markOpacity})`
-    ctx.lineWidth = 2
-
-    // 足迹印记
-    ctx.beginPath()
-    ctx.arc(canvas.value.width * 0.5, canvas.value.height * 0.7, 20, 0, Math.PI * 2)
-    ctx.stroke()
-  }
-
-  // 最终的平静
-  if (progress > 0.9) {
-    const peaceOpacity = (progress - 0.9) / 0.1 * 0.2
-    ctx.fillStyle = `rgba(255, 255, 255, ${peaceOpacity})`
-    ctx.fillRect(0, 0, canvas.value.width, canvas.value.height)
-  }
-}
-
-// 主动画循环
-const animate = () => {
-  if (!ctx) return
-
-  const currentTime = Date.now()
-  globalTime = currentTime
-  const elapsed = currentTime - chapterStartTime
-  const progress = Math.min(elapsed / chapters[currentChapterIndex.value].duration, 1)
-
-  // 根据章节绘制
-  switch (currentChapterIndex.value) {
-    case 0: drawChapter1Falling(progress); break
-    case 1: drawChapter2Flowing(progress); break
-    case 2: drawChapter3Home(progress); break
-    case 3: drawChapter4Life(progress); break
-    case 4: drawChapter5Journey(progress); break
-    case 5: drawChapter6OliveTree(progress); break
-    case 6: drawChapter7Return(progress); break
-  }
-
-  // 显示跳过提示（章节播放超过30%后显示）
-  if (!showIntro.value && !showOutro.value && !showButton.value && progress > 0.3) {
-    showSkipHint.value = true
-  } else {
-    showSkipHint.value = false
-  }
-
-  // 检查章节是否结束
-  if (progress >= 1) {
-    if (chapters[currentChapterIndex.value].hasButton) {
-      if (!showButton.value) {
-        showButton.value = true
-        isLastChapter.value = currentChapterIndex.value === chapters.length - 1
-      }
-    } else {
-      nextChapter()
-    }
-  }
-
-  animationId = requestAnimationFrame(animate)
-}
-
-// 下一章
-const nextChapter = () => {
-  showButton.value = false
-  showChapterText.value = false
-
-  if (currentChapterIndex.value < chapters.length - 1) {
-    currentChapterIndex.value++
-    chapterStartTime = Date.now()
-    currentChapterText.value = chapters[currentChapterIndex.value].text
-
-    setTimeout(() => {
-      showChapterText.value = true
-    }, 1000)
-  } else {
-    // 最后一章结束，显示结尾
-    setTimeout(() => {
-      showOutro.value = true
-      showChapterText.value = false
-    }, 1000)
-  }
-}
-
-// 按钮点击处理
-const handleButtonClick = () => {
-  if (isLastChapter.value) {
-    // 重新开始
-    restart()
-  } else {
-    nextChapter()
-  }
-}
-
-// 场景点击处理（跳过当前章节）
-const handleSceneClick = () => {
-  // 只在播放章节时响应
-  if (!showIntro.value && !showOutro.value && !showButton.value) {
-    nextChapter()
-  }
-}
-
-// 开场点击处理
-const handleIntroClick = () => {
-  // 立即开始，不等3秒
-  showIntro.value = false
-  currentChapterText.value = chapters[0].text
-  chapterStartTime = Date.now()
-
-  setTimeout(() => {
-    showChapterText.value = true
-  }, 1000)
-}
-
-// 重新开始
-const restart = () => {
-  showIntro.value = true
-  showOutro.value = false
-  showButton.value = false
-  showChapterText.value = false
-  currentChapterIndex.value = 0
-  currentChapterText.value = ''
-  chapterStartTime = Date.now()
-
-  setTimeout(() => {
-    showIntro.value = false
-    currentChapterText.value = chapters[0].text
-    setTimeout(() => {
-      showChapterText.value = true
-    }, 1000)
-  }, 3000)
-}
-
-// 鼠标移动处理
-const handleMouseMove = (e) => {
-  mousePos.value = {
-    x: e.clientX,
-    y: e.clientY
-  }
-}
-
-// 启动体验
-const startExperience = () => {
-  setTimeout(() => {
-    showIntro.value = false
-    currentChapterText.value = chapters[0].text
-    chapterStartTime = Date.now()
-
-    setTimeout(() => {
-      showChapterText.value = true
-    }, 1000)
-  }, 3000)
+const exitWorld = () => {
+  router.push('/universe')
 }
 
 onMounted(() => {
-  ctx = canvas.value?.getContext('2d')
-  resizeCanvas()
-  initSandParticles()
-
-  window.addEventListener('resize', resizeCanvas)
-  window.addEventListener('mousemove', handleMouseMove)
-
-  startExperience()
-  animate()
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', resizeCanvas)
-  window.removeEventListener('mousemove', handleMouseMove)
-  if (animationId) {
-    cancelAnimationFrame(animationId)
-  }
+  setTimeout(() => {
+    showWarp.value = false
+  }, 1800)
 })
 </script>
 
 <style scoped>
 .sahara-world {
-  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
   height: 100vh;
-  position: relative;
+  background: #f7f5f2;
   overflow: hidden;
-  background: #d4a574;
+  font-family: 'Noto Serif SC', serif;
 }
 
-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-/* 开场/结尾文字 */
-.intro-text,
-.outro-text {
+/* === 跃迁动画 === */
+.warp-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  background: #f7f5f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
+}
+
+.warp-circle {
+  width: 300px;
+  height: 300px;
+  border: 1px solid rgba(26, 26, 26, 0.2);
+  border-radius: 50%;
+  position: relative;
+  animation: warp-expand 1.5s ease-out forwards;
+}
+
+.warp-circle-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  border: 1px solid rgba(26, 26, 26, 0.3);
+  border-radius: 50%;
+}
+
+.warp-text {
+  position: absolute;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.5em;
+  color: rgba(26, 26, 26, 0.8);
+  animation: warp-fade 1.5s ease-out forwards;
+}
+
+@keyframes warp-expand {
+  0% { transform: scale(0); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+@keyframes warp-fade {
+  0% { opacity: 0; transform: translateY(20px); }
+  50% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; }
+}
+
+/* === 返回按钮 === */
+.exit-btn {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  background: rgba(247, 245, 242, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid #1a1a1a;
+  color: #1a1a1a;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 3000;
+}
+
+.exit-btn:hover {
+  background: #1a1a1a;
+  color: #f7f5f2;
+  box-shadow: 0 0 30px rgba(26, 26, 26, 0.15);
+  transform: translateX(-3px);
+}
+
+.exit-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* === 主容器 === */
+.main-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stage-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(212, 165, 116, 0.3);
-  z-index: 10;
+  gap: 2.5rem;
+  cursor: pointer;
+  width: 100%;
+  max-width: 600px;
+  padding: 2rem;
+  margin: 0 auto;
 }
 
-.quote {
-  font-size: clamp(2rem, 5vw, 4rem);
-  font-weight: 300;
-  color: #fff;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
-  margin-bottom: 1rem;
-  letter-spacing: 0.2em;
+/* SVG 图形 */
+.sand-grain,
+.dune-curves,
+.life-emerges,
+.tree-eternal,
+.time-layers,
+.vast-heart {
+  width: 280px;
+  height: 280px;
+  display: block;
+  margin: 0 auto;
+  flex-shrink: 0;
 }
 
-.quote-sub {
-  font-size: clamp(1.2rem, 3vw, 2rem);
-  font-weight: 300;
-  color: #fff;
-  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
-  opacity: 0.9;
-}
-
-.click-hint {
-  font-size: clamp(1rem, 2vw, 1.3rem);
-  font-weight: 300;
-  color: #fff;
-  margin-top: 2rem;
-  opacity: 0.8;
-  letter-spacing: 0.15em;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-.author {
-  font-size: clamp(1rem, 2vw, 1.5rem);
-  font-weight: 300;
-  color: #fff;
-  margin-top: 2rem;
-  opacity: 0.8;
-}
-
-/* 章节文字 */
-.chapter-text {
-  position: absolute;
-  bottom: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 5;
-  text-align: center;
-}
-
-.chapter-text p {
-  font-size: clamp(1.5rem, 4vw, 3rem);
-  font-weight: 300;
-  color: #fff;
-  text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
-  letter-spacing: 0.15em;
-  line-height: 1.8;
-}
-
-/* 跳过提示 */
-.skip-hint {
-  position: absolute;
-  bottom: 10%;
-  right: 5%;
-  z-index: 5;
-  text-align: right;
-}
-
-.skip-hint p {
-  font-size: clamp(1rem, 2vw, 1.3rem);
-  font-weight: 300;
-  color: #fff;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  letter-spacing: 0.15em;
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
-}
-
-.skip-hint:hover p {
-  opacity: 1;
-}
-
-/* 继续/结束按钮 */
-.continue-btn {
-  position: absolute;
-  bottom: 15%;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 1rem 3rem;
-  background: rgba(255, 255, 255, 0.9);
-  border: 2px solid #d4a574;
-  border-radius: 50px;
-  font-size: 1.2rem;
+/* 金句文字 */
+.quote-text {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(1.1rem, 2.8vw, 1.6rem);
   font-weight: 400;
-  color: #8b5a2b;
+  letter-spacing: 0.12em;
+  line-height: 1.8;
+  color: #1a1a1a;
+  text-align: center;
+  margin: 0;
+}
+
+/* 点击提示 */
+.click-hint {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: rgba(26, 26, 26, 0.3);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* 返回按钮 */
+.back-to-contents {
+  padding: 0.875rem 2rem;
+  background: transparent;
+  border: 1px solid #1a1a1a;
+  color: #1a1a1a;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  z-index: 10;
-  letter-spacing: 0.1em;
 }
 
-.continue-btn:hover {
-  background: #fff;
-  transform: translateX(-50%) scale(1.05);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+.back-to-contents:hover {
+  background: #1a1a1a;
+  color: #f7f5f2;
 }
 
-/* 转场动画 */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 1.5s ease;
+/* 进度指示 */
+.stage-progress {
+  position: absolute;
+  bottom: 2rem;
+  display: flex;
+  gap: 0.75rem;
 }
 
-.fade-enter-from,
-.fade-leave-to {
+.progress-dot {
+  width: 6px;
+  height: 6px;
+  border: 1px solid rgba(26, 26, 26, 0.3);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.progress-dot.active {
+  background: #d97706;
+  border-color: #d97706;
+}
+
+/* === 过渡动画 === */
+.stage-fade-enter-active,
+.stage-fade-leave-active {
+  transition: opacity 0.6s ease;
+}
+
+.stage-fade-enter-from,
+.stage-fade-leave-to {
   opacity: 0;
 }
 
-/* 响应式 */
+.warp-enter-active,
+.warp-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.warp-enter-from,
+.warp-leave-to {
+  opacity: 0;
+}
+
+/* === 响应式 === */
 @media (max-width: 768px) {
-  .quote {
-    letter-spacing: 0.1em;
+  .stage-container {
+    padding: 1.5rem;
+    max-width: 100%;
   }
 
-  .chapter-text {
-    bottom: 25%;
+  .sand-grain,
+  .dune-curves,
+  .life-emerges,
+  .tree-eternal,
+  .time-layers,
+  .vast-heart {
+    width: 240px;
+    height: 240px;
   }
 
-  .chapter-text p {
-    letter-spacing: 0.1em;
+  .exit-btn {
+    top: 1rem;
+    left: 1rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.65rem;
   }
+}
 
-  .continue-btn {
-    padding: 0.8rem 2rem;
+@media (max-width: 480px) {
+  .quote-text {
     font-size: 1rem;
+  }
+
+  .sand-grain,
+  .dune-curves,
+  .life-emerges,
+  .tree-eternal,
+  .time-layers,
+  .vast-heart {
+    width: 200px;
+    height: 200px;
   }
 }
 </style>

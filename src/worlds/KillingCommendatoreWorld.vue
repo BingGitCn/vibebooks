@@ -1,1001 +1,469 @@
 <template>
-  <div class="killing-commendatore-world" ref="container">
-    <!-- WebGL Canvas 由 Three.js 自动创建 -->
-
-    <!-- 光痕 Canvas (Phase 6) -->
-    <canvas v-if="showLightTrailCanvas" ref="lightTrailCanvas" class="light-trail-canvas"></canvas>
-
-    <!-- 开场说明 -->
-    <transition name="fade">
-      <div v-if="showIntro" class="intro-screen">
-        <h1 class="intro-title">刺杀骑士团长</h1>
-        <p class="intro-author">村上春树</p>
-        <p class="intro-subtitle">一次从现实到隐喻的滑落</p>
+  <div class="killing-commendatore-world" @scroll="handleScroll" ref="scrollContainer">
+    <!-- 跃迁动画 -->
+    <transition name="warp">
+      <div v-if="showWarp" class="warp-overlay">
+        <div class="warp-circle">
+          <div class="warp-circle-inner"></div>
+        </div>
+        <div class="warp-text">刺杀骑士团长</div>
       </div>
     </transition>
 
-    <!-- 阶段标题（右下角） -->
-    <div class="phase-indicator">
-      <span class="phase-roman">{{ currentPhaseRoman }}</span>
-      <span class="phase-name">{{ currentPhaseName }}</span>
+    <!-- 返回按钮 -->
+    <button class="exit-btn" @click="exitWorld">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      <span>Return</span>
+    </button>
+
+    <!-- 长卷容器 -->
+    <div class="scroll-content">
+      <!-- 段落1：婚姻崩塌 -->
+      <section class="scroll-section" :class="{ active: activeSection >= 1 }">
+        <svg class="section-svg" viewBox="0 0 200 200">
+          <line x1="50" y1="100" x2="100" y2="100" stroke="#1a1a1a" stroke-width="2" opacity="0.6"/>
+          <line x1="105" y1="100" x2="150" y2="100" stroke="#1a1a1a" stroke-width="2" opacity="0.3" stroke-dasharray="4,4"/>
+        </svg>
+        <p class="section-quote">"有些事情，一旦开始就无法回头"</p>
+        <p class="section-desc">六周前，妻子突然提出离婚。我离开家，搬进山间旧居。</p>
+        <div class="section-number">01</div>
+      </section>
+
+      <!-- 段落2：山间生活 -->
+      <section class="scroll-section" :class="{ active: activeSection >= 2 }">
+        <svg class="section-svg" viewBox="0 0 200 200">
+          <path d="M40,160 L100,100 L160,140" stroke="#1a1a1a" stroke-width="1.5" fill="none" opacity="0.5"/>
+        </svg>
+        <p class="section-quote">"我需要一个新的开始"</p>
+        <p class="section-desc">应雨田政彦之邀，我住进这座山间房子。远离人群，教绘画班度日。</p>
+        <div class="section-number">02</div>
+      </section>
+
+      <!-- 段落3：阁楼发现 -->
+      <section class="scroll-section" :class="{ active: activeSection >= 3 }">
+        <svg class="section-svg" viewBox="0 0 200 200">
+          <rect x="60" y="60" width="80" height="80" stroke="#1a1a1a" stroke-width="2" fill="none" opacity="0.6"/>
+          <circle cx="100" cy="100" r="15" stroke="#1a1a1a" stroke-width="1.5" fill="none" opacity="0.4"/>
+        </svg>
+        <p class="section-quote">"那幅画在等我"</p>
+        <p class="section-desc">在阁楼里，我发现了雨田具彦尘封的巨作——《刺杀骑士团长》。</p>
+        <div class="section-number">03</div>
+      </section>
+
+      <!-- 段落4：夜半铃声 -->
+      <section class="scroll-section" :class="{ active: activeSection >= 4 }">
+        <svg class="section-svg" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="30" stroke="#4a5568" stroke-width="1.5" fill="none" opacity="0.6"/>
+          <circle cx="100" cy="100" r="45" stroke="#4a5568" stroke-width="1" fill="none" opacity="0.4"/>
+          <circle cx="100" cy="100" r="60" stroke="#4a5568" stroke-width="1" fill="none" opacity="0.3"/>
+        </svg>
+        <p class="section-quote">"铃声从画中传来"</p>
+        <p class="section-desc">半夜，我被一阵铃声惊醒。有人在摇铃，向我发出信号。</p>
+        <div class="section-number">04</div>
+      </section>
+
+      <!-- 段落5：长面人 -->
+      <section class="scroll-section" :class="{ active: activeSection >= 5 }">
+        <svg class="section-svg" viewBox="0 0 200 200">
+          <ellipse cx="100" cy="100" rx="25" ry="35" stroke="#4a5568" stroke-width="1.5" fill="none" opacity="0.6"/>
+          <circle cx="100" cy="90" r="3" fill="#4a5568" opacity="0.5"/>
+        </svg>
+        <p class="section-quote">"他戴着面具，看不清脸"</p>
+        <p class="section-desc">长面人出现了。他说是从画里来的，要我去完成一件事。</p>
+        <div class="section-number">05</div>
+      </section>
+
+      <!-- 段落6：免色的故事 -->
+      <section class="scroll-section" :class="{ active: activeSection >= 6 }">
+        <svg class="section-svg" viewBox="0 0 200 200">
+          <circle cx="70" cy="100" r="6" fill="#4a5568" opacity="0.6"/>
+          <circle cx="130" cy="100" r="4" fill="#4a5568" opacity="0.4"/>
+          <path d="M76,100 L124,100" stroke="#4a5568" stroke-width="1" opacity="0.3" stroke-dasharray="3,3"/>
+        </svg>
+        <p class="section-quote">"我在寻找我的女儿"</p>
+        <p class="section-desc">免色，我的邻居，一直在寻找失踪的女儿。他说，女儿被带走了。</p>
+        <div class="section-number">06</div>
+      </section>
+
+      <!-- 段落7：通往古庙 -->
+      <section class="scroll-section" :class="{ active: activeSection >= 7 }">
+        <svg class="section-svg" viewBox="0 0 200 200">
+          <rect x="80" y="40" width="40" height="60" stroke="#6366f1" stroke-width="1.5" fill="none" opacity="0.6"/>
+          <path d="M100,100 L100,180" stroke="#6366f1" stroke-width="1.5" opacity="0.5"/>
+          <circle cx="100" cy="180" r="4" fill="#6366f1" opacity="0.7"/>
+        </svg>
+        <p class="section-quote">"两个世界，只有一墙之隔"</p>
+        <p class="section-desc">通过山洞，我可以到达古庙。那里是另一个世界。</p>
+        <div class="section-number">07</div>
+      </section>
+
+      <!-- 段落8：骑士团长 -->
+      <section class="scroll-section" :class="{ active: activeSection >= 8 }">
+        <svg class="section-svg" viewBox="0 0 200 200">
+          <circle cx="100" cy="70" r="15" stroke="#6366f1" stroke-width="1.5" fill="none" opacity="0.6"/>
+          <line x1="100" y1="85" x2="100" y2="150" stroke="#6366f1" stroke-width="2" opacity="0.7"/>
+          <line x1="100" y1="100" x2="75" y2="130" stroke="#6366f1" stroke-width="1.5" opacity="0.5"/>
+          <line x1="100" y1="100" x2="125" y2="130" stroke="#6366f1" stroke-width="1.5" opacity="0.5"/>
+        </svg>
+        <p class="section-quote">"你必须替我完成这件事"</p>
+        <p class="section-desc">骑士团长从画中走出。他需要我替他刺杀某人。</p>
+        <div class="section-number">08</div>
+      </section>
+
+      <!-- 段落9：线索交汇 -->
+      <section class="scroll-section" :class="{ active: activeSection >= 9 }">
+        <svg class="section-svg" viewBox="0 0 200 200">
+          <circle cx="60" cy="80" r="4" fill="#1a1a1a" opacity="0.6"/>
+          <circle cx="140" cy="80" r="4" fill="#1a1a1a" opacity="0.6"/>
+          <circle cx="100" cy="120" r="4" fill="#6366f1" opacity="0.7"/>
+          <circle cx="100" cy="60" r="3" fill="#1a1a1a" opacity="0.5"/>
+          <path d="M60,84 Q80,100 100,115" stroke="#1a1a1a" stroke-width="0.5" opacity="0.3"/>
+          <path d="M140,84 Q120,100 100,115" stroke="#1a1a1a" stroke-width="0.5" opacity="0.3"/>
+          <path d="M100,64 L100,116" stroke="#6366f1" stroke-width="0.5" opacity="0.3"/>
+        </svg>
+        <p class="section-quote">"所有的失去，都会以另一种方式归来"</p>
+        <p class="section-desc">妻子、妹妹、免色的女儿、那幅画——四条线索在这里交汇。</p>
+        <div class="section-number">09</div>
+      </section>
+
+      <!-- 段落10：和解与重生 -->
+      <section class="scroll-section" :class="{ active: activeSection >= 10 }">
+        <svg class="section-svg" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="50" stroke="#10b981" stroke-width="1.5" fill="none" opacity="0.6"/>
+          <circle cx="100" cy="100" r="35" stroke="#10b981" stroke-width="1" fill="none" opacity="0.5"/>
+          <circle cx="100" cy="100" r="20" fill="#10b981" opacity="0.4"/>
+        </svg>
+        <p class="section-quote">"我终于与过去和解"</p>
+        <p class="section-desc">面对内心的黑暗，我完成了仪式。创伤被治愈，艺术重新开始。</p>
+        <div class="section-number">10</div>
+        <button class="back-to-universe" @click="exitWorld">返回宇宙</button>
+      </section>
     </div>
 
-    <!-- 核心文字（中心，淡入淡出） -->
-    <transition name="fade">
-      <div v-if="showCoreText && currentPhaseText" class="core-text">
-        <p v-html="currentPhaseText"></p>
-      </div>
-    </transition>
-
-    <!-- 点击提示 -->
-    <transition name="fade">
-      <div v-if="showClickHint" class="click-hint">
-        <p>点击跳过 →</p>
-      </div>
-    </transition>
+    <!-- 滚动进度 -->
+    <div class="scroll-progress">
+      <div
+        v-for="i in 10"
+        :key="i"
+        class="progress-dot"
+        :class="{ active: activeSection >= i }"
+        @click="scrollToSection(i)"
+      ></div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import * as THREE from 'three'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
-// 容器引用
-const container = ref(null)
-const lightTrailCanvas = ref(null)
+const router = useRouter()
+const scrollContainer = ref(null)
+const showWarp = ref(true)
+const activeSection = ref(0)
 
-// UI 状态
-const showIntro = ref(true)
-const showLightTrailCanvas = ref(false)
-const showCoreText = ref(false)
-const showClickHint = ref(false)
-const currentPhaseText = ref('')
-const currentPhaseRoman = ref('I')
-const currentPhaseName = ref('')
-
-// Three.js 核心对象
-let scene = null
-let camera = null
-let renderer = null
-let animationId = null
-
-// 交互状态
-const mouse = new THREE.Vector2()
-const targetMouse = new THREE.Vector2()
-let mouseSpeed = 0
-let isMouseDown = false
-let mouseDownTime = 0
-let clickPositions = [] // 用于 Phase 6 的光痕
-
-// Phase 管理
-const phases = ['blank', 'chance', 'well', 'manifest', 'dual', 'kill', 'idea']
-let currentPhase = 0
-let phaseProgress = 0
-let phaseStartTime = 0
-
-// 粒子系统
-let particles = null
-let manifestationParticles = null // Phase 3 专用粒子
-let particleCount = 10000
-
-// 着色器材质
-let gridMaterial = null
-let wellMaterial = null
-let dualWorldMaterial = null
-
-// Phase 5: 杀死系统
-let knightMesh = null
-let isDissolving = false
-
-// 文字配置
-const phaseTexts = {
-  blank: '有些东西<br>只有当你不再寻找时<br>才会出现',
-  chance: '偶然<br>是必然的碎片',
-  well: '井<br>通往另一个世界的入口',
-  manifest: '意象<br>从画中走出',
-  dual: '你站在<br>两个世界的中间',
-  kill: '杀死<br>是另一种形式的记住',
-  idea: '理念<br>就是那从天而降的东西'
+const handleScroll = (e) => {
+  const container = e.target
+  const scrollPercent = container.scrollTop / (container.scrollHeight - container.clientHeight)
+  activeSection.value = Math.min(10, Math.ceil(scrollPercent * 10))
 }
 
-const phaseNames = {
-  blank: '空白的凝视',
-  chance: '偶然性降临',
-  well: '井的显现',
-  manifest: '意象显形',
-  dual: '双重世界',
-  kill: '杀死',
-  idea: '理念降落'
+const scrollToSection = (index) => {
+  const container = scrollContainer.value
+  const targetScroll = (container.scrollHeight - container.clientHeight) * (index - 1) / 9
+  container.scrollTo({ top: targetScroll, behavior: 'smooth' })
 }
 
-const phaseRomans = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII']
-
-// 初始化 Three.js 场景
-const initThree = () => {
-  scene = new THREE.Scene()
-  scene.background = new THREE.Color(0xffffff)
-
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-  camera.position.z = 5
-
-  renderer = new THREE.WebGLRenderer({
-    antialias: true,
-    alpha: true,
-    powerPreference: 'high-performance'
-  })
-  renderer.setSize(window.innerWidth, window.innerHeight)
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-  container.value.appendChild(renderer.domElement)
-
-  // 初始化各阶段
-  initPhase0()
-  initParticles()
-  initPhase2()
-  initPhase3()
-  initPhase4()
-  initPhase5()
-
-  phaseStartTime = Date.now()
-
-  // 开场 3 秒后开始体验
-  setTimeout(() => {
-    showIntro.value = false
-    transitionToPhase(0)
-  }, 3000)
-
-  animate()
-}
-
-// Phase 0: 空白的凝视
-const initPhase0 = () => {
-  const gridVertexShader = `
-    uniform float uTime;
-    uniform vec2 uMouse;
-    uniform float uMouseSpeed;
-
-    varying vec2 vUv;
-    varying float vDisplacement;
-
-    void main() {
-      vUv = uv;
-      vec3 pos = position;
-
-      float dist = distance(uv, uMouse);
-      float influence = smoothstep(0.5, 0.0, dist) * uMouseSpeed * 2.0;
-
-      pos.z += sin(pos.x * 10.0 + uTime) * 0.02;
-      pos.z += influence * 0.5 * sin(uTime * 3.0);
-      pos.x += influence * 0.3;
-      pos.y += influence * 0.3;
-
-      vDisplacement = influence;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-    }
-  `
-
-  const gridFragmentShader = `
-    uniform float uTime;
-    varying vec2 vUv;
-    varying float vDisplacement;
-
-    void main() {
-      float gridX = step(0.98, fract(vUv.x * 20.0));
-      float gridY = step(0.98, fract(vUv.y * 20.0));
-      float grid = max(gridX, gridY);
-
-      vec3 color = mix(vec3(0.48, 0.29, 0.54), vec3(0.0, 0.0, 0.0), vDisplacement);
-      color += grid * vec3(0.7, 0.7, 0.7) * (1.0 - vDisplacement);
-
-      gl_FragColor = vec4(color, 1.0);
-    }
-  `
-
-  gridMaterial = new THREE.ShaderMaterial({
-    uniforms: {
-      uTime: { value: 0 },
-      uMouse: { value: new THREE.Vector2(0.5, 0.5) },
-      uMouseSpeed: { value: 0 }
-    },
-    vertexShader: gridVertexShader,
-    fragmentShader: gridFragmentShader,
-    transparent: true
-  })
-
-  const geometry = new THREE.PlaneGeometry(10, 10, 100, 100)
-  const mesh = new THREE.Mesh(geometry, gridMaterial)
-  mesh.name = 'gridMesh'
-  scene.add(mesh)
-}
-
-// Phase 1: 粒子系统
-const initParticles = () => {
-  const geometry = new THREE.BufferGeometry()
-  const positions = new Float32Array(particleCount * 3)
-  const velocities = new Float32Array(particleCount * 3)
-  const colors = new Float32Array(particleCount * 3)
-
-  const goldColor = new THREE.Color(0xd4af37)
-
-  for (let i = 0; i < particleCount; i++) {
-    positions[i * 3] = (Math.random() - 0.5) * 20
-    positions[i * 3 + 1] = Math.random() * 10 + 5
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 10
-
-    velocities[i * 3] = 0
-    velocities[i * 3 + 1] = -Math.random() * 0.02
-    velocities[i * 3 + 2] = 0
-
-    colors[i * 3] = goldColor.r
-    colors[i * 3 + 1] = goldColor.g
-    colors[i * 3 + 2] = goldColor.b
-  }
-
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-  geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3))
-  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
-
-  const material = new THREE.PointsMaterial({
-    size: 0.05,
-    vertexColors: true,
-    transparent: true,
-    opacity: 0,
-    blending: THREE.AdditiveBlending
-  })
-
-  particles = new THREE.Points(geometry, material)
-  particles.name = 'particles'
-  particles.visible = false
-  scene.add(particles)
-}
-
-// Phase 2: 井的显现
-const initPhase2 = () => {
-  const wellVertexShader = `
-    uniform float uTime;
-    uniform float uProgress;
-
-    varying vec2 vUv;
-    varying float vDepth;
-
-    void main() {
-      vUv = uv;
-      vDepth = 0.0;
-      vec3 pos = position;
-
-      float angle = atan(pos.y, pos.x);
-      float radius = length(pos.xy);
-      angle += uTime * 0.5 * uProgress;
-
-      pos.z = sin(radius * 3.0 - uTime * 2.0) * uProgress * 0.5;
-      vDepth = pos.z;
-
-      pos.x = cos(angle) * radius;
-      pos.y = sin(angle) * radius;
-
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-    }
-  `
-
-  const wellFragmentShader = `
-    uniform float uTime;
-    uniform float uProgress;
-
-    varying vec2 vUv;
-    varying float vDepth;
-
-    void main() {
-      vec3 color = mix(vec3(0.0, 0.0, 0.0), vec3(0.48, 0.29, 0.54), vDepth * 0.5 + 0.5);
-      float dist = length(vUv - 0.5);
-      float glow = smoothstep(0.5, 0.3, dist);
-      color += glow * vec3(0.83, 0.69, 0.22) * uProgress * 0.5;
-      float alpha = smoothstep(0.0, 0.3, uProgress) * (1.0 - smoothstep(0.3, 0.5, dist));
-
-      gl_FragColor = vec4(color, alpha);
-    }
-  `
-
-  wellMaterial = new THREE.ShaderMaterial({
-    uniforms: {
-      uTime: { value: 0 },
-      uProgress: { value: 0 }
-    },
-    vertexShader: wellVertexShader,
-    fragmentShader: wellFragmentShader,
-    transparent: true,
-    side: THREE.DoubleSide
-  })
-
-  const geometry = new THREE.CircleGeometry(2, 64)
-  const well = new THREE.Mesh(geometry, wellMaterial)
-  well.name = 'well'
-  well.rotation.x = -Math.PI / 2
-  well.position.z = -1
-  well.visible = false
-  scene.add(well)
-}
-
-// Phase 3: 显形 - 粒子聚合
-const initPhase3 = () => {
-  // 创建人形目标位置的粒子
-  const manifestCount = 5000
-  const geometry = new THREE.BufferGeometry()
-  const positions = new Float32Array(manifestCount * 3)
-  const targetPositions = new Float32Array(manifestCount * 3)
-  const colors = new Float32Array(manifestCount * 3)
-
-  // 生成人形轮廓（简化版）
-  for (let i = 0; i < manifestCount; i++) {
-    // 随机起始位置
-    positions[i * 3] = (Math.random() - 0.5) * 20
-    positions[i * 3 + 1] = (Math.random() - 0.5) * 20
-    positions[i * 3 + 2] = (Math.random() - 0.5) * 10
-
-    // 人形目标位置（两米高的轮廓）
-    const t = i / manifestCount
-    const section = Math.floor(t * 5) // 头、躯干、左臂、右臂、腿
-
-    let tx = 0, ty = 0, tz = 0
-
-    switch(section) {
-      case 0: // 头
-        tx = (Math.random() - 0.5) * 0.5
-        ty = 1.5 + Math.random() * 0.5
-        tz = (Math.random() - 0.5) * 0.3
-        break
-      case 1: // 躯干
-        tx = (Math.random() - 0.5) * 0.6
-        ty = 0.5 + Math.random() * 1.0
-        tz = (Math.random() - 0.5) * 0.4
-        break
-      case 2: // 左臂
-        tx = -0.8 - Math.random() * 0.3
-        ty = 0.2 + Math.random() * 0.8
-        tz = (Math.random() - 0.5) * 0.2
-        break
-      case 3: // 右臂
-        tx = 0.8 + Math.random() * 0.3
-        ty = 0.2 + Math.random() * 0.8
-        tz = (Math.random() - 0.5) * 0.2
-        break
-      case 4: // 腿
-        tx = (Math.random() - 0.5) * 0.4
-        ty = -1.5 - Math.random() * 0.5
-        tz = (Math.random() - 0.5) * 0.3
-        break
-    }
-
-    targetPositions[i * 3] = tx
-    targetPositions[i * 3 + 1] = ty
-    targetPositions[i * 3 + 2] = tz
-
-    // 紫色到金色渐变
-    const mixFactor = Math.random()
-    colors[i * 3] = 0.48 + mixFactor * (0.83 - 0.48)
-    colors[i * 3 + 1] = 0.29 + mixFactor * (0.69 - 0.29)
-    colors[i * 3 + 2] = 0.54 + mixFactor * (0.22 - 0.54)
-  }
-
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
-  geometry.setAttribute('targetPosition', new THREE.BufferAttribute(targetPositions, 3))
-  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
-
-  const material = new THREE.PointsMaterial({
-    size: 0.03,
-    vertexColors: true,
-    transparent: true,
-    opacity: 0,
-    blending: THREE.AdditiveBlending
-  })
-
-  manifestationParticles = new THREE.Points(geometry, material)
-  manifestationParticles.name = 'manifestation'
-  manifestationParticles.visible = false
-  scene.add(manifestationParticles)
-}
-
-// Phase 4: 双重世界
-const initPhase4 = () => {
-  const dualVertexShader = `
-    varying vec2 vUv;
-
-    void main() {
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  `
-
-  const dualFragmentShader = `
-    uniform float uTime;
-    uniform vec2 uMouse;
-    uniform float uProgress;
-
-    varying vec2 vUv;
-
-    // 简化的 metaball 函数
-    float metaball(vec2 p1, vec2 p2, float r1, float r2) {
-      float d = length(p1 - p2);
-      return r1 * r2 / max(d, 0.001);
-    }
-
-    void main() {
-      vec2 uv = vUv;
-
-      // 左右分界线（受鼠标影响）
-      float divide = 0.5 + sin(uTime * 0.5) * 0.05 + (uMouse.x - 0.5) * 0.2;
-
-      // 两个世界的颜色
-      vec3 leftColor = vec3(0.48, 0.29, 0.54); // 紫色
-      vec3 rightColor = vec3(0.83, 0.69, 0.22); // 金色
-
-      // 创建液体边界
-      float dist = distance(uv, vec2(divide, 0.5));
-      float boundary = smoothstep(0.15, 0.1, dist);
-
-      // 混合颜色
-      vec3 color = mix(leftColor, rightColor, uv.x);
-      color = mix(color, vec3(1.0), boundary * 0.3 * sin(uTime * 3.0));
-
-      gl_FragColor = vec4(color, 1.0);
-    }
-  `
-
-  dualWorldMaterial = new THREE.ShaderMaterial({
-    uniforms: {
-      uTime: { value: 0 },
-      uMouse: { value: new THREE.Vector2(0.5, 0.5) },
-      uProgress: { value: 0 }
-    },
-    vertexShader: dualVertexShader,
-    fragmentShader: dualFragmentShader
-  })
-
-  const geometry = new THREE.PlaneGeometry(10, 10)
-  const dualMesh = new THREE.Mesh(geometry, dualWorldMaterial)
-  dualMesh.name = 'dualWorld'
-  dualMesh.visible = false
-  scene.add(dualMesh)
-}
-
-// Phase 5: 杀死 - 瓦解系统
-const initPhase5 = () => {
-  // 创建一个代表"骑士团长"的几何体
-  const geometry = new THREE.BoxGeometry(1, 2, 0.5)
-  const material = new THREE.MeshBasicMaterial({
-    color: 0x7b4b8a,
-    wireframe: true,
-    transparent: true,
-    opacity: 0
-  })
-
-  knightMesh = new THREE.Mesh(geometry, material)
-  knightMesh.name = 'knight'
-  knightMesh.visible = false
-  scene.add(knightMesh)
-}
-
-// 更新网格
-const updateGrid = (time) => {
-  if (gridMaterial) {
-    mouse.lerp(targetMouse, 0.05)
-    gridMaterial.uniforms.uTime.value = time
-    gridMaterial.uniforms.uMouse.value.set(mouse.x * 0.5 + 0.5, mouse.y * 0.5 + 0.5)
-    gridMaterial.uniforms.uMouseSpeed.value = mouseSpeed
-  }
-  mouseSpeed *= 0.95
-}
-
-// 更新粒子
-const updateParticles = () => {
-  if (!particles || !particles.visible) return
-
-  const positions = particles.geometry.attributes.position.array
-  const velocities = particles.geometry.attributes.velocity.array
-
-  for (let i = 0; i < particleCount; i++) {
-    positions[i * 3] += velocities[i * 3]
-    positions[i * 3 + 1] += velocities[i * 3 + 1]
-    positions[i * 3 + 2] += velocities[i * 3 + 2]
-
-    if (positions[i * 3 + 1] < -10) {
-      positions[i * 3] = (Math.random() - 0.5) * 20
-      positions[i * 3 + 1] = 10
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 10
-    }
-  }
-
-  particles.geometry.attributes.position.needsUpdate = true
-}
-
-// 更新井
-const updateWell = (time) => {
-  const well = scene.getObjectByName('well')
-  if (well && well.visible) {
-    wellMaterial.uniforms.uTime.value = time
-    const distToCenter = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y)
-    wellMaterial.uniforms.uProgress.value = 1.0 - Math.min(distToCenter, 1.0) * 0.5
-  }
-}
-
-// 更新显形（Phase 3）
-const updateManifestation = () => {
-  if (!manifestationParticles || !manifestationParticles.visible) return
-
-  const positions = manifestationParticles.geometry.attributes.position.array
-  const targetPositions = manifestationParticles.geometry.attributes.targetPosition.array
-  const progress = phaseProgress
-
-  // 粒子从随机位置聚合到目标位置
-  for (let i = 0; i < 5000; i++) {
-    const lerpFactor = Math.min(progress * 2, 1)
-
-    positions[i * 3] += (targetPositions[i * 3] - positions[i * 3]) * 0.02 * lerpFactor
-    positions[i * 3 + 1] += (targetPositions[i * 3 + 1] - positions[i * 3 + 1]) * 0.02 * lerpFactor
-    positions[i * 3 + 2] += (targetPositions[i * 3 + 2] - positions[i * 3 + 2]) * 0.02 * lerpFactor
-
-    // 添加轻微震动
-    if (progress > 0.5) {
-      positions[i * 3] += (Math.random() - 0.5) * 0.01
-      positions[i * 3 + 1] += (Math.random() - 0.5) * 0.01
-      positions[i * 3 + 2] += (Math.random() - 0.5) * 0.01
-    }
-  }
-
-  manifestationParticles.geometry.attributes.position.needsUpdate = true
-  manifestationParticles.material.opacity = Math.min(progress * 2, 1)
-}
-
-// 更新双重世界（Phase 4）
-const updateDualWorld = (time) => {
-  const dualMesh = scene.getObjectByName('dualWorld')
-  if (dualMesh && dualMesh.visible) {
-    dualWorldMaterial.uniforms.uTime.value = time
-    dualWorldMaterial.uniforms.uMouse.value.set(mouse.x * 0.5 + 0.5, mouse.y * 0.5 + 0.5)
-    dualWorldMaterial.uniforms.uProgress.value = phaseProgress
-  }
-}
-
-// 更新杀死（Phase 5）
-const updateKill = () => {
-  if (!knightMesh || !knightMesh.visible) return
-
-  // 显示骑士
-  if (phaseProgress < 0.3) {
-    knightMesh.material.opacity = phaseProgress / 0.3
-    knightMesh.rotation.y += 0.01
-  } else if (isDissolving) {
-    // 瓦解效果
-    const dissolveProgress = (phaseProgress - 0.3) / 0.7
-    knightMesh.material.opacity = 1 - dissolveProgress
-    knightMesh.scale.setScalar(1 + dissolveProgress * 0.5)
-    knightMesh.rotation.x += dissolveProgress * 0.1
-    knightMesh.rotation.z += dissolveProgress * 0.05
-  }
-}
-
-// 更新理念降落（Phase 6）
-const updateIdea = (time) => {
-  if (!particles || !particles.visible) return
-
-  // 粒子变成金色雨
-  particles.material.opacity = 1
-
-  // 更新光痕生命周期
-  clickPositions.forEach(pos => {
-    pos.life -= 0.001  // 淡出更慢
-  })
-
-  clickPositions = clickPositions.filter(pos => pos.life > 0)
-
-  // 渲染光痕到 Canvas
-  renderLightTrails()
-}
-
-// 渲染光痕
-const renderLightTrails = () => {
-  if (!lightTrailCanvas.value) return
-
-  const canvas = lightTrailCanvas.value
-  const ctx = canvas.getContext('2d')
-
-  // 清空画布
-  ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-  if (clickPositions.length === 0) return
-
-  // 绘制所有光痕
-  clickPositions.forEach((pos, index) => {
-    if (index === 0) return
-
-    const prevPos = clickPositions[index - 1]
-    const opacity = pos.life
-
-    // 创建金色渐变
-    const gradient = ctx.createLinearGradient(
-      prevPos.x * canvas.width,
-      prevPos.y * canvas.height,
-      pos.x * canvas.width,
-      pos.y * canvas.height
-    )
-
-    gradient.addColorStop(0, `rgba(212, 175, 55, ${opacity * 0.5})`)
-    gradient.addColorStop(1, `rgba(255, 215, 0, ${opacity})`)
-
-    ctx.strokeStyle = gradient
-    ctx.lineWidth = 3
-    ctx.lineCap = 'round'
-
-    ctx.beginPath()
-    ctx.moveTo(prevPos.x * canvas.width, prevPos.y * canvas.height)
-    ctx.lineTo(pos.x * canvas.width, pos.y * canvas.height)
-    ctx.stroke()
-  })
-}
-
-// Phase 切换
-const transitionToPhase = (phaseIndex) => {
-  currentPhase = phaseIndex
-  phaseProgress = 0
-  phaseStartTime = Date.now()
-
-  // 更新阶段标题
-  currentPhaseRoman.value = phaseRomans[phaseIndex]
-  currentPhaseName.value = phaseNames[phases[phaseIndex]]
-
-  // Phase 6 显示光痕 Canvas
-  showLightTrailCanvas.value = phaseIndex === 6
-
-  const grid = scene.getObjectByName('gridMesh')
-  const well = scene.getObjectByName('well')
-  const dual = scene.getObjectByName('dualWorld')
-  const knight = scene.getObjectByName('knight')
-
-  // 隐藏所有
-  if (grid) grid.visible = false
-  if (well) well.visible = false
-  if (particles) particles.visible = false
-  if (manifestationParticles) manifestationParticles.visible = false
-  if (dual) dual.visible = false
-  if (knight) knight.visible = false
-
-  // 显示当前阶段
-  switch (phaseIndex) {
-    case 0: // blank
-      if (grid) grid.visible = true
-      scene.background = new THREE.Color(0xffffff)
-      break
-    case 1: // chance
-      if (particles) {
-        particles.visible = true
-        particles.material.opacity = 0
-      }
-      scene.background = new THREE.Color(0x1a1a2e)
-      break
-    case 2: // well
-      if (well) well.visible = true
-      scene.background = new THREE.Color(0x0d0d1a)
-      break
-    case 3: // manifest
-      if (manifestationParticles) {
-        manifestationParticles.visible = true
-        manifestationParticles.material.opacity = 0
-      }
-      scene.background = new THREE.Color(0x0d0d1a)
-      break
-    case 4: // dual
-      if (dual) dual.visible = true
-      scene.background = new THREE.Color(0x000000)
-      break
-    case 5: // kill
-      if (knight) {
-        knight.visible = true
-        knight.material.opacity = 0
-      }
-      isDissolving = false
-      scene.background = new THREE.Color(0x1a1a2e)
-      break
-    case 6: // idea
-      if (particles) {
-        particles.visible = true
-        particles.material.opacity = 1
-      }
-      scene.background = new THREE.Color(0x0d0d1a)
-      break
-  }
-
-  // 更新核心文字
-  currentPhaseText.value = phaseTexts[phases[phaseIndex]]
-  showCoreText.value = true
-  setTimeout(() => {
-    showCoreText.value = false
-  }, 4000)
-}
-
-// Phase 管理器
-const updatePhaseManager = () => {
-  const elapsed = Date.now() - phaseStartTime
-  phaseProgress = Math.min(elapsed / 10000, 1) // 10秒每个阶段
-
-  // 显示点击提示
-  if (phaseProgress > 0.3 && !showClickHint.value) {
-    showClickHint.value = true
-  }
-
-  // 阶段5特殊处理：点击触发瓦解
-  if (currentPhase === 5 && phaseProgress > 0.5 && !isDissolving) {
-    // 自动开始瓦解
-    isDissolving = true
-  }
-
-  // 自动切换
-  if (phaseProgress >= 1) {
-    showClickHint.value = false
-    currentPhase = (currentPhase + 1) % phases.length
-    transitionToPhase(currentPhase)
-  }
-}
-
-// 主动画循环
-const clock = new THREE.Clock()
-
-const animate = () => {
-  animationId = requestAnimationFrame(animate)
-
-  const time = clock.getElapsedTime()
-  const deltaTime = clock.getDelta()
-
-  // 更新当前阶段
-  updateGrid(time)
-  updateParticles()
-  updateWell(time)
-  updateManifestation()
-  updateDualWorld(time)
-  updateKill()
-  updateIdea(time)
-
-  // Phase 管理
-  updatePhaseManager()
-
-  renderer.render(scene, camera)
-}
-
-// 事件处理
-const onMouseMove = (event) => {
-  targetMouse.x = (event.clientX / window.innerWidth) * 2 - 1
-  targetMouse.y = -(event.clientY / window.innerHeight) * 2 + 1
-
-  const deltaX = targetMouse.x - mouse.x
-  const deltaY = targetMouse.y - mouse.y
-  mouseSpeed = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
-
-  // Phase 6: 记录光痕
-  if (currentPhase === 6) {
-    clickPositions.push({
-      x: event.clientX / window.innerWidth,
-      y: event.clientY / window.innerHeight,
-      life: 1.0,
-      time: Date.now()
-    })
-  }
-}
-
-const onMouseDown = () => {
-  isMouseDown = true
-  mouseDownTime = Date.now()
-}
-
-const onMouseUp = () => {
-  isMouseDown = false
-
-  // 短按点击：跳过当前阶段
-  if (Date.now() - mouseDownTime < 300) {
-    if (currentPhase === 5 && phaseProgress > 0.3) {
-      isDissolving = true
-    } else {
-      phaseProgress = 1 // 立即结束当前阶段
-    }
-  }
-}
-
-const onResize = () => {
-  camera.aspect = window.innerWidth / window.innerHeight
-  camera.updateProjectionMatrix()
-  renderer.setSize(window.innerWidth, window.innerHeight)
-
-  // 调整光痕 Canvas 大小
-  if (lightTrailCanvas.value) {
-    lightTrailCanvas.value.width = window.innerWidth
-    lightTrailCanvas.value.height = window.innerHeight
-  }
-}
-
-// 初始化光痕 Canvas
-const initLightTrailCanvas = () => {
-  if (lightTrailCanvas.value) {
-    lightTrailCanvas.value.width = window.innerWidth
-    lightTrailCanvas.value.height = window.innerHeight
-  }
+const exitWorld = () => {
+  router.push('/universe')
 }
 
 onMounted(() => {
-  initThree()
-  initLightTrailCanvas()
-
-  window.addEventListener('mousemove', onMouseMove)
-  window.addEventListener('mousedown', onMouseDown)
-  window.addEventListener('mouseup', onMouseUp)
-  window.addEventListener('resize', onResize)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('mousemove', onMouseMove)
-  window.removeEventListener('mousedown', onMouseDown)
-  window.removeEventListener('mouseup', onMouseUp)
-  window.removeEventListener('resize', onResize)
-
-  if (animationId) {
-    cancelAnimationFrame(animationId)
-  }
-
-  if (renderer) {
-    renderer.dispose()
-  }
+  setTimeout(() => {
+    showWarp.value = false
+  }, 1800)
 })
 </script>
 
 <style scoped>
 .killing-commendatore-world {
-  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
   height: 100vh;
-  position: relative;
-  overflow: hidden;
-  background: #ffffff;
+  background: #f7f5f2;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: 'Noto Serif SC', serif;
+  scroll-behavior: smooth;
 }
 
-.killing-commendatore-world canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-/* 光痕 Canvas */
-.light-trail-canvas {
-  position: absolute;
+/* === 跃迁动画 === */
+.warp-overlay {
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* 开场屏幕 */
-.intro-screen {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  background: #f7f5f2;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.95);
-  z-index: 20;
+  z-index: 5000;
 }
 
-.intro-title {
-  font-size: clamp(2.5rem, 6vw, 5rem);
-  font-weight: 300;
-  color: #7b4b8a;
-  letter-spacing: 0.4em;
-  margin-bottom: 1rem;
-  text-align: center;
+.warp-circle {
+  width: 300px;
+  height: 300px;
+  border: 1px solid rgba(26, 26, 26, 0.2);
+  border-radius: 50%;
+  position: relative;
+  animation: warp-expand 1.5s ease-out forwards;
 }
 
-.intro-author {
-  font-size: clamp(1.2rem, 3vw, 2rem);
-  font-weight: 300;
-  color: #1a1a2e;
-  margin-bottom: 2rem;
-  opacity: 0.8;
-}
-
-.intro-subtitle {
-  font-size: clamp(1rem, 2vw, 1.3rem);
-  font-weight: 300;
-  color: #666;
-  letter-spacing: 0.2em;
-  font-style: italic;
-}
-
-/* 阶段指示器 */
-.phase-indicator {
-  position: absolute;
-  bottom: 5%;
-  right: 5%;
-  z-index: 10;
-  text-align: right;
-  pointer-events: none;
-}
-
-.phase-roman {
-  font-size: clamp(2rem, 4vw, 3rem);
-  font-weight: 200;
-  color: rgba(255, 255, 255, 0.6);
-  letter-spacing: 0.3em;
-  display: block;
-  margin-bottom: 0.3rem;
-}
-
-.phase-name {
-  font-size: clamp(0.8rem, 1.5vw, 1rem);
-  font-weight: 300;
-  color: rgba(255, 255, 255, 0.5);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-/* 核心文字 */
-.core-text {
+.warp-circle-inner {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 10;
-  text-align: center;
-  pointer-events: none;
-  max-width: 80%;
+  width: 200px;
+  height: 200px;
+  border: 1px solid rgba(26, 26, 26, 0.3);
+  border-radius: 50%;
 }
 
-.core-text p {
-  font-size: clamp(1.5rem, 4vw, 3rem);
-  font-weight: 300;
-  color: #ffffff;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
-  letter-spacing: 0.3em;
-  line-height: 2;
-}
-
-/* 点击提示 */
-.click-hint {
+.warp-text {
   position: absolute;
-  bottom: 10%;
-  right: 5%;
-  z-index: 5;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.9rem;
+  letter-spacing: 0.5em;
+  color: rgba(26, 26, 26, 0.8);
+  animation: warp-fade 1.5s ease-out forwards;
 }
 
-.click-hint p {
+@keyframes warp-expand {
+  0% { transform: scale(0); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+@keyframes warp-fade {
+  0% { opacity: 0; transform: translateY(20px); }
+  50% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; }
+}
+
+/* === 返回按钮 === */
+.exit-btn {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  background: rgba(247, 245, 242, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid #1a1a1a;
+  color: #1a1a1a;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 3000;
+}
+
+.exit-btn:hover {
+  background: #1a1a1a;
+  color: #f7f5f2;
+  box-shadow: 0 0 30px rgba(26, 26, 26, 0.15);
+  transform: translateX(-3px);
+}
+
+.exit-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* === 滚动内容 === */
+.scroll-content {
+  width: 100%;
+  min-height: 1000vh;
+  padding: 8rem 2rem 4rem;
+}
+
+.scroll-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  opacity: 0.3;
+  transition: opacity 0.6s ease;
+  padding: 4rem 2rem;
+}
+
+.scroll-section.active {
+  opacity: 1;
+}
+
+.section-svg {
+  width: 280px;
+  height: 280px;
+  margin-bottom: 1rem;
+}
+
+.section-quote {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: #1a1a1a;
+  text-align: center;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.section-desc {
+  font-family: 'Noto Serif SC', serif;
   font-size: clamp(0.9rem, 2vw, 1.2rem);
   font-weight: 300;
-  color: #ffffff;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.1em;
+  color: rgba(26, 26, 26, 0.6);
+  text-align: center;
+  margin: 0;
+  line-height: 1.8;
+  max-width: 600px;
+}
+
+.section-number {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
   letter-spacing: 0.2em;
-  opacity: 0.7;
+  color: rgba(26, 26, 26, 0.3);
 }
 
-/* 转场动画 */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 1s ease;
+/* === 返回按钮（最后一段） === */
+.back-to-universe {
+  margin-top: 2rem;
+  padding: 0.875rem 2rem;
+  background: transparent;
+  border: 1px solid #1a1a1a;
+  color: #1a1a1a;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.fade-enter-from,
-.fade-leave-to {
+.back-to-universe:hover {
+  background: #1a1a1a;
+  color: #f7f5f2;
+}
+
+/* === 滚动进度 === */
+.scroll-progress {
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 1000;
+}
+
+.progress-dot {
+  width: 8px;
+  height: 8px;
+  border: 1px solid rgba(26, 26, 26, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.progress-dot:hover {
+  transform: scale(1.2);
+}
+
+.progress-dot.active {
+  background: #6366f1;
+  border-color: #6366f1;
+}
+
+/* === 过渡动画 === */
+.warp-enter-active,
+.warp-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.warp-enter-from,
+.warp-leave-to {
   opacity: 0;
 }
 
+/* === 响应式 === */
 @media (max-width: 768px) {
-  .core-text p {
-    letter-spacing: 0.15em;
+  .scroll-content {
+    padding: 6rem 1rem 2rem;
   }
 
-  .phase-indicator {
-    bottom: 3%;
-    right: 3%;
+  .scroll-section {
+    padding: 2rem 1rem;
   }
 
-  .click-hint {
-    bottom: 15%;
+  .section-svg {
+    width: 200px;
+    height: 200px;
+  }
+
+  .exit-btn {
+    top: 1rem;
+    left: 1rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.65rem;
+  }
+
+  .scroll-progress {
+    right: 1rem;
+  }
+
+  .progress-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .section-number {
+    top: 1rem;
+    right: 1rem;
+    font-size: 0.65rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-quote {
+    font-size: 1rem;
+  }
+
+  .section-desc {
+    font-size: 0.9rem;
+  }
+
+  .section-svg {
+    width: 160px;
+    height: 160px;
   }
 }
 </style>
