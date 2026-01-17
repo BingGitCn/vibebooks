@@ -65,6 +65,11 @@ const routes = [
     path: '/world/lost-satellite',
     name: 'LostSatelliteWorld',
     component: () => import('../worlds/LostSatelliteWorld.vue')
+  },
+  {
+    path: '/world/ergun-river',
+    name: 'ErgunRiverWorld',
+    component: () => import('../worlds/ErgunRiverWorld.vue')
   }
 ]
 
