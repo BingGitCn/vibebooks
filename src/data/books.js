@@ -187,7 +187,8 @@ export const booksData = [
     interactiveType: 'mysterious',
     vibeDescription: '一幅画背后的双重世界',
     footerText: '村上春树',
-    moodScore: 6.8
+    moodScore: 6.8,
+    worldComponent: 'KillingCommendatoreWorld' // 有专属沉浸世界
   },
   // VOL.009 - 失落的卫星
   {

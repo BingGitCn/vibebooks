@@ -12,6 +12,11 @@ const routes = [
     component: () => import('../views/BooksUniverse.vue')
   },
   {
+    path: '/vibe-universe',
+    name: 'VibeBooksUniverse',
+    component: () => import('../views/VibeBooksUniverse.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')
@@ -50,6 +55,11 @@ const routes = [
     path: '/world/sahara',
     name: 'SaharaWorld',
     component: () => import('../worlds/SaharaWorld.vue')
+  },
+  {
+    path: '/world/killing-commendatore',
+    name: 'KillingCommendatoreWorld',
+    component: () => import('../worlds/KillingCommendatoreWorld.vue')
   }
 ]
 

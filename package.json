@@ -10,6 +10,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@types/three": "^0.182.0",
     "gsap": "^3.14.2",
     "three": "^0.182.0",
     "vue": "^3.4.0",
