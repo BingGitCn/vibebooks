@@ -210,7 +210,8 @@ export const booksData = [
     interactiveType: 'exploring',
     vibeDescription: '中亚五国的孤独旅行',
     footerText: '刘子超',
-    moodScore: 7.0
+    moodScore: 7.0,
+    worldComponent: 'LostSatelliteWorld' // 有专属沉浸世界
   },
   // VOL.010 - 额尔古纳河右岸
   {

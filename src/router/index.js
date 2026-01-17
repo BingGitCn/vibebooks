@@ -60,6 +60,11 @@ const routes = [
     path: '/world/killing-commendatore',
     name: 'KillingCommendatoreWorld',
     component: () => import('../worlds/KillingCommendatoreWorld.vue')
+  },
+  {
+    path: '/world/lost-satellite',
+    name: 'LostSatelliteWorld',
+    component: () => import('../worlds/LostSatelliteWorld.vue')
   }
 ]
 
