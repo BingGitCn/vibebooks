@@ -1,7 +1,7 @@
 <template>
   <div class="intro-container">
-    <!-- 金色粒子层 -->
-    <div class="golden-particles">
+    <!-- 黑色粒子层 -->
+    <div class="particles">
       <div
         v-for="particle in particles"
         :key="particle.id"
@@ -19,21 +19,18 @@
 
     <!-- 中心内容 -->
     <div class="center-content">
-      <!-- 金色的门 -->
+      <!-- 门 -->
       <div class="door-container" @click="enterUniverse">
-        <!-- 门楣文字 -->
-        <div class="door-header">书籍 Vibe 宇宙</div>
-
         <!-- 门框 -->
         <div class="door-frame">
           <!-- 左门 -->
           <div class="door door-left">
-            <div class="door-light"></div>
+            <div class="door-inner"></div>
           </div>
 
           <!-- 右门 -->
           <div class="door door-right">
-            <div class="door-light"></div>
+            <div class="door-inner"></div>
           </div>
 
           <!-- 门缝光芒 -->
@@ -49,14 +46,14 @@
 
       <!-- 按钮 -->
       <button class="enter-btn" @click="enterUniverse">
-        推开这扇门
+        Enter the Library
       </button>
     </div>
 
-    <!-- 底部装饰线 -->
+    <!-- 底部装饰 -->
     <div class="bottom-decoration">
       <div class="deco-line"></div>
-      <div class="deco-square"></div>
+      <div class="deco-dot"></div>
     </div>
   </div>
 </template>
@@ -68,7 +65,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const particles = ref([])
 
-// 生成金色粒子
+// 生成粒子
 function initParticles() {
   const particleCount = 30
   const newParticles = []
@@ -109,8 +106,8 @@ onMounted(() => {
   justify-content: center;
 }
 
-/* ========== 金色粒子层 ========== */
-.golden-particles {
+/* ========== 粒子层 ========== */
+.particles {
   position: absolute;
   top: 0;
   left: 0;
@@ -122,7 +119,7 @@ onMounted(() => {
 
 .particle {
   position: absolute;
-  background: rgba(212, 175, 55, 0.3);
+  background: rgba(26, 26, 26, 0.15);
   border-radius: 50%;
   animation: particle-float ease-in-out infinite;
 }
@@ -133,14 +130,14 @@ onMounted(() => {
     opacity: 0;
   }
   10% {
-    opacity: 0.5;
+    opacity: 0.3;
   }
   50% {
     transform: translateY(-30px) translateX(10px);
-    opacity: 0.8;
+    opacity: 0.5;
   }
   90% {
-    opacity: 0.3;
+    opacity: 0.2;
   }
 }
 
@@ -155,22 +152,11 @@ onMounted(() => {
   gap: 2rem;
 }
 
-/* ========== 金色的门 ========== */
+/* ========== 门 ========== */
 .door-container {
   position: relative;
   cursor: pointer;
   margin-bottom: 1rem;
-}
-
-.door-header {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.4em;
-  color: #d4af37;
-  margin-bottom: 1.5rem;
-  text-transform: uppercase;
-  opacity: 0.8;
 }
 
 .door-frame {
@@ -186,13 +172,8 @@ onMounted(() => {
   top: 0;
   width: 98px;
   height: 300px;
-  background: linear-gradient(
-    135deg,
-    rgba(212, 175, 55, 0.05) 0%,
-    rgba(212, 175, 55, 0.02) 50%,
-    rgba(212, 175, 55, 0.05) 100%
-  );
-  border: 1px solid #d4af37;
+  background: rgba(26, 26, 26, 0.02);
+  border: 1px solid #1a1a1a;
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: center;
   overflow: hidden;
@@ -217,24 +198,24 @@ onMounted(() => {
   transform: rotateY(10deg);
 }
 
-/* 门内光芒 */
-.door-light {
+/* 门内纹理 */
+.door-inner {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(
-    circle at center,
-    rgba(212, 175, 55, 0.3) 0%,
-    rgba(212, 175, 55, 0.1) 50%,
-    transparent 70%
+  background: linear-gradient(
+    135deg,
+    rgba(26, 26, 26, 0.03) 0%,
+    rgba(26, 26, 26, 0.01) 50%,
+    rgba(26, 26, 26, 0.03) 100%
   );
   opacity: 0;
   transition: opacity 0.8s ease;
 }
 
-.door-container:hover .door-light {
+.door-container:hover .door-inner {
   opacity: 1;
 }
 
@@ -249,33 +230,33 @@ onMounted(() => {
   background: linear-gradient(
     to bottom,
     transparent,
-    rgba(212, 175, 55, 0.4),
+    rgba(26, 26, 26, 0.3),
     transparent
   );
-  opacity: 0.6;
+  opacity: 0.5;
   animation: glow-breathe 4s ease-in-out infinite;
 }
 
 @keyframes glow-breathe {
   0%, 100% {
-    opacity: 0.4;
+    opacity: 0.3;
     width: 4px;
   }
   50% {
-    opacity: 0.8;
+    opacity: 0.6;
     width: 6px;
   }
 }
 
 /* 悬停时门缝光芒增强 */
 .door-container:hover .door-glow {
-  opacity: 1;
+  opacity: 0.8;
   animation: glow-pulse 2s ease-in-out infinite;
 }
 
 @keyframes glow-pulse {
   0%, 100% {
-    opacity: 0.8;
+    opacity: 0.7;
     width: 6px;
     filter: blur(2px);
   }
@@ -294,7 +275,7 @@ onMounted(() => {
   transform: translateX(-50%);
   width: 216px;
   height: 2px;
-  background: #d4af37;
+  background: #1a1a1a;
   opacity: 0.6;
 }
 
@@ -305,7 +286,7 @@ onMounted(() => {
   font-weight: 300;
   font-style: italic;
   letter-spacing: 0.15em;
-  color: rgba(212, 175, 55, 0.7);
+  color: rgba(26, 26, 26, 0.6);
   margin: 0;
   opacity: 0;
   animation: fade-in 1s ease-out 0.5s forwards;
@@ -321,8 +302,8 @@ onMounted(() => {
 .enter-btn {
   padding: 1rem 2.5rem;
   background: transparent;
-  border: 1px solid #d4af37;
-  color: #d4af37;
+  border: 1px solid #1a1a1a;
+  color: #1a1a1a;
   font-family: 'Inter', sans-serif;
   font-size: 0.75rem;
   font-weight: 500;
@@ -335,13 +316,13 @@ onMounted(() => {
 }
 
 .enter-btn:hover {
-  background: #d4af37;
+  background: #1a1a1a;
   color: #f7f5f2;
-  box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+  box-shadow: 0 0 30px rgba(26, 26, 26, 0.2);
 }
 
 .enter-btn:focus-visible {
-  outline: 2px solid #d4af37;
+  outline: 2px solid #1a1a1a;
   outline-offset: 4px;
 }
 
@@ -360,13 +341,13 @@ onMounted(() => {
 .deco-line {
   width: 60px;
   height: 1px;
-  background: rgba(212, 175, 55, 0.3);
+  background: rgba(26, 26, 26, 0.2);
 }
 
-.deco-square {
+.deco-dot {
   width: 6px;
   height: 6px;
-  border: 1px solid rgba(212, 175, 55, 0.4);
+  border: 1px solid rgba(26, 26, 26, 0.3);
 }
 
 /* ========== 响应式 ========== */
@@ -387,11 +368,6 @@ onMounted(() => {
 
   .door-threshold {
     width: 174px;
-  }
-
-  .door-header {
-    font-size: 0.6rem;
-    margin-bottom: 1rem;
   }
 
   .subtitle {

@@ -22,16 +22,17 @@
     <main class="universe-main">
       <!-- 页面头部 -->
       <header class="universe-header">
-        <div class="header-decoration">
-          <div class="thick-line"></div>
-          <div class="small-square"></div>
+        <!-- 极简框架 -->
+        <div class="header-frame">
+          <div class="frame-top"></div>
+          <div class="frame-title">Book Archive</div>
+          <div class="frame-bottom"></div>
         </div>
 
-        <h1 class="universe-title">Book Archive</h1>
         <p class="universe-subtitle">Every book has a soul</p>
 
         <button class="back-btn" @click="goBack">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M19 12H5M12 19l-7-7 7-7"/>
           </svg>
           <span>Return</span>
@@ -81,7 +82,7 @@ const goBack = () => {
 /* ========== 容器 ========== */
 .monochrome-universe {
   min-height: 100vh;
-  background: #FFFFFF;
+  background: #f7f5f2;
   position: relative;
   overflow-x: hidden;
 }
@@ -177,50 +178,54 @@ const goBack = () => {
 /* ========== 页面头部 ========== */
 .universe-header {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 5rem;
   position: relative;
 }
 
-/* 装饰元素 */
-.header-decoration {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
+/* 极简框架 */
+.header-frame {
+  display: inline-block;
+  position: relative;
+  padding: 2rem 4rem;
   margin-bottom: 2rem;
 }
 
-.thick-line {
-  width: 120px;
-  height: 4px;
-  background: #000000;
+.frame-top,
+.frame-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #1a1a1a;
+  opacity: 0.3;
 }
 
-.small-square {
-  width: 12px;
-  height: 12px;
-  border: 3px solid #000000;
+.frame-top {
+  top: 0;
 }
 
-/* 主标题 */
-.universe-title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(3rem, 8vw, 6rem);
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: #000000;
-  margin-bottom: 1rem;
+.frame-bottom {
+  bottom: 0;
+}
+
+.frame-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.4em;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  opacity: 0.8;
 }
 
 /* 副标题 */
 .universe-subtitle {
   font-family: 'Source Serif 4', Georgia, serif;
-  font-size: clamp(1rem, 2vw, 1.5rem);
-  font-weight: 400;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-weight: 300;
   font-style: italic;
   letter-spacing: 0.15em;
-  color: #525252;
+  color: rgba(26, 26, 26, 0.5);
   margin-bottom: 3rem;
 }
 
@@ -230,33 +235,32 @@ const goBack = () => {
   align-items: center;
   gap: 0.75rem;
   padding: 0.875rem 2rem;
-  background: #000000;
-  border: none;
-  color: #FFFFFF;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.75rem;
+  background: transparent;
+  border: 1px solid #1a1a1a;
+  color: #1a1a1a;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
   font-weight: 500;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.1s;
+  transition: all 0.4s ease;
 }
 
 .back-btn:hover {
-  background: #FFFFFF;
-  color: #000000;
-  box-shadow: inset 0 0 0 2px #000000;
+  background: #1a1a1a;
+  color: #f7f5f2;
+  box-shadow: 0 0 30px rgba(26, 26, 26, 0.15);
 }
 
 .back-btn:focus-visible {
-  outline: 3px solid #000000;
-  outline-offset: 3px;
+  outline: 2px solid #1a1a1a;
+  outline-offset: 4px;
 }
 
 .back-btn svg {
-  width: 18px;
-  height: 18px;
-  stroke-width: 1.5;
+  width: 16px;
+  height: 16px;
 }
 
 /* ========== 书籍网格 ========== */
