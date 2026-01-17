@@ -1,50 +1,174 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const currentStage = ref(0)
+const currentCategory = ref('theory')
+const currentIndex = ref(0)
 
-const stages = [
+// 理论档案（10条）
+const theoryArchives = [
   {
-    type: 'alert',
-    title: 'ARCHIVE HACKED',
-    subtitle: '> ACCESS GRANTED',
-    terminal: [
-      '> 连接目标：PDC数据库',
-      '> 破解等级：Ω',
-      '> 警告：智子检测中...',
-      '> 加载档案...'
-    ],
-    color: 'red'
-  },
-  {
-    type: 'theory',
-    title: '黑暗森林法则',
-    tags: ['理论档案', '宇宙社会学'],
+    title: '宇宙社会学公理',
+    tags: ['理论档案', '基础公理'],
     content: [
-      '> 生存是文明的第一需要',
-      '> 文明不断增长和扩张',
-      '> 宇宙中的物质总量保持不变'
+      '> 公理1：生存是文明的第一需要',
+      '> 公理2：文明不断增长和扩张',
+      '> 公理3：宇宙中的物质总量保持不变',
+      '> 推论：文明间的竞争是零和博弈'
     ],
     color: 'green',
-    icon: 'triangle'
+    icon: 'axiom'
   },
   {
-    type: 'event',
-    title: '红岸基地',
+    title: '猜疑链',
+    tags: ['理论档案', '博弈论'],
+    content: [
+      '> 两个文明之间无法判断对方善恶',
+      '> 判断善恶需要交流',
+      '> 交流本身就是暴露',
+      '> 暴露即毁灭，所以不能交流'
+    ],
+    color: 'green',
+    icon: 'chain'
+  },
+  {
+    title: '技术爆炸',
+    tags: ['理论档案', '文明演化'],
+    content: [
+      '> 弱小文明可能在短时间内超越强大文明',
+      '> 技术发展不是线性的',
+      '> 可能呈指数级爆炸式增长',
+      '> 所以不能轻视任何弱小文明'
+    ],
+    color: 'green',
+    icon: 'explosion'
+  },
+  {
+    title: '黑暗森林打击',
+    tags: ['理论档案', '生存法则'],
+    content: [
+      '> 发现即毁灭',
+      '> 最经济的打击方式',
+      '> 清除隐患，不留痕迹',
+      '> 宇宙就是一座黑暗森林'
+    ],
+    color: 'magenta',
+    icon: 'target'
+  },
+  {
+    title: '面壁计划',
+    tags: ['理论档案', '战略'],
+    content: [
+      '> 智子无法读取思维',
+      '> 四位面壁者：罗辑、泰勒、雷迪亚兹、希恩斯',
+      '> 用思维欺骗整个宇宙',
+      '> 不需要解释，不需要理解'
+    ],
+    color: 'cyan',
+    icon: 'mask'
+  },
+  {
+    title: '执剑人威慑',
+    tags: ['理论档案', '威慑体系'],
+    content: [
+      '> 罗辑建立黑暗森林威慑',
+      '> 两个世界的微妙平衡',
+      '> 威慑度决定存亡',
+      '> 执剑54年，威慑度98%'
+    ],
+    color: 'green',
+    icon: 'sword'
+  },
+  {
+    title: '降维打击',
+    tags: ['理论档案', '宇宙战争'],
+    content: [
+      '> 从10维到0维的宇宙战争',
+      '> 二向箔：小纸片般的武器',
+      '> 生存是第一需要，所以降维',
+      '> 每次降维都是宇宙的退化'
+    ],
+    color: 'magenta',
+    icon: 'dimension'
+  },
+  {
+    title: '光速飞船',
+    tags: ['理论档案', '技术'],
+    content: [
+      '> 曲率驱动：折叠空间',
+      '> 黑域：降低光速构建安全区',
+      '> 慢雾与死线',
+      '> 逃亡主义的最后希望'
+    ],
+    color: 'cyan',
+    icon: 'ship'
+  },
+  {
+    title: '宇宙归零',
+    tags: ['理论档案', '宇宙终极'],
+    content: [
+      '> 大宇宙向小宇宙归还质量',
+      '> 最后的文明等待重启',
+      '> 如果质量不够，宇宙会坍缩',
+      '> 等待下一次大爆炸'
+    ],
+    color: 'magenta',
+    icon: 'restart'
+  },
+  {
+    title: '文明生存策略',
+    tags: ['理论档案', '生存法则'],
+    content: [
+      '> 藏好自己',
+      '> 做好清理',
+      '> 不要暴露',
+      '> 在黑暗中生存'
+    ],
+    color: 'green',
+    icon: 'survival'
+  }
+]
+
+// 重大事件（12条）
+const eventArchives = [
+  {
+    title: '红岸基地建立',
     tags: ['事件档案', '1969年'],
     content: [
       '> 大兴安岭，雷达峰',
-      '> 发射功率：10⁷瓦',
-      '> 接收到信号...',
-      '> "不要回答！"'
+      '> 绝密军事工程',
+      '> 目标：寻找地外文明',
+      '> 雷达发射功率：10^7瓦'
     ],
     color: 'cyan',
-    icon: 'wave'
+    icon: 'base'
   },
   {
-    type: 'event',
+    title: '叶文洁首次发射',
+    tags: ['事件档案', '1979年'],
+    content: [
+      '> 太阳作为天线放大器',
+      '> 信号飞向4光年外的三体',
+      '> "到这里吧，我帮助你们"',
+      '> 改变人类命运的一刻'
+    ],
+    color: 'cyan',
+    icon: 'signal'
+  },
+  {
+    title: '三体游戏',
+    tags: ['事件档案', '游戏'],
+    content: [
+      '> VR虚拟现实',
+      '> 183次文明毁灭',
+      '> 乱纪元与恒纪元交替',
+      '> 脱水与浸泡'
+    ],
+    color: 'green',
+    icon: 'game'
+  },
+  {
     title: '古筝行动',
     tags: ['事件档案', '2007年'],
     content: [
@@ -57,50 +181,324 @@ const stages = [
     icon: 'cut'
   },
   {
-    type: 'person',
+    title: '面壁计划启动',
+    tags: ['事件档案', '战略'],
+    content: [
+      '> PDC（行星防御理事会）成立',
+      '> 四位面壁者被选出',
+      '> 每个人都有无限资源',
+      '> 但无需向任何人解释'
+    ],
+    color: 'cyan',
+    icon: 'meeting'
+  },
+  {
+    title: '水滴之战',
+    tags: ['事件档案', '末日之战'],
+    content: [
+      '> 2000艘恒星级战舰',
+      '> 强互作用力探测器',
+      '> "毁灭你，与你何干"',
+      '> 40分钟全军覆没'
+    ],
+    color: 'magenta',
+    icon: 'drop'
+  },
+  {
+    title: '威慑建立',
+    tags: ['事件档案', '威慑纪元'],
+    content: [
+      '> 罗辑对决三体世界',
+      '> 黑暗森林广播坐标',
+      '> 两个世界的和平',
+      '> 威慑纪元开始'
+    ],
+    color: 'green',
+    icon: 'peace'
+  },
+  {
+    title: '威慑后纪元',
+    tags: ['事件档案', '和平'],
+    content: [
+      '> 罗辑执剑54年',
+      '> 程心接任执剑人',
+      '> 威慑度从98%跌到10%',
+      '> 三体立刻发动攻击'
+    ],
+    color: 'cyan',
+    icon: 'change'
+  },
+  {
+    title: '万有引力号追击',
+    tags: ['事件档案', '逃亡'],
+    content: [
+      '> 章北海劫持战舰',
+      '> "自然选择，前进四！"',
+      '> 逃亡主义',
+      '> 人类的最后火种'
+    ],
+    color: 'cyan',
+    icon: 'escape'
+  },
+  {
+    title: '二向箔打击',
+    tags: ['事件档案', '末日'],
+    content: [
+      '> 太阳系二维化',
+      '> 梵高的星空成真',
+      '> 所有文明灭亡',
+      '> 只有程心和艾AA逃出'
+    ],
+    color: 'magenta',
+    icon: 'collapse'
+  },
+  {
+    title: '云天明的童话',
+    tags: ['事件档案', '情报'],
+    content: [
+      '> 三个故事',
+      '> 隐藏的情报',
+      '> 曲率驱动计划',
+      '> 藏在童话里的技术'
+    ],
+    color: 'green',
+    icon: 'fairy'
+  },
+  {
+    title: '星际移民',
+    tags: ['事件档案', '未来'],
+    content: [
+      '> 程心和关一帆到达蓝星',
+      '> 时间膨胀：1800万年',
+      '> 小宇宙的伦理',
+      '> 回归大宇宙'
+    ],
+    color: 'cyan',
+    icon: 'migration'
+  }
+]
+
+// 人物档案（15条）
+const personArchives = [
+  {
+    title: '叶文洁',
+    tags: ['人物档案', '红岸统帅'],
+    content: [
+      '> 红岸基地核心人员',
+      '> 按下按钮的人',
+      '> "我点燃了火，却控制不了它"',
+      '> 三体革命的精神领袖'
+    ],
+    color: 'cyan',
+    icon: 'yewenjie'
+  },
+  {
+    title: '汪淼',
+    tags: ['人物档案', '纳米科学家'],
+    content: [
+      '> 纳米材料研究员',
+      '> 古筝行动执行者',
+      '> "物理学从未存在过"',
+      '> 倒计时眼中的宇宙'
+    ],
+    color: 'cyan',
+    icon: 'wangmiao'
+  },
+  {
     title: '罗辑',
     tags: ['人物档案', '面壁者', '执剑人'],
     content: [
       '> 面壁者编号：4',
-      '> 威慑建立：是',
-      '> 执剑时间：54年',
-      '> 威慑度：98%'
+      '> 黑暗森林法则发现者',
+      '> 执剑54年，威慑度98%',
+      '> 人类的救世主'
     ],
     color: 'green',
-    icon: 'circle'
+    icon: 'luoji'
   },
   {
-    type: 'event',
-    title: '水滴',
-    tags: ['事件档案', '强互作用力'],
+    title: '章北海',
+    tags: ['人物档案', '逃亡主义'],
     content: [
-      '> 强互作用力探测器',
-      '> 表面：绝对光滑',
-      '> 速度：1/3光速',
-      '> "毁灭你，与你何干"'
+      '> "自然选择，前进四！"',
+      '> 逃亡主义之父',
+      '> 人类的希望',
+      '> 深沉的远见'
     ],
     color: 'cyan',
-    icon: 'drop'
+    icon: 'zhangbeihai'
   },
   {
-    type: 'final',
-    title: '二向箔',
-    tags: ['终极档案', '降维打击'],
+    title: '程心',
+    tags: ['人物档案', '执剑人'],
     content: [
-      '> 警告！警告！',
-      '> 太阳系二维化启动',
-      '> 所有文明...',
-      '> 数据丢失...',
-      '> [CONNECTION LOST]'
+      '> 第二任执剑人',
+      '> 爱与责任的悲剧',
+      '> 威慑度10%',
+      '> 毁灭人类的仁慈'
+    ],
+    color: 'green',
+    icon: 'chengxin'
+  },
+  {
+    title: '云天明',
+    tags: ['人物档案', '星星'],
+    content: [
+      '> 大脑送入太空',
+      '> 给程心一颗星星',
+      '> 童话情报传递者',
+      '> 跨越光年的爱'
+    ],
+    color: 'cyan',
+    icon: 'yuntianming'
+  },
+  {
+    title: '托马斯·维德',
+    tags: ['人物档案', '极端理性'],
+    content: [
+      '> "失去人性，失去很多；失去兽性，失去一切"',
+      '> 极端理性主义者',
+      '> 被程心阻止',
+      '> "前进！不惜一切代价！"'
     ],
     color: 'magenta',
-    icon: 'collapse'
+    icon: 'vid'
+  },
+  {
+    title: '丁仪',
+    tags: ['人物档案', '物理学家'],
+    content: [
+      '> "你们是虫子"',
+      '> 在水滴前死亡',
+      '> 最后的物理学家',
+      '> 理解了，但太晚了'
+    ],
+    color: 'cyan',
+    icon: 'dingyi'
+  },
+  {
+    title: '史强',
+    tags: ['人物档案', '警察'],
+    content: [
+      '> 粗鲁但智慧',
+      '> "虫子从来没有被真正战胜过"',
+      '> 汪淼的引路人',
+      '> 大智若愚'
+    ],
+    color: 'green',
+    icon: 'daqiang'
+  },
+  {
+    title: '杨冬',
+    tags: ['人物档案', '物理学家'],
+    content: [
+      '> 叶文洁的女儿',
+      '> "物理学不存在了"',
+      '> 自杀',
+      '> 真相的受害者'
+    ],
+    color: 'cyan',
+    icon: 'yangdong'
+  },
+  {
+    title: '申玉菲',
+    tags: ['人物档案', '科学边界'],
+    content: [
+      '> 科学边界成员',
+      '> 三体组织成员',
+      '> "主啊"',
+      '> 魏成的妻子'
+    ],
+    color: 'green',
+    icon: 'shenyufei'
+  },
+  {
+    title: '泰勒',
+    tags: ['人物档案', '面壁者'],
+    content: [
+      '> 美国国防部长',
+      '> 面壁者1号',
+      '> 蚊群战术',
+      '> 自杀，破壁人成功'
+    ],
+    color: 'magenta',
+    icon: 'taylor'
+  },
+  {
+    title: '雷迪亚兹',
+    tags: ['人物档案', '面壁者'],
+    content: [
+      '> 委内瑞拉总统',
+      '> 面壁者2号',
+      '> 恒星氢弹同归于尽',
+      '> 被本国人民砸死'
+    ],
+    color: 'magenta',
+    icon: 'rediaz'
+  },
+  {
+    title: '希恩斯',
+    tags: ['人物档案', '面壁者'],
+    content: [
+      '> 脑科学家',
+      '> 面壁者3号',
+      '> 思想钢印',
+      '> 被妻子破壁'
+    ],
+    color: 'cyan',
+    icon: 'hines'
+  },
+  {
+    title: '智子',
+    tags: ['人物档案', 'AI'],
+    content: [
+      '> 三体AI',
+      '> 展开成二维',
+      '> "你们是虫子"',
+      '> 监视人类'
+    ],
+    color: 'magenta',
+    icon: 'sophon'
   }
 ]
 
-function nextStage() {
-  if (currentStage.value < stages.length - 1) {
-    currentStage.value++
+// 计算属性
+const currentArchives = computed(() => {
+  switch (currentCategory.value) {
+    case 'theory': return theoryArchives
+    case 'event': return eventArchives
+    case 'person': return personArchives
+    default: return theoryArchives
+  }
+})
+
+const currentArchive = computed(() => {
+  return currentArchives.value[currentIndex.value]
+})
+
+const totalArchives = computed(() => {
+  return currentArchives.value.length
+})
+
+// 方法
+function switchCategory(category) {
+  currentCategory.value = category
+  currentIndex.value = 0
+}
+
+function prevArchive() {
+  if (currentIndex.value > 0) {
+    currentIndex.value--
+  } else {
+    currentIndex.value = totalArchives.value - 1
+  }
+}
+
+function nextArchive() {
+  if (currentIndex.value < totalArchives.value - 1) {
+    currentIndex.value++
+  } else {
+    currentIndex.value = 0
   }
 }
 
@@ -109,12 +507,13 @@ function goBack() {
 }
 
 onMounted(() => {
-  currentStage.value = 0
+  currentCategory.value = 'theory'
+  currentIndex.value = 0
 })
 </script>
 
 <template>
-  <div class="three-body-world" @click="nextStage">
+  <div class="three-body-world">
     <!-- 三体运动背景层 -->
     <div class="three-body-background">
       <div class="star star-1"></div>
@@ -136,12 +535,40 @@ onMounted(() => {
     <!-- 主内容区 -->
     <div class="content-layer">
       <!-- 返回按钮 -->
-      <button class="back-btn cyber-chamfer-sm" @click.stop="goBack">← EXIT</button>
+      <button class="back-btn cyber-chamfer-sm" @click="goBack">← EXIT</button>
+
+      <!-- 顶部类别切换 -->
+      <div class="category-tabs">
+        <button
+          class="tab-btn"
+          :class="{ active: currentCategory === 'theory' }"
+          @click="switchCategory('theory')"
+        >
+          <span class="tab-count">[10]</span>
+          <span class="tab-label">理论档案</span>
+        </button>
+        <button
+          class="tab-btn"
+          :class="{ active: currentCategory === 'event' }"
+          @click="switchCategory('event')"
+        >
+          <span class="tab-count">[12]</span>
+          <span class="tab-label">重大事件</span>
+        </button>
+        <button
+          class="tab-btn"
+          :class="{ active: currentCategory === 'person' }"
+          @click="switchCategory('person')"
+        >
+          <span class="tab-count">[15]</span>
+          <span class="tab-label">人物档案</span>
+        </button>
+      </div>
 
       <!-- 档案卡片容器 -->
       <div class="archive-container">
         <transition name="glitch-transition" mode="out-in">
-          <div :key="currentStage" class="archive-card" :class="[`color-${stages[currentStage].color}`, stages[currentStage].type]">
+          <div :key="`${currentCategory}-${currentIndex}`" class="archive-card" :class="`color-${currentArchive.color}`">
             <!-- 终端标题栏 -->
             <div class="terminal-header">
               <div class="terminal-dots">
@@ -150,109 +577,65 @@ onMounted(() => {
                 <span class="dot green"></span>
               </div>
               <div class="terminal-title">PDC ARCHIVE v3.7.1</div>
+              <div class="archive-number">
+                FILE {{ String(currentIndex + 1).padStart(2, '0') }}/{{ String(totalArchives).padStart(2, '0') }}
+              </div>
             </div>
 
             <!-- 档案内容 -->
             <div class="archive-content">
               <!-- 标题 -->
-              <h1
-                class="archive-title"
-                :class="{ 'cyber-glitch': currentStage === 0 || currentStage === 6 }"
-                :data-text="stages[currentStage].title"
-              >
-                {{ stages[currentStage].title }}
+              <h1 class="archive-title" :data-text="currentArchive.title">
+                {{ currentArchive.title }}
               </h1>
 
               <!-- 标签 -->
-              <div class="archive-tags" v-if="stages[currentStage].tags">
+              <div class="archive-tags">
                 <span
-                  v-for="(tag, index) in stages[currentStage].tags"
+                  v-for="(tag, index) in currentArchive.tags"
                   :key="index"
                   class="tag"
-                  :class="`tag-${stages[currentStage].color}`"
+                  :class="`tag-${currentArchive.color}`"
                 >
                   [{{ tag }}]
                 </span>
               </div>
 
               <!-- 图标/视觉元素 -->
-              <div class="visual-element" v-if="stages[currentStage].icon">
-                <!-- 三角形（黑暗森林） -->
-                <svg v-if="stages[currentStage].icon === 'triangle'" class="icon-svg" viewBox="0 0 100 100">
-                  <polygon points="50,20 80,80 20,80" fill="none" stroke="currentColor" stroke-width="2"/>
-                  <polygon points="50,30 70,70 30,70" fill="none" stroke="currentColor" stroke-width="1" opacity="0.5"/>
-                  <polygon points="50,40 60,60 40,60" fill="none" stroke="currentColor" stroke-width="1" opacity="0.3"/>
-                </svg>
-
-                <!-- 波形（红岸信号） -->
-                <svg v-if="stages[currentStage].icon === 'wave'" class="icon-svg" viewBox="0 0 100 100">
-                  <path d="M0,50 Q25,20 50,50 T100,50" fill="none" stroke="currentColor" stroke-width="2">
-                    <animate attributeName="d" dur="2s" repeatCount="indefinite"
-                      values="M0,50 Q25,20 50,50 T100,50;M0,50 Q25,80 50,50 T100,50;M0,50 Q25,20 50,50 T100,50"/>
-                  </path>
-                </svg>
-
-                <!-- 切割线（古筝） -->
-                <svg v-if="stages[currentStage].icon === 'cut'" class="icon-svg" viewBox="0 0 100 100">
-                  <line x1="0" y1="20" x2="100" y2="20" stroke="currentColor" stroke-width="0.5"/>
-                  <line x1="0" y1="50" x2="100" y2="50" stroke="currentColor" stroke-width="1"/>
-                  <line x1="0" y1="80" x2="100" y2="80" stroke="currentColor" stroke-width="0.5"/>
-                </svg>
-
-                <!-- 圆（两个世界） -->
-                <svg v-if="stages[currentStage].icon === 'circle'" class="icon-svg" viewBox="0 0 100 100">
-                  <circle cx="35" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="2"/>
-                  <circle cx="65" cy="50" r="25" fill="none" stroke="currentColor" stroke-width="2"/>
-                  <circle cx="50" cy="50" r="8" fill="currentColor" opacity="0.3"/>
-                </svg>
-
-                <!-- 水滴 -->
-                <svg v-if="stages[currentStage].icon === 'drop'" class="icon-svg" viewBox="0 0 100 100">
-                  <path d="M50,10 C50,10 20,50 20,65 A30,30 0 1,0 80,65 C80,50 50,10 50,10"
-                    fill="none" stroke="currentColor" stroke-width="2">
-                    <animate attributeName="opacity" values="1;0.5;1" dur="3s" repeatCount="indefinite"/>
-                  </path>
-                </svg>
-
-                <!-- 坍塌（二向箔） -->
-                <svg v-if="stages[currentStage].icon === 'collapse'" class="icon-svg" viewBox="0 0 100 100">
-                  <rect x="25" y="25" width="50" height="50" fill="none" stroke="currentColor" stroke-width="2">
-                    <animate attributeName="height" from="50" to="2" dur="3s" repeatCount="indefinite"/>
-                    <animate attributeName="y" from="25" to="49" dur="3s" repeatCount="indefinite"/>
-                    <animate attributeName="opacity" values="1;0.3;1" dur="3s" repeatCount="indefinite"/>
-                  </rect>
-                </svg>
+              <div class="visual-element">
+                <div class="icon-placeholder">● ● ●</div>
               </div>
 
               <!-- 终端文本内容 -->
               <div class="terminal-content">
                 <p
-                  v-for="(line, index) in stages[currentStage].content"
+                  v-for="(line, index) in currentArchive.content"
                   :key="index"
                   class="terminal-line"
-                  :class="{ 'typing-effect': index === 0 && currentStage === 0 }"
                 >
                   {{ line }}
                 </p>
               </div>
-
-              <!-- 阶段指示 -->
-              <div class="stage-indicator">
-                <span class="indicator-label">FILE_0{{ currentStage + 1 }}_0{{ stages.length }}</span>
-                <div class="indicator-dots">
-                  <span
-                    v-for="i in stages.length"
-                    :key="i"
-                    class="dot"
-                    :class="{ active: currentStage >= i - 1, [`dot-${stages[currentStage].color}`]: currentStage === i - 1 }"
-                  ></span>
-                </div>
-              </div>
             </div>
 
-            <!-- 交互提示 -->
-            <div class="interaction-hint" v-if="currentStage < stages.length - 1">
-              [PRESS ENTER OR CLICK TO CONTINUE]
+            <!-- 导航按钮 -->
+            <div class="navigation">
+              <button class="nav-btn" @click="prevArchive">
+                <span class="nav-icon">◀</span>
+                <span class="nav-text">PREV</span>
+              </button>
+              <div class="nav-indicator">
+                <span
+                  v-for="i in totalArchives"
+                  :key="i"
+                  class="indicator-dot"
+                  :class="{ active: currentIndex === i - 1 }"
+                ></span>
+              </div>
+              <button class="nav-btn" @click="nextArchive">
+                <span class="nav-text">NEXT</span>
+                <span class="nav-icon">▶</span>
+              </button>
             </div>
           </div>
         </transition>
@@ -278,7 +661,6 @@ onMounted(() => {
   font-family: 'JetBrains Mono', monospace;
   position: relative;
   overflow-x: hidden;
-  cursor: pointer;
 }
 
 /* ========== 三体背景层 ========== */
@@ -402,7 +784,7 @@ onMounted(() => {
   position: relative;
   z-index: 10;
   min-height: 100vh;
-  padding: 60px 40px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
 }
@@ -413,8 +795,8 @@ onMounted(() => {
   top: 40px;
   left: 40px;
   background: transparent;
-  border: 2px solid var(--border-color, #2a2a3a);
-  color: var(--text-color, #e0e0e0);
+  border: 2px solid #2a2a3a;
+  color: #e0e0e0;
   padding: 12px 24px;
   font-family: 'Share Tech Mono', monospace;
   font-size: 12px;
@@ -428,12 +810,66 @@ onMounted(() => {
     100% calc(100% - 8px), calc(100% - 8px) 100%,
     8px 100%, 0 calc(100% - 8px)
   );
+  z-index: 100;
 }
 
 .back-btn:hover {
-  border-color: var(--hover-color, #00ff88);
-  color: var(--hover-color, #00ff88);
-  box-shadow: 0 0 10px var(--hover-glow, rgba(0, 255, 136, 0.4));
+  border-color: #00ff88;
+  color: #00ff88;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
+}
+
+/* ========== 类别切换标签 ========== */
+.category-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 100px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(18, 18, 26, 0.8);
+  border: 2px solid #2a2a3a;
+  padding: 12px 24px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  clip-path: polygon(
+    0 6px, 6px 0,
+    calc(100% - 6px) 0, 100% 6px,
+    100% calc(100% - 6px), calc(100% - 6px) 100%,
+    6px 100%, 0 calc(100% - 6px)
+  );
+}
+
+.tab-btn:hover {
+  border-color: #00ff88;
+  color: #00ff88;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+.tab-btn.active {
+  border-color: #00ff88;
+  color: #00ff88;
+  background: rgba(0, 255, 136, 0.1);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+}
+
+.tab-count {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+.tab-label {
+  font-weight: 700;
 }
 
 /* ========== 档案容器 ========== */
@@ -442,14 +878,14 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 60px 20px;
+  padding: 20px;
 }
 
 .archive-card {
   width: 100%;
   max-width: 700px;
-  background: rgba(18, 18, 26, 0.8);
-  border: 1px solid var(--border-color, #2a2a3a);
+  background: rgba(18, 18, 26, 0.9);
+  border: 1px solid #2a2a3a;
   clip-path: polygon(
     0 15px, 15px 0,
     calc(100% - 15px) 0, 100% 15px,
@@ -457,39 +893,24 @@ onMounted(() => {
     15px 100%, 0 calc(100% - 15px)
   );
   transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-
-/* 颜色变体 */
-.archive-card.color-red {
-  --border-color: #ff3366;
-  --text-color: #ff3366;
-  --hover-color: #ff3366;
-  --hover-glow: rgba(255, 51, 102, 0.4);
-  box-shadow: 0 0 20px rgba(255, 51, 102, 0.2);
 }
 
 .archive-card.color-green {
   --border-color: #00ff88;
   --text-color: #00ff88;
   --hover-color: #00ff88;
-  --hover-glow: rgba(0, 255, 136, 0.4);
   box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
 }
 
 .archive-card.color-cyan {
   --border-color: #00d4ff;
   --text-color: #00d4ff;
-  --hover-color: #00d4ff;
-  --hover-glow: rgba(0, 212, 255, 0.4);
   box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
 }
 
 .archive-card.color-magenta {
   --border-color: #ff00ff;
   --text-color: #ff00ff;
-  --hover-color: #ff00ff;
-  --hover-glow: rgba(255, 0, 255, 0.4);
   box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
 }
 
@@ -498,7 +919,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   padding: 12px 20px;
-  border-bottom: 1px solid var(--border-color, #2a2a3a);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(10, 10, 15, 0.5);
 }
 
@@ -526,6 +947,14 @@ onMounted(() => {
   text-transform: uppercase;
 }
 
+.archive-number {
+  margin-left: 20px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-color, #e0e0e0);
+}
+
 /* ========== 档案内容 ========== */
 .archive-content {
   padding: 40px;
@@ -533,69 +962,14 @@ onMounted(() => {
 
 .archive-title {
   font-family: 'Orbitron', monospace;
-  font-size: clamp(24px, 5vw, 36px);
+  font-size: clamp(20px, 4vw, 28px);
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.2em;
   margin: 0 0 20px;
   color: var(--text-color, #e0e0e0);
   line-height: 1.2;
-}
-
-/* 故障效果 */
-.cyber-glitch {
   position: relative;
-  animation: glitch 3s infinite;
-}
-
-.cyber-glitch::before,
-.cyber-glitch::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.cyber-glitch::before {
-  left: 2px;
-  text-shadow: -1px 0 #ff00ff;
-  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-  animation: glitch-1 2s infinite linear alternate-reverse;
-}
-
-.cyber-glitch::after {
-  left: -2px;
-  text-shadow: -1px 0 #00d4ff;
-  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
-  animation: glitch-2 3s infinite linear alternate-reverse;
-}
-
-@keyframes glitch {
-  0%, 100% { transform: translate(0); }
-  20% { transform: translate(-2px, 2px); }
-  40% { transform: translate(2px, -2px); }
-  60% { transform: translate(-1px, -1px); }
-  80% { transform: translate(1px, 1px); }
-}
-
-@keyframes glitch-1 {
-  0% { clip-path: inset(20% 0 80% 0); }
-  20% { clip-path: inset(60% 0 10% 0); }
-  40% { clip-path: inset(40% 0 50% 0); }
-  60% { clip-path: inset(80% 0 5% 0); }
-  80% { clip-path: inset(10% 0 70% 0); }
-  100% { clip-path: inset(30% 0 20% 0); }
-}
-
-@keyframes glitch-2 {
-  0% { clip-path: inset(10% 0 60% 0); }
-  20% { clip-path: inset(30% 0 20% 0); }
-  40% { clip-path: inset(70% 0 10% 0); }
-  60% { clip-path: inset(20% 0 50% 0); }
-  80% { clip-path: inset(50% 0 30% 0); }
-  100% { clip-path: inset(0% 0 80% 0); }
 }
 
 /* ========== 标签 ========== */
@@ -609,7 +983,7 @@ onMounted(() => {
 .tag {
   font-family: 'Share Tech Mono', monospace;
   font-size: 10px;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.15em;
   padding: 4px 10px;
   border: 1px solid currentColor;
   text-transform: uppercase;
@@ -621,7 +995,7 @@ onMounted(() => {
 
 /* ========== 视觉元素 ========== */
 .visual-element {
-  height: 120px;
+  height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -629,20 +1003,14 @@ onMounted(() => {
   color: var(--text-color, #e0e0e0);
 }
 
-.icon-svg {
-  width: 100%;
-  max-width: 150px;
-  height: auto;
-}
-
 /* ========== 终端内容 ========== */
 .terminal-content {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .terminal-line {
   font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(13px, 2.5vw, 16px);
+  font-size: clamp(12px, 2vw, 14px);
   line-height: 1.8;
   margin: 0;
   color: #e0e0e0;
@@ -651,105 +1019,89 @@ onMounted(() => {
 }
 
 .terminal-line:nth-child(1) { animation-delay: 0.1s; }
-.terminal-line:nth-child(2) { animation-delay: 0.3s; }
-.terminal-line:nth-child(3) { animation-delay: 0.5s; }
-.terminal-line:nth-child(4) { animation-delay: 0.7s; }
-.terminal-line:nth-child(5) { animation-delay: 0.9s; }
+.terminal-line:nth-child(2) { animation-delay: 0.2s; }
+.terminal-line:nth-child(3) { animation-delay: 0.3s; }
+.terminal-line:nth-child(4) { animation-delay: 0.4s; }
+.terminal-line:nth-child(5) { animation-delay: 0.5s; }
 
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.typing-effect {
-  overflow: hidden;
-  white-space: nowrap;
-  border-right: 2px solid currentColor;
-  animation: typing 3s steps(30) forwards, blink 0.75s step-end infinite;
-}
-
-@keyframes typing {
-  from { width: 0; }
-  to { width: 100%; }
-}
-
-@keyframes blink {
-  50% { border-color: transparent; }
-}
-
-/* ========== 阶段指示 ========== */
-.stage-indicator {
+/* ========== 导航 ========== */
+.navigation {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 15px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border-color, #2a2a3a);
+  justify-content: space-between;
+  padding: 15px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(10, 10, 15, 0.5);
 }
 
-.indicator-label {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  color: #6b7280;
-  text-transform: uppercase;
-}
-
-.indicator-dots {
+.nav-btn {
   display: flex;
+  align-items: center;
   gap: 8px;
+  background: transparent;
+  border: 1px solid var(--text-color, #2a2a3a);
+  padding: 8px 16px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--text-color, #e0e0e0);
+  cursor: pointer;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  clip-path: polygon(
+    0 4px, 4px 0,
+    calc(100% - 4px) 0, 100% 4px,
+    100% calc(100% - 4px), calc(100% - 4px) 100%,
+    4px 100%, 0 calc(100% - 4px)
+  );
 }
 
-.indicator-dots .dot {
-  width: 8px;
-  height: 8px;
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 10px currentColor;
+}
+
+.nav-indicator {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 300px;
+}
+
+.indicator-dot {
+  width: 6px;
+  height: 6px;
   background: #2a2a3a;
   border-radius: 50%;
   transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.indicator-dots .dot.active {
+.indicator-dot.active {
   background: var(--text-color, #e0e0e0);
-  box-shadow: 0 0 10px currentColor;
-}
-
-.indicator-dots .dot.dot-green { background: #00ff88; box-shadow: 0 0 10px #00ff88; }
-.indicator-dots .dot.dot-cyan { background: #00d4ff; box-shadow: 0 0 10px #00d4ff; }
-.indicator-dots .dot.dot-magenta { background: #ff00ff; box-shadow: 0 0 10px #ff00ff; }
-
-/* ========== 交互提示 ========== */
-.interaction-hint {
-  text-align: center;
-  padding: 20px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  color: #6b7280;
-  text-transform: uppercase;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
+  box-shadow: 0 0 8px currentColor;
 }
 
 /* ========== 过渡动画 ========== */
 .glitch-transition-enter-active,
 .glitch-transition-leave-active {
-  transition: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glitch-transition-enter-from {
   opacity: 0;
-  transform: scale(0.95) translateY(20px);
-  filter: blur(10px);
+  transform: scale(0.95);
+  filter: blur(5px);
 }
 
 .glitch-transition-leave-to {
   opacity: 0;
-  transform: scale(1.05) translateY(-20px);
-  filter: blur(10px);
+  transform: scale(1.05);
+  filter: blur(5px);
 }
 
 /* ========== 页脚 ========== */
@@ -772,12 +1124,22 @@ onMounted(() => {
 /* ========== 响应式 ========== */
 @media (max-width: 768px) {
   .content-layer {
-    padding: 40px 20px;
+    padding: 20px;
   }
 
   .back-btn {
     top: 20px;
     left: 20px;
+    padding: 8px 16px;
+    font-size: 10px;
+  }
+
+  .category-tabs {
+    margin-top: 80px;
+    gap: 10px;
+  }
+
+  .tab-btn {
     padding: 10px 16px;
     font-size: 10px;
   }
@@ -787,15 +1149,20 @@ onMounted(() => {
   }
 
   .archive-title {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .terminal-line {
-    font-size: 13px;
+    font-size: 12px;
   }
 
-  .visual-element {
-    height: 100px;
+  .navigation {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .nav-indicator {
+    max-width: 100%;
   }
 
   .world-footer {
