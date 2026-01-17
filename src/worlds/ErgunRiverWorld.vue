@@ -28,49 +28,49 @@
       <!-- 火塘中心 -->
       <div class="fireplace-center">
         <svg class="fireplace-svg" viewBox="0 0 400 400">
-          <!-- 火塘底座 -->
-          <circle class="hearth-base" cx="200" cy="280" r="100" fill="none" stroke="currentColor" stroke-width="2" opacity="0.2"/>
-          <circle class="hearth-inner" cx="200" cy="280" r="80" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.15"/>
+          <!-- 火塘底座（移到中心） -->
+          <circle class="hearth-base" cx="200" cy="200" r="70" fill="none" stroke="currentColor" stroke-width="2" opacity="0.2"/>
+          <circle class="hearth-inner" cx="200" cy="200" r="50" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.15"/>
 
           <!-- 火焰线条 -->
           <g class="flames">
             <line class="flame-line" v-for="i in 12" :key="i"
-              x1="200" y1="260"
+              x1="200" y1="180"
               :x2="180 + Math.random() * 40"
-              :y2="100 + Math.random() * 80"
+              :y2="80 + Math.random() * 60"
               stroke="currentColor"
               :stroke-width="1.5 + Math.random()"
               :opacity="0.4 + Math.random() * 0.4"
-              :transform="`rotate(${(i - 1) * 15}, 200, 280)`"
+              :transform="`rotate(${(i - 1) * 15}, 200, 200)`"
             />
           </g>
 
-          <!-- 四季标记 -->
+          <!-- 四季标记（放在外围） -->
           <g class="seasons-markers">
             <!-- 春 -->
             <g class="season-marker" @click="selectSeason('spring')">
-              <circle cx="200" cy="80" r="30" fill="none" stroke="#059669" stroke-width="2" opacity="0.6"/>
-              <text x="200" y="85" text-anchor="middle" fill="#059669" font-size="14" font-family="Noto Serif SC">春</text>
+              <circle cx="200" cy="50" r="30" fill="none" stroke="#059669" stroke-width="2" opacity="0.6"/>
+              <text x="200" y="55" text-anchor="middle" fill="#059669" font-size="14" font-family="Noto Serif SC">春</text>
             </g>
             <!-- 夏 -->
             <g class="season-marker" @click="selectSeason('summer')">
-              <circle cx="320" cy="180" r="30" fill="none" stroke="#047857" stroke-width="2" opacity="0.6"/>
-              <text x="320" y="185" text-anchor="middle" fill="#047857" font-size="14" font-family="Noto Serif SC">夏</text>
+              <circle cx="350" cy="200" r="30" fill="none" stroke="#047857" stroke-width="2" opacity="0.6"/>
+              <text x="350" y="205" text-anchor="middle" fill="#047857" font-size="14" font-family="Noto Serif SC">夏</text>
             </g>
             <!-- 秋 -->
             <g class="season-marker" @click="selectSeason('autumn')">
-              <circle cx="200" cy="300" r="30" fill="none" stroke="#d97706" stroke-width="2" opacity="0.6"/>
-              <text x="200" y="305" text-anchor="middle" fill="#d97706" font-size="14" font-family="Noto Serif SC">秋</text>
+              <circle cx="200" cy="350" r="30" fill="none" stroke="#d97706" stroke-width="2" opacity="0.6"/>
+              <text x="200" y="355" text-anchor="middle" fill="#d97706" font-size="14" font-family="Noto Serif SC">秋</text>
             </g>
             <!-- 冬 -->
             <g class="season-marker" @click="selectSeason('winter')">
-              <circle cx="80" cy="180" r="30" fill="none" stroke="#9ca3af" stroke-width="2" opacity="0.6"/>
-              <text x="80" y="185" text-anchor="middle" fill="#9ca3af" font-size="14" font-family="Noto Serif SC">冬</text>
+              <circle cx="50" cy="200" r="30" fill="none" stroke="#9ca3af" stroke-width="2" opacity="0.6"/>
+              <text x="50" y="205" text-anchor="middle" fill="#9ca3af" font-size="14" font-family="Noto Serif SC">冬</text>
             </g>
           </g>
 
           <!-- 中心文字 -->
-          <text x="200" y="280" text-anchor="middle" fill="currentColor" font-size="16" font-family="Noto Serif SC" opacity="0.4">
+          <text x="200" y="205" text-anchor="middle" fill="currentColor" font-size="16" font-family="Noto Serif SC" opacity="0.4">
             火塘
           </text>
         </svg>
