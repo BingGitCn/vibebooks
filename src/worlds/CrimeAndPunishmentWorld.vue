@@ -372,6 +372,9 @@ onMounted(() => {
 
 .geometry-stage {
   position: absolute;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -502,6 +505,7 @@ onMounted(() => {
   max-width: 900px;
   padding: 2rem;
   text-align: center;
+  margin-top: 15vh;
 }
 
 .quote-content {
