@@ -21,6 +21,9 @@
     <div class="center-content">
       <!-- 门 -->
       <div class="door-container" @click="enterUniverse">
+        <!-- 年份标记 -->
+        <div class="door-year">EST. 2025</div>
+
         <!-- 门框 -->
         <div class="door-frame">
           <!-- 左门 -->
@@ -157,6 +160,19 @@ onMounted(() => {
   position: relative;
   cursor: pointer;
   margin-bottom: 1rem;
+}
+
+.door-year {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  color: rgba(26, 26, 26, 0.4);
+  text-align: center;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fade-in 1s ease-out forwards;
 }
 
 .door-frame {
@@ -372,6 +388,11 @@ onMounted(() => {
 
   .subtitle {
     font-size: 0.9rem;
+  }
+
+  .door-year {
+    font-size: 0.55rem;
+    margin-bottom: 1.5rem;
   }
 
   .enter-btn {
