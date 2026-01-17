@@ -18,6 +18,14 @@
       <div class="vertical-subtext">Where ideas breathe</div>
     </aside>
 
+    <!-- 返回按钮（固定左上角） -->
+    <button class="back-btn-fixed" @click="goBack">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      <span>Return</span>
+    </button>
+
     <!-- 主内容区 -->
     <main class="universe-main">
       <!-- 页面头部 -->
@@ -30,13 +38,6 @@
         </div>
 
         <p class="universe-subtitle">Every book has a soul</p>
-
-        <button class="back-btn" @click="goBack">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M19 12H5M12 19l-7-7 7-7"/>
-          </svg>
-          <span>Return</span>
-        </button>
       </header>
 
       <!-- 书籍网格 -->
@@ -229,13 +230,18 @@ const goBack = () => {
   margin-bottom: 3rem;
 }
 
-/* 返回按钮 */
-.back-btn {
-  display: inline-flex;
+/* 返回按钮（固定左上角） */
+.back-btn-fixed {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  z-index: 100;
+  display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.875rem 2rem;
-  background: transparent;
+  padding: 0.875rem 1.5rem;
+  background: rgba(247, 245, 242, 0.9);
+  backdrop-filter: blur(10px);
   border: 1px solid #1a1a1a;
   color: #1a1a1a;
   font-family: 'Inter', sans-serif;
@@ -244,21 +250,22 @@ const goBack = () => {
   letter-spacing: 0.15em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.4s ease;
+  transition: all 0.3s ease;
 }
 
-.back-btn:hover {
+.back-btn-fixed:hover {
   background: #1a1a1a;
   color: #f7f5f2;
   box-shadow: 0 0 30px rgba(26, 26, 26, 0.15);
+  transform: translateX(-3px);
 }
 
-.back-btn:focus-visible {
+.back-btn-fixed:focus-visible {
   outline: 2px solid #1a1a1a;
   outline-offset: 4px;
 }
 
-.back-btn svg {
+.back-btn-fixed svg {
   width: 16px;
   height: 16px;
 }
@@ -347,21 +354,10 @@ const goBack = () => {
     font-size: 1rem;
   }
 
-  .header-decoration {
-    margin-bottom: 1.5rem;
-  }
-
-  .thick-line {
-    width: 80px;
-  }
-
-  .small-square {
-    width: 10px;
-    height: 10px;
-  }
-
-  .back-btn {
-    padding: 0.75rem 1.5rem;
+  .back-btn-fixed {
+    top: 1rem;
+    left: 1rem;
+    padding: 0.75rem 1.25rem;
     font-size: 0.65rem;
   }
 
