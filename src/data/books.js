@@ -851,7 +851,8 @@ export const booksData = [
     middleEffect: {
       type: 'countdown',
       value: '450:00:00'
-    }
+    },
+    worldComponent: 'ThreeBodyWorld'
   },
   // VOL.038 - 白夜行
   {

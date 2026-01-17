@@ -495,7 +495,8 @@ const readBook = () => {
       'Q84World': '/world/q84',
       'MountainMoonWorld': '/world/mountain-moon',
       'ShootingHeroWorld': '/world/shooting-hero',
-      'MoonAndSixpenceWorld': '/world/moon-and-sixpence'
+      'MoonAndSixpenceWorld': '/world/moon-and-sixpence',
+      'ThreeBodyWorld': '/world/three-body'
     }
 
     const route = routeMap[props.book.worldComponent]
