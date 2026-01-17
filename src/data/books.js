@@ -398,7 +398,8 @@ export const booksData = [
     interactiveType: 'heroic',
     vibeDescription: '江湖中的成长与侠义',
     footerText: '郭靖',
-    moodScore: 8.5
+    moodScore: 8.5,
+    worldComponent: 'ShootingHeroWorld'
   },
   // VOL.018 - 月亮与六便士
   {

@@ -493,7 +493,8 @@ const readBook = () => {
       'NorwegianForestWorld': '/world/norwegian-forest',
       'UncertainWallWorld': '/world/uncertain-wall',
       'Q84World': '/world/q84',
-      'MountainMoonWorld': '/world/mountain-moon'
+      'MountainMoonWorld': '/world/mountain-moon',
+      'ShootingHeroWorld': '/world/shooting-hero'
     }
 
     const route = routeMap[props.book.worldComponent]
