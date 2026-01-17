@@ -33,7 +33,34 @@
           @click="selectCountry(country)"
         >
           <svg class="country-icon" viewBox="0 0 200 200" :style="{ color: country.color }">
-            <component :is="country.icon" />
+            <!-- 吉尔吉斯斯坦：天山线条 -->
+            <g v-if="country.id === 1">
+              <path d="M40,100 L60,60 L100,100 L140,70 L160,100" stroke="currentColor" stroke-width="2" fill="none" opacity="0.6"/>
+              <path d="M40,120 L80,80 L120,110 L160,90" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
+            </g>
+            <!-- 塔吉克斯坦：帕米尔圆环 -->
+            <g v-if="country.id === 2">
+              <circle cx="100" cy="100" r="60" stroke="currentColor" stroke-width="2" fill="none" opacity="0.6"/>
+              <circle cx="100" cy="100" r="40" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
+              <circle cx="100" cy="100" r="20" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/>
+            </g>
+            <!-- 乌兹别克斯坦：古城方形 -->
+            <g v-if="country.id === 3">
+              <rect x="60" y="60" width="80" height="80" stroke="currentColor" stroke-width="2" fill="none" opacity="0.6"/>
+              <rect x="75" y="75" width="50" height="50" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
+              <rect x="90" y="90" width="20" height="20" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/>
+            </g>
+            <!-- 土库曼斯坦：边境虚线 -->
+            <g v-if="country.id === 4">
+              <line x1="40" y1="100" x2="80" y2="100" stroke="currentColor" stroke-width="2" opacity="0.6"/>
+              <line x1="90" y1="100" x2="130" y2="100" stroke="currentColor" stroke-width="2" stroke-dasharray="4,4" opacity="0.5"/>
+              <line x1="140" y1="100" x2="180" y2="100" stroke="currentColor" stroke-width="2" opacity="0.4"/>
+            </g>
+            <!-- 哈萨克斯坦：草原椭圆 -->
+            <g v-if="country.id === 5">
+              <ellipse cx="100" cy="100" rx="80" ry="50" stroke="currentColor" stroke-width="2" fill="none" opacity="0.6"/>
+              <ellipse cx="100" cy="100" rx="55" ry="35" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
+            </g>
           </svg>
           <h2 class="country-name">{{ country.name }}</h2>
           <p class="country-name-en">{{ country.nameEn }}</p>
@@ -59,7 +86,34 @@
         <transition name="quote-fade" mode="out-in">
           <div :key="currentQuoteIndex" class="quote-content">
             <svg class="quote-decoration" viewBox="0 0 200 200" :style="{ color: selectedCountry.color }">
-              <component :is="selectedCountry.icon" />
+              <!-- 吉尔吉斯斯坦：天山线条 -->
+              <g v-if="selectedCountry.id === 1">
+                <path d="M40,100 L60,60 L100,100 L140,70 L160,100" stroke="currentColor" stroke-width="2" fill="none" opacity="0.6"/>
+                <path d="M40,120 L80,80 L120,110 L160,90" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
+              </g>
+              <!-- 塔吉克斯坦：帕米尔圆环 -->
+              <g v-if="selectedCountry.id === 2">
+                <circle cx="100" cy="100" r="60" stroke="currentColor" stroke-width="2" fill="none" opacity="0.6"/>
+                <circle cx="100" cy="100" r="40" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
+                <circle cx="100" cy="100" r="20" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/>
+              </g>
+              <!-- 乌兹别克斯坦：古城方形 -->
+              <g v-if="selectedCountry.id === 3">
+                <rect x="60" y="60" width="80" height="80" stroke="currentColor" stroke-width="2" fill="none" opacity="0.6"/>
+                <rect x="75" y="75" width="50" height="50" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
+                <rect x="90" y="90" width="20" height="20" stroke="currentColor" stroke-width="1" fill="none" opacity="0.3"/>
+              </g>
+              <!-- 土库曼斯坦：边境虚线 -->
+              <g v-if="selectedCountry.id === 4">
+                <line x1="40" y1="100" x2="80" y2="100" stroke="currentColor" stroke-width="2" opacity="0.6"/>
+                <line x1="90" y1="100" x2="130" y2="100" stroke="currentColor" stroke-width="2" stroke-dasharray="4,4" opacity="0.5"/>
+                <line x1="140" y1="100" x2="180" y2="100" stroke="currentColor" stroke-width="2" opacity="0.4"/>
+              </g>
+              <!-- 哈萨克斯坦：草原椭圆 -->
+              <g v-if="selectedCountry.id === 5">
+                <ellipse cx="100" cy="100" rx="80" ry="50" stroke="currentColor" stroke-width="2" fill="none" opacity="0.6"/>
+                <ellipse cx="100" cy="100" rx="55" ry="35" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"/>
+              </g>
             </svg>
 
             <p class="quote-text">"{{ currentQuote.text }}"</p>
@@ -89,153 +143,13 @@
 </template>
 
 <script setup>
-import { ref, h } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const showWarp = ref(true)
 const selectedCountry = ref(null)
 const currentQuoteIndex = ref(0)
-
-// 图标组件
-const KyrgyzstanIcon = () => h('svg', {
-  viewBox: '0 0 200 200',
-  fill: 'none'
-}, [
-  h('path', {
-    d: 'M40,100 L60,60 L100,100 L140,70 L160,100',
-    stroke: 'currentColor',
-    'stroke-width': '2',
-    opacity: '0.6'
-  }),
-  h('path', {
-    d: 'M40,120 L80,80 L120,110 L160,90',
-    stroke: 'currentColor',
-    'stroke-width': '1.5',
-    opacity: '0.4'
-  })
-])
-
-const TajikistanIcon = () => h('svg', {
-  viewBox: '0 0 200 200',
-  fill: 'none'
-}, [
-  h('circle', {
-    cx: '100',
-    cy: '100',
-    r: '60',
-    stroke: 'currentColor',
-    'stroke-width': '2',
-    opacity: '0.6'
-  }),
-  h('circle', {
-    cx: '100',
-    cy: '100',
-    r: '40',
-    stroke: 'currentColor',
-    'stroke-width': '1.5',
-    opacity: '0.4'
-  }),
-  h('circle', {
-    cx: '100',
-    cy: '100',
-    r: '20',
-    stroke: 'currentColor',
-    'stroke-width': '1',
-    opacity: '0.3'
-  })
-])
-
-const UzbekistanIcon = () => h('svg', {
-  viewBox: '0 0 200 200',
-  fill: 'none'
-}, [
-  h('rect', {
-    x: '60',
-    y: '60',
-    width: '80',
-    height: '80',
-    stroke: 'currentColor',
-    'stroke-width': '2',
-    opacity: '0.6'
-  }),
-  h('rect', {
-    x: '75',
-    y: '75',
-    width: '50',
-    height: '50',
-    stroke: 'currentColor',
-    'stroke-width': '1.5',
-    opacity: '0.4'
-  }),
-  h('rect', {
-    x: '90',
-    y: '90',
-    width: '20',
-    height: '20',
-    stroke: 'currentColor',
-    'stroke-width': '1',
-    opacity: '0.3'
-  })
-])
-
-const TurkmenistanIcon = () => h('svg', {
-  viewBox: '0 0 200 200',
-  fill: 'none'
-}, [
-  h('line', {
-    x1: '40',
-    y1: '100',
-    x2: '80',
-    y2: '100',
-    stroke: 'currentColor',
-    'stroke-width': '2',
-    opacity: '0.6'
-  }),
-  h('line', {
-    x1: '90',
-    y1: '100',
-    x2: '130',
-    y2: '100',
-    stroke: 'currentColor',
-    'stroke-width': '2',
-    'stroke-dasharray': '4,4',
-    opacity: '0.5'
-  }),
-  h('line', {
-    x1: '140',
-    y1: '100',
-    x2: '180',
-    y2: '100',
-    stroke: 'currentColor',
-    'stroke-width': '2',
-    opacity: '0.4'
-  })
-])
-
-const KazakhstanIcon = () => h('svg', {
-  viewBox: '0 0 200 200',
-  fill: 'none'
-}, [
-  h('ellipse', {
-    cx: '100',
-    cy: '100',
-    rx: '80',
-    ry: '50',
-    stroke: 'currentColor',
-    'stroke-width': '2',
-    opacity: '0.6'
-  }),
-  h('ellipse', {
-    cx: '100',
-    cy: '100',
-    rx: '55',
-    ry: '35',
-    stroke: 'currentColor',
-    'stroke-width': '1.5',
-    opacity: '0.4'
-  })
-])
 
 // 国家数据
 const countries = ref([
@@ -245,7 +159,6 @@ const countries = ref([
     nameEn: 'Kyrgyzstan',
     color: '#0891b2',
     signal: 3,
-    icon: KyrgyzstanIcon,
     quotes: [
       {
         text: '这就是世界真实的样子，充满琐碎的细节，而我用尽所能来理解它们——这让我感到自由。',
@@ -267,7 +180,6 @@ const countries = ref([
     nameEn: 'Tajikistan',
     color: '#a78bfa',
     signal: 2,
-    icon: TajikistanIcon,
     quotes: [
       {
         text: '德国人宽慰我说，他总是暗示自己，旅行就像打游戏，困难就如同游戏中的关卡……我们只需心平气和地想办法，熬过去，就能闯关成功。',
@@ -289,7 +201,6 @@ const countries = ref([
     nameEn: 'Uzbekistan',
     color: '#d97706',
     signal: 3,
-    icon: UzbekistanIcon,
     quotes: [
       {
         text: '不喝一杯的话，我就没办法把身体的零件装回去。',
@@ -311,7 +222,6 @@ const countries = ref([
     nameEn: 'Turkmenistan',
     color: '#6b7280',
     signal: 1,
-    icon: TurkmenistanIcon,
     quotes: [
       {
         text: '一个以劳模名字命名的村子，现在成了法外之地，听起来是不是有点讽刺？',
@@ -325,7 +235,6 @@ const countries = ref([
     nameEn: 'Kazakhstan',
     color: '#059669',
     signal: 2,
-    icon: KazakhstanIcon,
     quotes: [
       {
         text: '还有一个喜欢乱吃零食的加拿大老太太……她偷偷掩盖了那摊痕迹，没告诉任何人，回国后才把金戒指留在房间里。',
@@ -365,6 +274,12 @@ const nextQuote = () => {
 const exitWorld = () => {
   router.push('/universe')
 }
+
+onMounted(() => {
+  setTimeout(() => {
+    showWarp.value = false
+  }, 1800)
+})
 </script>
 
 <style scoped>
