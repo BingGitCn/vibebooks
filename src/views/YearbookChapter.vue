@@ -97,7 +97,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import booksData from '../data/books'
 
@@ -156,20 +156,31 @@ const currentIndex = computed(() => chapters.indexOf(categorySlug.value))
 const hasPrevious = computed(() => currentIndex.value > 0)
 const hasNext = computed(() => currentIndex.value < chapters.length - 1)
 
-onMounted(() => {
+const truncate = (text, length) => {
+  if (text.length <= length) return text
+  return text.substring(0, length) + '...'
+}
+
+const loadCategoryData = () => {
   categorySlug.value = route.params.category
+  console.log('Loading category:', categorySlug.value)
   const catInfo = categoryMap[categorySlug.value]
   category.value = catInfo?.name || ''
   chapterId.value = catInfo?.id || 1
 
   // Filter books by category
   books.value = booksData.filter(b => b.category === catInfo?.name)
+  console.log('Found books:', books.value.length)
+}
+
+onMounted(() => {
+  loadCategoryData()
 })
 
-const truncate = (text, length) => {
-  if (text.length <= length) return text
-  return text.substring(0, length) + '...'
-}
+// Watch for route changes
+watch(() => route.params.category, () => {
+  loadCategoryData()
+})
 
 const goBack = () => {
   router.push('/yearbook')
@@ -193,14 +204,20 @@ const goToBook = (book) => {
 }
 
 const goToPrevious = () => {
+  console.log('Previous clicked, hasPrevious:', hasPrevious.value, 'currentIndex:', currentIndex.value)
   if (hasPrevious.value) {
-    router.push(`/yearbook/${chapters[currentIndex.value - 1]}`)
+    const prevRoute = `/yearbook/${chapters[currentIndex.value - 1]}`
+    console.log('Navigating to:', prevRoute)
+    router.push(prevRoute)
   }
 }
 
 const goToNext = () => {
+  console.log('Next clicked, hasNext:', hasNext.value, 'currentIndex:', currentIndex.value)
   if (hasNext.value) {
-    router.push(`/yearbook/${chapters[currentIndex.value + 1]}`)
+    const nextRoute = `/yearbook/${chapters[currentIndex.value + 1]}`
+    console.log('Navigating to:', nextRoute)
+    router.push(nextRoute)
   }
 }
 </script>
