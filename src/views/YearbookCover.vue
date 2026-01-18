@@ -94,11 +94,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { books } from '../data/books'
+import booksDataData from '../data/booksData'
 
 const router = useRouter()
 
-// Get unique categories and count books
+// Get unique categories and count booksData
 const chapters = ref([
   { id: 1, name: 'FICTION', route: '/yearbook/fiction', count: 0, accent: '#FF3000' },
   { id: 2, name: 'PHILOSOPHY', route: '/yearbook/philosophy', count: 0, accent: '#FF3000' },
@@ -111,8 +111,8 @@ const chapters = ref([
 const issueDate = ref('')
 
 onMounted(() => {
-  // Count books per category
-  books.forEach(book => {
+  // Count booksData per category
+  booksData.forEach(book => {
     const chapter = chapters.value.find(c => c.name === book.category)
     if (chapter) {
       chapter.count++
@@ -124,7 +124,7 @@ onMounted(() => {
   issueDate.value = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase()
 })
 
-const totalBooks = computed(() => books.length)
+const totalBooks = computed(() => booksData.length)
 
 const navigateToChapter = (route) => {
   router.push(route)

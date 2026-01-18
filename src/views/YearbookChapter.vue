@@ -99,7 +99,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { books as allBooks } from '../data/books'
+import booksData from '../data/books'
 
 const router = useRouter()
 const route = useRoute()
@@ -163,7 +163,7 @@ onMounted(() => {
   chapterId.value = catInfo?.id || 1
 
   // Filter books by category
-  books.value = allBooks.filter(b => b.category === catInfo?.name)
+  books.value = booksData.filter(b => b.category === catInfo?.name)
 })
 
 const truncate = (text, length) => {

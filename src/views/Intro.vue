@@ -100,9 +100,12 @@ const enterUniverse = () => {
 }
 
 const enterYearbook = () => {
-  console.log('Navigating to yearbook...')
-  // Try path-based navigation
-  window.location.hash = '#/yearbook'
+  console.log('Clicking Open Yearbook button')
+  router.push('/yearbook').then(() => {
+    console.log('Navigation successful')
+  }).catch(err => {
+    console.error('Navigation failed:', err)
+  })
 }
 
 onMounted(() => {
