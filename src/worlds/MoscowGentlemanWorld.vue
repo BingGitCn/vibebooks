@@ -740,11 +740,6 @@ const exitWorld = () => {
   margin: 0;
 }
 
-.room-card.expanded .room-character {
-  background-color: var(--swiss-muted);
-  border-color: var(--swiss-black);
-}
-
 .char-name {
   font-family: 'Inter', sans-serif;
   font-weight: 700;
@@ -762,6 +757,20 @@ const exitWorld = () => {
   letter-spacing: 0.1em;
   color: var(--swiss-text-secondary);
   margin: 0;
+}
+
+/* Expanded state - Ensure colors remain dark */
+.room-card.expanded .room-character {
+  background-color: var(--swiss-muted) !important;
+  border-color: var(--swiss-black) !important;
+}
+
+.room-card.expanded .char-name {
+  color: var(--swiss-black) !important;
+}
+
+.room-card.expanded .char-title {
+  color: var(--swiss-text-secondary) !important;
 }
 
 /* Room Details (Expanded) */
