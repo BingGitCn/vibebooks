@@ -368,7 +368,6 @@ const exitWorld = () => {
 /* Book Header */
 .book-header {
   padding: 6rem 2rem 3rem 2rem;
-  margin-left: 10rem;
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 4rem;
@@ -804,7 +803,6 @@ const exitWorld = () => {
 /* Section 03: QUOTES */
 .section-quotes {
   padding: 2rem;
-  padding-left: 12rem;
   padding-bottom: 4rem;
 }
 
@@ -812,7 +810,8 @@ const exitWorld = () => {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  padding: 2rem 0;
+  padding: 2rem;
+  padding-left: 12rem;
 }
 
 .quote-card {
