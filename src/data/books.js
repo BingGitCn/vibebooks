@@ -17,7 +17,7 @@ export const booksData = [
     layout: 'centered',
     layoutVariant: 'centered',
     tags: ['治愈', '书店', '人生'],
-    featuredQuote: '"我们读书，因为我们孤单，我们孤单，因为我们读书。"',
+    featuredQuote: '我们读书，因为我们孤单，我们孤单，因为我们读书。',
     specialElement: 'bookstack',
     interactiveType: 'gentle',
     vibeDescription: '关于阅读、治愈与连接的故事',
