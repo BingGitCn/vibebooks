@@ -241,72 +241,78 @@
           </div>
 
           <div class="quotes-grid">
-            <div class="quote-module">
-              <div class="quote-icon"></div>
+            <div class="quote-card">
+              <div class="quote-spine"></div>
+              <div class="quote-border-top"></div>
               <p class="quote-text">
                 我们读书，因为我们孤单，我们不孤单，所以我们读书
               </p>
-              <div class="quote-divider"></div>
+              <div class="quote-border-bottom"></div>
               <div class="quote-source">
                 <span class="source-name">A.J. 费克里</span>
                 <span class="source-role">书店老板</span>
               </div>
             </div>
 
-            <div class="quote-module">
-              <div class="quote-icon"></div>
+            <div class="quote-card">
+              <div class="quote-spine"></div>
+              <div class="quote-border-top"></div>
               <p class="quote-text">
                 没有一座岛屿是真正孤立的
               </p>
-              <div class="quote-divider"></div>
+              <div class="quote-border-bottom"></div>
               <div class="quote-source">
                 <span class="source-name">A.J. 费克里</span>
                 <span class="source-role">第四章</span>
               </div>
             </div>
 
-            <div class="quote-module">
-              <div class="quote-icon"></div>
+            <div class="quote-card">
+              <div class="quote-spine"></div>
+              <div class="quote-border-top"></div>
               <p class="quote-text">
                 我们不只是在讨论书，我们是在通过书认识彼此
               </p>
-              <div class="quote-divider"></div>
+              <div class="quote-border-bottom"></div>
               <div class="quote-source">
                 <span class="source-name">阿米莉娅</span>
                 <span class="source-role">销售代表</span>
               </div>
             </div>
 
-            <div class="quote-module">
-              <div class="quote-icon"></div>
+            <div class="quote-card">
+              <div class="quote-spine"></div>
+              <div class="quote-border-top"></div>
               <p class="quote-text">
                 读书是一切，在你不再孤单之前，你不会知道读书的乐趣
               </p>
-              <div class="quote-divider"></div>
+              <div class="quote-border-bottom"></div>
               <div class="quote-source">
                 <span class="source-name">A.J. 费克里</span>
                 <span class="source-role">第一章</span>
               </div>
             </div>
 
-            <div class="quote-module">
-              <div class="quote-icon"></div>
+            <div class="quote-card">
+              <div class="quote-spine"></div>
+              <div class="quote-border-top"></div>
               <p class="quote-text">
                 我们会成为我们所读之书，我们会成为我们爱的书
               </p>
-              <div class="quote-divider"></div>
+              <div class="quote-border-bottom"></div>
               <div class="quote-source">
                 <span class="source-name">A.J. 费克里</span>
                 <span class="source-role">玛雅的养父</span>
               </div>
             </div>
 
-            <div class="quote-module">
-              <div class="quote-icon"></div>
+            <div class="quote-card">
+              <div class="quote-spine"></div>
+              <div class="quote-border-top"></div>
               <p class="quote-text">
                 一个好的故事不会因为被读完而消失
               </p>
-              <div class="quote-divider"></div>
+              <div class="quote-border-bottom"></div>
               <div class="quote-source">
                 <span class="source-name">书籍本身</span>
                 <span class="source-role">终章</span>
@@ -714,7 +720,7 @@ const eventDetails = {
   margin: 0;
 }
 
-/* Quotes Section - 参考客户证言设计 */
+/* Quotes Section - 书店主题设计 */
 .quotes-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -722,60 +728,106 @@ const eventDetails = {
   padding: 2rem;
 }
 
-.quote-module {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+.quote-card {
+  background-color: var(--swiss-white);
+  border: 2px solid var(--swiss-black);
   padding: 2rem;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.15s ease-out;
 }
 
-/* 红色引号图标 */
-.quote-icon {
-  width: 8px;
-  height: 8px;
+.quote-card:hover {
+  border-color: var(--swiss-accent);
+  transform: translateY(-2px);
+}
+
+/* Quote Spine - 书脊元素 */
+.quote-spine {
+  width: 12px;
+  height: 16px;
   background-color: var(--swiss-accent);
-  margin-bottom: 1rem;
+  position: absolute;
+  top: -1px;
+  left: -1px;
+}
+
+/* 书脊线条 */
+.quote-spine::before,
+.quote-spine::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.quote-spine::before {
+  left: 33%;
+}
+
+.quote-spine::after {
+  left: 66%;
+}
+
+/* 渐变边框线 */
+.quote-border-top {
+  height: 2px;
+  background: linear-gradient(90deg,
+    var(--swiss-black) 0%,
+    var(--swiss-accent) 50%,
+    var(--swiss-black) 100%
+  );
+  margin: 0 0 1.5rem 0;
+}
+
+.quote-border-bottom {
+  height: 2px;
+  background: linear-gradient(90deg,
+    var(--swiss-black) 0%,
+    var(--swiss-accent) 50%,
+    var(--swiss-black) 100%
+  );
+  margin: 1.5rem 0 1rem 0;
 }
 
 .quote-text {
   font-family: 'Inter', sans-serif;
   font-weight: 500;
-  font-size: 1.125rem;
-  line-height: 1.6;
-  color: #333;
-  margin: 0 0 1.5rem 0;
-  max-width: 280px;
-}
-
-.quote-divider {
-  width: 40px;
-  height: 1px;
-  background-color: #e0e0e0;
-  margin: 0 0 1rem 0;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--swiss-black);
+  margin: 0;
+  flex: 1;
 }
 
 .quote-source {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--swiss-border);
 }
 
 .source-name {
   font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 0.875rem;
-  color: #666;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--swiss-black);
   margin: 0;
 }
 
 .source-role {
   font-family: 'Inter', sans-serif;
   font-weight: 400;
-  font-size: 0.75rem;
-  color: #999;
-  margin: 0;
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  color: var(--swiss-text-secondary);
 }
 
 .quote-accent {
