@@ -8,7 +8,7 @@
     <!-- Book Header -->
     <header class="book-header swiss-border-bottom">
       <div class="header-content">
-        <p class="book-vol">VOL.003</p>
+        <p class="book-vol">VOL.004</p>
         <h1 class="book-title">莫斯科绅士</h1>
         <p class="book-subtitle">A Gentleman in Moscow</p>
         <p class="book-author">Amor Towles · 2016</p>
@@ -42,7 +42,7 @@
             <h3 class="room-name">阁楼房间</h3>
             <p class="room-desc">10×12 英尺的狭小空间</p>
           </div>
-          <div class="room-character swiss-dots">
+          <div class="room-character">
             <p class="char-name">罗斯托夫伯爵</p>
             <p class="char-title">Count Alexander Ilyich Rostov</p>
           </div>
@@ -79,7 +79,7 @@
             <h3 class="room-name">酒店酒吧</h3>
             <p class="room-desc">社交中心，观察世界的窗口</p>
           </div>
-          <div class="room-character swiss-dots">
+          <div class="room-character">
             <p class="char-name">罗斯托夫 / 阿尔卡季</p>
             <p class="char-title">Head Bartender</p>
           </div>
@@ -118,7 +118,7 @@
             <h3 class="room-name">餐厅</h3>
             <p class="room-desc">时代变迁的见证者</p>
           </div>
-          <div class="room-character swiss-dots">
+          <div class="room-character">
             <p class="char-name">安娜 / 娜塔莉亚</p>
             <p class="char-name">索菲亚 / 米什卡</p>
           </div>
@@ -158,7 +158,7 @@
           @click="toggleDecade(0)"
         >
           <div class="decade-year">1922</div>
-          <div class="decade-icon">⚖️</div>
+          <div class="decade-icon icon-balance"></div>
           <div class="decade-info">
             <h3 class="decade-title">判决入宿</h3>
             <p class="decade-desc">被认定"无阶级敌人"</p>
@@ -183,7 +183,7 @@
           @click="toggleDecade(1)"
         >
           <div class="decade-year">1930s</div>
-          <div class="decade-icon">🎭</div>
+          <div class="decade-icon icon-masks"></div>
           <div class="decade-info">
             <h3 class="decade-title">与安娜的友谊</h3>
             <p class="decade-desc">女演员安娜·乌拉诺娃</p>
@@ -208,7 +208,7 @@
           @click="toggleDecade(2)"
         >
           <div class="decade-year">1940s</div>
-          <div class="decade-icon">👧</div>
+          <div class="decade-icon icon-triangle"></div>
           <div class="decade-info">
             <h3 class="decade-title">Nina 的成长</h3>
             <p class="decade-desc">酒店经理的女儿</p>
@@ -233,7 +233,7 @@
           @click="toggleDecade(3)"
         >
           <div class="decade-year">1950s</div>
-          <div class="decade-icon">👨‍👩‍👧</div>
+          <div class="decade-icon icon-dots"></div>
           <div class="decade-info">
             <h3 class="decade-title">父女情深</h3>
             <p class="decade-desc">索菲亚的童年</p>
@@ -258,7 +258,7 @@
           @click="toggleDecade(4)"
         >
           <div class="decade-year">1960s</div>
-          <div class="decade-icon">🏛️</div>
+          <div class="decade-icon icon-columns"></div>
           <div class="decade-info">
             <h3 class="decade-title">政治风云</h3>
             <p class="decade-desc">时代的巨变</p>
@@ -283,7 +283,7 @@
           @click="toggleDecade(5)"
         >
           <div class="decade-year">1954</div>
-          <div class="decade-icon">🚪</div>
+          <div class="decade-icon icon-door"></div>
           <div class="decade-info">
             <h3 class="decade-title">最终离开</h3>
             <p class="decade-desc">自由之门打开</p>
@@ -312,60 +312,66 @@
       </div>
 
       <div class="quotes-grid">
-        <div class="quote-module">
-          <div class="quote-icon door-number"></div>
+        <div class="quote-card">
+          <div class="quote-number">01</div>
+          <div class="quote-border-top"></div>
           <p class="quote-text">"如果一个人不能离开自己的房间，他是不是就失去了体验生活的一切？恰恰相反。"</p>
-          <div class="quote-divider"></div>
+          <div class="quote-border-bottom"></div>
           <div class="quote-source">
             <span class="source-name">罗斯托夫伯爵</span>
             <span class="source-role">Count Rostov</span>
           </div>
         </div>
 
-        <div class="quote-module">
-          <div class="quote-icon door-number"></div>
+        <div class="quote-card">
+          <div class="quote-number">02</div>
+          <div class="quote-border-top"></div>
           <p class="quote-text">"一个人的命运不是由他所处的环境决定的，而是由他如何面对这些环境决定的。"</p>
-          <div class="quote-divider"></div>
+          <div class="quote-border-bottom"></div>
           <div class="quote-source">
             <span class="source-name">亚历山大·罗斯托夫</span>
             <span class="source-role">Protagonist</span>
           </div>
         </div>
 
-        <div class="quote-module">
-          <div class="quote-icon door-number"></div>
+        <div class="quote-card">
+          <div class="quote-number">03</div>
+          <div class="quote-border-top"></div>
           <p class="quote-text">"无论生活把你放在哪里，你都有责任把它变成一个值得生活的地方。"</p>
-          <div class="quote-divider"></div>
+          <div class="quote-border-bottom"></div>
           <div class="quote-source">
             <span class="source-name">罗斯托夫伯爵</span>
             <span class="source-role">Count Rostov</span>
           </div>
         </div>
 
-        <div class="quote-module">
-          <div class="quote-icon door-number"></div>
+        <div class="quote-card">
+          <div class="quote-number">04</div>
+          <div class="quote-border-top"></div>
           <p class="quote-text">"优雅不是一种行为，而是一种心态。无论在皇宫还是在阁楼，都可以保持优雅。"</p>
-          <div class="quote-divider"></div>
+          <div class="quote-border-bottom"></div>
           <div class="quote-source">
             <span class="source-name">酒店生活哲学</span>
             <span class="source-role">Theme</span>
           </div>
         </div>
 
-        <div class="quote-module">
-          <div class="quote-icon door-number"></div>
+        <div class="quote-card">
+          <div class="quote-number">05</div>
+          <div class="quote-border-top"></div>
           <p class="quote-text">"我们没有选择时代的能力，但我们可以选择如何在时代中生活。"</p>
-          <div class="quote-divider"></div>
+          <div class="quote-border-bottom"></div>
           <div class="quote-source">
             <span class="source-name">时代反思</span>
             <span class="source-role">Reflection</span>
           </div>
         </div>
 
-        <div class="quote-module">
-          <div class="quote-icon door-number"></div>
+        <div class="quote-card">
+          <div class="quote-number">06</div>
+          <div class="quote-border-top"></div>
           <p class="quote-text">"真正的贵族不在于血统，而在于品格。即使身无分文，也可以保持尊严。"</p>
-          <div class="quote-divider"></div>
+          <div class="quote-border-bottom"></div>
           <div class="quote-source">
             <span class="source-name">贵族精神</span>
             <span class="source-role">Aristocracy</span>
@@ -440,7 +446,7 @@ const decadeDetails = {
   },
   3: {
     role: '当 Nina 被流放到西伯利亚时，罗斯托夫成为了索菲亚的养父。他在阁楼房间里抚养她长大，给她最好的教育。',
-    impact: '父女之间的深情。索菲亚成为了罗斯托夫生活的中心，也是他最终决定离开酒店的原因。'
+    sacrifice: '为了让索菲亚能够追求音乐梦想，罗斯托夫策划了逃离酒店的计划，最终在1954年成功离开。'
   },
   4: {
     background: '1950年代，斯大林去世，赫鲁晓夫上台，政治风向开始变化。莫斯科的文化氛围逐渐松动。',
@@ -615,12 +621,16 @@ const exitWorld = () => {
   border-color: var(--swiss-accent);
 }
 
-.room-card:not(.expanded):hover * {
+.room-card:not(.expanded):hover .room-number,
+.room-card:not(.expanded):hover .room-name,
+.room-card:not(.expanded):hover .room-desc,
+.room-card:not(.expanded):hover .char-name,
+.room-card:not(.expanded):hover .char-title {
   color: var(--swiss-white) !important;
 }
 
 .room-card.expanded {
-  background-color: var(--swiss-muted) !important;
+  background-color: var(--swiss-white) !important;
   border-color: var(--swiss-black) !important;
 }
 
@@ -634,7 +644,7 @@ const exitWorld = () => {
 }
 
 .room-card.expanded .room-number {
-  color: var(--swiss-accent) !important;
+  color: var(--swiss-accent);
 }
 
 /* Room Plan (Visual Element) */
@@ -714,10 +724,6 @@ const exitWorld = () => {
   color: var(--swiss-black);
 }
 
-.room-card.expanded .room-name {
-  color: var(--swiss-black) !important;
-}
-
 .room-desc {
   font-family: 'Inter', sans-serif;
   font-weight: 400;
@@ -726,15 +732,17 @@ const exitWorld = () => {
   margin: 0;
 }
 
-.room-card.expanded .room-desc {
-  color: var(--swiss-text-secondary) !important;
-}
-
-/* Room Character */
+/* Room Character - FIXED */
 .room-character {
   padding: 1rem;
   background-color: var(--swiss-muted);
+  border: 2px solid var(--swiss-black);
   margin: 0;
+}
+
+.room-card.expanded .room-character {
+  background-color: var(--swiss-muted);
+  border-color: var(--swiss-black);
 }
 
 .char-name {
@@ -747,10 +755,6 @@ const exitWorld = () => {
   margin: 0 0 0.25rem 0;
 }
 
-.room-card.expanded .char-name {
-  color: var(--swiss-black) !important;
-}
-
 .char-title {
   font-family: 'Inter', sans-serif;
   font-weight: 400;
@@ -758,10 +762,6 @@ const exitWorld = () => {
   letter-spacing: 0.1em;
   color: var(--swiss-text-secondary);
   margin: 0;
-}
-
-.room-card.expanded .char-title {
-  color: var(--swiss-text-secondary) !important;
 }
 
 /* Room Details (Expanded) */
@@ -789,10 +789,6 @@ const exitWorld = () => {
   margin: 0 0 0.5rem 0;
 }
 
-.room-card.expanded .detail-label {
-  color: var(--swiss-accent) !important;
-}
-
 .detail-text {
   font-family: 'Inter', sans-serif;
   font-weight: 400;
@@ -800,10 +796,6 @@ const exitWorld = () => {
   line-height: 1.6;
   color: var(--swiss-text-secondary);
   margin: 0;
-}
-
-.room-card.expanded .detail-text {
-  color: var(--swiss-text-secondary) !important;
 }
 
 /* Section 02: DECADES */
@@ -831,12 +823,14 @@ const exitWorld = () => {
   border-color: var(--swiss-accent);
 }
 
-.decade-card:not(.expanded):hover * {
+.decade-card:not(.expanded):hover .decade-year,
+.decade-card:not(.expanded):hover .decade-title,
+.decade-card:not(.expanded):hover .decade-desc {
   color: var(--swiss-white) !important;
 }
 
 .decade-card.expanded {
-  background-color: var(--swiss-muted) !important;
+  background-color: var(--swiss-white) !important;
   border-color: var(--swiss-black) !important;
   grid-column: span 2;
   text-align: left;
@@ -853,12 +847,155 @@ const exitWorld = () => {
 }
 
 .decade-card.expanded .decade-year {
-  color: var(--swiss-black) !important;
+  color: var(--swiss-black);
 }
 
+/* Geometric Icons */
 .decade-icon {
-  font-size: 2rem;
+  width: 40px;
+  height: 40px;
   margin: 0 0 1rem 0;
+  position: relative;
+}
+
+/* Balance Scale (1922) */
+.icon-balance::before,
+.icon-balance::after {
+  content: '';
+  position: absolute;
+}
+
+.icon-balance::before {
+  width: 2px;
+  height: 30px;
+  background-color: var(--swiss-black);
+  left: 50%;
+  top: 5px;
+  transform: translateX(-50%);
+}
+
+.icon-balance::after {
+  width: 30px;
+  height: 2px;
+  background-color: var(--swiss-black);
+  left: 50%;
+  top: 10px;
+  transform: translateX(-50%);
+}
+
+/* Theater Masks (1930s) */
+.icon-masks::before,
+.icon-masks::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 20px;
+  border: 2px solid var(--swiss-black);
+  top: 10px;
+}
+
+.icon-masks::before {
+  left: 2px;
+  border-radius: 50% 50% 0 0;
+}
+
+.icon-masks::after {
+  right: 2px;
+  border-radius: 0 0 50% 50%;
+}
+
+/* Triangle (1940s) */
+.icon-triangle::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 26px solid var(--swiss-black);
+  top: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Three Dots (1950s) */
+.icon-dots::before,
+.icon-dots::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: var(--swiss-black);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.icon-dots::before {
+  left: 5px;
+}
+
+.icon-dots::after {
+  right: 5px;
+}
+
+.icon-dots {
+  background-color: var(--swiss-black);
+  position: relative;
+}
+
+.icon-dots::before {
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.icon-dots::after {
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Columns (1960s) */
+.icon-columns::before,
+.icon-columns::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 30px;
+  background-color: var(--swiss-black);
+  top: 5px;
+}
+
+.icon-columns::before {
+  left: 8px;
+}
+
+.icon-columns::after {
+  right: 8px;
+}
+
+/* Door (1954) */
+.icon-door::before {
+  content: '';
+  position: absolute;
+  width: 26px;
+  height: 34px;
+  border: 2px solid var(--swiss-black);
+  top: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.icon-door::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: var(--swiss-black);
+  border-radius: 50%;
+  top: 20px;
+  right: 8px;
 }
 
 .decade-title {
@@ -872,20 +1009,12 @@ const exitWorld = () => {
   color: var(--swiss-black);
 }
 
-.decade-card.expanded .decade-title {
-  color: var(--swiss-black) !important;
-}
-
 .decade-desc {
   font-family: 'Inter', sans-serif;
   font-weight: 400;
   font-size: 0.75rem;
   color: var(--swiss-text-secondary);
   margin: 0 0 1rem 0;
-}
-
-.decade-card.expanded .decade-desc {
-  color: var(--swiss-text-secondary) !important;
 }
 
 /* Decade Details (Expanded) */
@@ -896,22 +1025,11 @@ const exitWorld = () => {
   width: 100%;
 }
 
-.decade-card.expanded .decade-details .detail-section .detail-label {
-  color: var(--swiss-accent) !important;
-}
-
-.decade-card.expanded .decade-details .detail-section .detail-text {
-  color: var(--swiss-text-secondary) !important;
-}
-
-.decade-card.expanded .decade-details .detail-section p {
-  color: var(--swiss-text-secondary) !important;
-}
-
-/* Section 03: QUOTES */
+/* Section 03: QUOTES - REDESIGNED */
 .section-quotes {
   padding: 2rem;
   padding-left: 12rem;
+  padding-bottom: 4rem;
 }
 
 .quotes-grid {
@@ -921,73 +1039,94 @@ const exitWorld = () => {
   padding: 2rem 0;
 }
 
-.quote-module {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+.quote-card {
+  background-color: var(--swiss-white);
+  border: 2px solid var(--swiss-black);
   padding: 2rem;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.15s ease-out;
 }
 
-/* Door Number Icon (Hotel Theme) */
-.quote-icon.door-number {
-  width: 24px;
-  height: 32px;
-  background-color: var(--swiss-black);
-  margin-bottom: 1.5rem;
-  position: relative;
+.quote-card:hover {
+  border-color: var(--swiss-accent);
+  transform: translateY(-2px);
 }
 
-.quote-icon.door-number::before {
-  content: '316';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+/* Quote Number - Gold Door Number Style */
+.quote-number {
   font-family: 'Inter', sans-serif;
   font-weight: 900;
-  font-size: 0.5rem;
-  letter-spacing: 0.1em;
-  color: var(--swiss-gold);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  color: var(--swiss-white);
+  background-color: var(--swiss-black);
+  padding: 0.25rem 0.5rem;
+  position: absolute;
+  top: -1px;
+  left: -1px;
+}
+
+/* Gold Border Lines */
+.quote-border-top {
+  height: 2px;
+  background: linear-gradient(90deg,
+    var(--swiss-black) 0%,
+    var(--swiss-gold) 50%,
+    var(--swiss-black) 100%
+  );
+  margin: 0 0 1.5rem 0;
+}
+
+.quote-border-bottom {
+  height: 2px;
+  background: linear-gradient(90deg,
+    var(--swiss-black) 0%,
+    var(--swiss-gold) 50%,
+    var(--swiss-black) 100%
+  );
+  margin: 1.5rem 0 1rem 0;
 }
 
 .quote-text {
   font-family: 'Inter', sans-serif;
   font-weight: 500;
-  font-size: 1rem;
-  line-height: 1.6;
-  color: #333;
-  margin: 0 0 1.5rem 0;
-  max-width: 280px;
-}
-
-.quote-divider {
-  width: 40px;
-  height: 1px;
-  background-color: #e0e0e0;
-  margin: 0 0 1rem 0;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--swiss-black);
+  margin: 0;
+  flex: 1;
 }
 
 .quote-source {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--swiss-border);
 }
 
 .source-name {
   font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 0.875rem;
-  color: #666;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--swiss-black);
 }
 
 .source-role {
   font-family: 'Inter', sans-serif;
   font-weight: 400;
   font-size: 0.625rem;
-  color: #999;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
+  color: var(--swiss-text-secondary);
+}
+
+/* Gold Color */
+:root {
+  --swiss-gold: #C9A962;
 }
 
 /* Responsive */
@@ -1041,10 +1180,5 @@ const exitWorld = () => {
     left: 1rem;
     padding: 0.5rem 1rem;
   }
-}
-
-/* Add gold color for accents */
-:root {
-  --swiss-gold: #C9A962;
 }
 </style>
