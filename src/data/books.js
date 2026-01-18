@@ -112,7 +112,8 @@ export const booksData = [
     interactiveType: 'floating',
     vibeDescription: '九个深潜想象力的故事',
     footerText: '陈春成',
-    moodScore: 7.5
+    moodScore: 7.5,
+    worldComponent: 'NightSubmarineWorld' // 有专属沉浸世界
   },
   // VOL.006 - 小王子
   {
