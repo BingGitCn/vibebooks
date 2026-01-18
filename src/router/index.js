@@ -22,6 +22,11 @@ const routes = [
     component: () => import('../worlds/IslandBookstoreWorld.vue')
   },
   {
+    path: '/world/moscow-gentleman',
+    name: 'MoscowGentlemanWorld',
+    component: () => import('../worlds/MoscowGentlemanWorld.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')

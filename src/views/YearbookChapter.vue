@@ -216,7 +216,8 @@ const goBack = () => {
 const goToBook = (book) => {
   if (book.worldComponent) {
     const routeMap = {
-      'IslandBookstoreWorld': '/world/island-bookstore'
+      'IslandBookstoreWorld': '/world/island-bookstore',
+      'MoscowGentlemanWorld': '/world/moscow-gentleman'
     }
     const route = routeMap[book.worldComponent]
     if (route) router.push(route)
