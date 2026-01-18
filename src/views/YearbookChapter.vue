@@ -220,9 +220,8 @@ const goToBook = (book) => {
     }
     const route = routeMap[book.worldComponent]
     if (route) router.push(route)
-  } else {
-    router.push(`/book/${book.id}`)
   }
+  // 没有 worldComponent 的书籍点击无效
 }
 
 const goToPrevious = () => {
