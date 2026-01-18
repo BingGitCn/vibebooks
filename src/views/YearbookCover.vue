@@ -136,8 +136,6 @@ const goToFirstChapter = () => {
 </script>
 
 <style scoped>
-@import '../styles/swiss-style.css';
-
 .yearbook-cover {
   min-height: 100vh;
   background-color: var(--swiss-white);

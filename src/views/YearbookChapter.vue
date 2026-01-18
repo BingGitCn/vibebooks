@@ -206,8 +206,6 @@ const goToNext = () => {
 </script>
 
 <style scoped>
-@import '../styles/swiss-style.css';
-
 .yearbook-chapter {
   min-height: 100vh;
   background-color: var(--swiss-white);
