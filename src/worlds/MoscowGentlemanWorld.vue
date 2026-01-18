@@ -773,6 +773,28 @@ const exitWorld = () => {
   color: var(--swiss-text-secondary) !important;
 }
 
+/* Expanded state hover - Keep colors dark */
+.room-card.expanded:hover {
+  background-color: var(--swiss-white) !important;
+  border-color: var(--swiss-black) !important;
+}
+
+.room-card.expanded:hover .room-number,
+.room-card.expanded:hover .room-name,
+.room-card.expanded:hover .room-desc,
+.room-card.expanded:hover .char-name,
+.room-card.expanded:hover .char-title,
+.room-card.expanded:hover .detail-label,
+.room-card.expanded:hover .detail-text {
+  color: var(--swiss-black) !important;
+}
+
+.room-card.expanded:hover .char-title,
+.room-card.expanded:hover .room-desc,
+.room-card.expanded:hover .detail-text {
+  color: var(--swiss-text-secondary) !important;
+}
+
 /* Room Details (Expanded) */
 .room-details {
   margin-top: 1.5rem;
