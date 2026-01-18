@@ -509,10 +509,8 @@ const eventDetails = {
 
 /* Section Headers */
 .section-header {
-  padding: 3rem 2rem 2rem;
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
+  padding: 3rem 2rem 2rem 2rem;
+  margin-left: 10rem;
 }
 
 .section-number {
@@ -538,6 +536,7 @@ const eventDetails = {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0;
+  padding-left: 12rem;
 }
 
 .character-card {
@@ -635,6 +634,7 @@ const eventDetails = {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0;
+  padding-left: 12rem;
 }
 
 .event-item {
@@ -725,7 +725,7 @@ const eventDetails = {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  padding: 2rem;
+  padding-left: 12rem;
 }
 
 .quote-card {
