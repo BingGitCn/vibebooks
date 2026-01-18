@@ -17,6 +17,11 @@ const routes = [
     component: () => import('../views/VibeBooksUniverse.vue')
   },
   {
+    path: '/newspaper',
+    name: 'NewspaperPrototype',
+    component: () => import('../views/NewspaperPrototype.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')
@@ -130,6 +135,16 @@ const routes = [
     path: '/world/my-altay',
     name: 'MyAltayWorld',
     component: () => import('../worlds/MyAltay.vue')
+  },
+  {
+    path: '/yearbook',
+    name: 'YearbookCover',
+    component: () => import('../views/YearbookCover.vue')
+  },
+  {
+    path: '/yearbook/:category',
+    name: 'YearbookChapter',
+    component: () => import('../views/YearbookChapter.vue')
   }
 ]
 

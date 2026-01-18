@@ -1,0 +1,244 @@
+/* Base typography setup - @import must come first */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
+
+/* ============================================
+   SWISS INTERNATIONAL STYLE - DESIGN TOKENS
+   ============================================ */
+
+/* Core Colors */
+:root {
+  --swiss-white: #FFFFFF;
+  --swiss-black: #000000;
+  --swiss-muted: #F2F2F2;
+  --swiss-accent: #FF3000;
+  --swiss-border: #000000;
+  --swiss-text-secondary: #525252;
+}
+
+/* ============================================
+   SWISS PATTERN TEXTURES
+   ============================================ */
+
+/* Grid Pattern (24px) */
+.swiss-grid-pattern {
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Dot Matrix (16px) */
+.swiss-dots {
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* Diagonal Lines (10px) */
+.swiss-diagonal {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 9px,
+    rgba(0, 0, 0, 0.02) 9px,
+    rgba(0, 0, 0, 0.02) 10px
+  );
+}
+
+/* Noise Texture (SVG filter) */
+.swiss-noise {
+  position: relative;
+}
+
+.swiss-noise::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.015;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  z-index: 1;
+}
+
+/* ============================================
+   TYPOGRAPHY CLASSES
+   ============================================ */
+
+.swiss-font {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.swiss-heading {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+}
+
+.swiss-subheading {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.swiss-body {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.swiss-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+/* ============================================
+   SWISS LAYOUT UTILITIES
+   ============================================ */
+
+.swiss-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.swiss-grid {
+  display: grid;
+  gap: 0;
+}
+
+/* 12-column grid system */
+.swiss-grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0;
+}
+
+/* Border utilities */
+.swiss-border {
+  border: 2px solid var(--swiss-black);
+}
+
+.swiss-border-thick {
+  border: 4px solid var(--swiss-black);
+}
+
+.swiss-border-top {
+  border-top: 2px solid var(--swiss-black);
+}
+
+.swiss-border-bottom {
+  border-bottom: 2px solid var(--swiss-black);
+}
+
+.swiss-border-left {
+  border-left: 2px solid var(--swiss-black);
+}
+
+.swiss-border-right {
+  border-right: 2px solid var(--swiss-black);
+}
+
+/* Spacing utilities */
+.swiss-p-xs { padding: 1rem; }
+.swiss-p-sm { padding: 2rem; }
+.swiss-p-md { padding: 4rem; }
+.swiss-p-lg { padding: 6rem; }
+.swiss-p-xl { padding: 8rem; }
+
+/* ============================================
+   INTERACTION STATES
+   ============================================ */
+
+.swiss-hover-invert {
+  transition: all 0.15s ease-out;
+}
+
+.swiss-hover-invert:hover {
+  background-color: var(--swiss-black);
+  color: var(--swiss-white);
+}
+
+.swiss-hover-accent {
+  transition: all 0.2s ease-out;
+}
+
+.swiss-hover-accent:hover {
+  background-color: var(--swiss-accent);
+  color: var(--swiss-white);
+  border-color: var(--swiss-accent);
+}
+
+/* Focus states for accessibility */
+.swiss-focus:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--swiss-accent);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   GEOMETRIC SHAPES
+   ============================================ */
+
+.swiss-circle {
+  border-radius: 50%;
+}
+
+/* No rounded corners by default in Swiss style */
+* {
+  border-radius: 0 !important;
+}
+
+/* ============================================
+   ANIMATION UTILITIES
+   ============================================ */
+
+.swiss-transition {
+  transition: all 0.2s ease-out;
+}
+
+.swiss-transition-fast {
+  transition: all 0.15s ease-linear;
+}
+
+/* ============================================
+   SECTION NUMBER PREFIX
+   ============================================ */
+
+.swiss-section-number {
+  position: relative;
+  padding-left: 3rem;
+}
+
+.swiss-section-number::before {
+  content: attr(data-number);
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: 0.875em;
+  color: var(--swiss-accent);
+  letter-spacing: 0.1em;
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  .swiss-no-print {
+    display: none;
+  }
+
+  * {
+    border-radius: 0 !important;
+  }
+}

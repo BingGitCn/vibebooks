@@ -51,9 +51,14 @@
       <p class="subtitle">Where stories breathe</p>
 
       <!-- 按钮 -->
-      <button class="enter-btn" @click="enterUniverse">
-        Enter the Library
-      </button>
+      <div class="button-group">
+        <button class="enter-btn" @click="enterUniverse">
+          Enter the Library
+        </button>
+        <button class="yearbook-btn" @click="enterYearbook">
+          Open Yearbook
+        </button>
+      </div>
     </div>
 
     <!-- 底部装饰 -->
@@ -92,6 +97,10 @@ function initParticles() {
 
 const enterUniverse = () => {
   router.push('/universe')
+}
+
+const enterYearbook = () => {
+  router.push('/yearbook')
 }
 
 onMounted(() => {
@@ -335,7 +344,14 @@ onMounted(() => {
 }
 
 /* ========== 按钮 ========== */
-.enter-btn {
+.button-group {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.enter-btn,
+.yearbook-btn {
   padding: 1rem 2.5rem;
   background: transparent;
   border: 1px solid #1a1a1a;
@@ -351,13 +367,25 @@ onMounted(() => {
   animation: fade-in 1s ease-out 0.8s forwards;
 }
 
+.yearbook-btn {
+  border-color: #FF3000;
+  color: #FF3000;
+}
+
 .enter-btn:hover {
   background: #1a1a1a;
   color: #f7f5f2;
   box-shadow: 0 0 30px rgba(26, 26, 26, 0.2);
 }
 
-.enter-btn:focus-visible {
+.yearbook-btn:hover {
+  background: #FF3000;
+  color: #f7f5f2;
+  box-shadow: 0 0 30px rgba(255, 48, 0, 0.3);
+}
+
+.enter-btn:focus-visible,
+.yearbook-btn:focus-visible {
   outline: 2px solid #1a1a1a;
   outline-offset: 4px;
 }
@@ -419,7 +447,13 @@ onMounted(() => {
     font-size: 1.2rem;
   }
 
-  .enter-btn {
+  .button-group {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .enter-btn,
+  .yearbook-btn {
     padding: 0.875rem 2rem;
     font-size: 0.65rem;
   }
