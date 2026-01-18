@@ -437,7 +437,7 @@ const exitWorld = () => {
 /* Section Headers */
 .section-header {
   padding: 3rem 2rem 2rem 2rem;
-  margin-left: 10rem;
+  margin-left: 12rem;
 }
 
 .section-number {
