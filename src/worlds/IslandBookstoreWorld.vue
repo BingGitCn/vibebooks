@@ -414,6 +414,13 @@ const eventDetails = {
   position: relative;
 }
 
+/* 覆盖 .swiss-container 使其与其他页面对齐一致 */
+.island-bookstore-world > .swiss-container {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
 /* 确保噪点层不阻止点击 */
 .island-bookstore-world::before {
   pointer-events: none !important;
@@ -445,10 +452,11 @@ const eventDetails = {
 
 /* Header */
 .world-header {
-  padding: 4rem 2rem;
+  padding: 6rem 2rem 3rem 2rem;
+  margin-left: 10rem;
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 2rem;
+  gap: 4rem;
   align-items: center;
 }
 
