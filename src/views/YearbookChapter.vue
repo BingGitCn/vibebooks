@@ -216,12 +216,7 @@ const goBack = () => {
 const goToBook = (book) => {
   if (book.worldComponent) {
     const routeMap = {
-      'PrinceWorld': '/world/prince',
-      'ThreeBodyWorld': '/world/three-body',
-      'WhiteNightWorld': '/world/white-night',
-      'SmallIslandEconomicsWorld': '/world/small-island-economics',
-      'MyAltayWorld': '/world/my-altay',
-      'BrightNightWorld': '/world/bright-night',
+      'IslandBookstoreWorld': '/world/island-bookstore'
     }
     const route = routeMap[book.worldComponent]
     if (route) router.push(route)
@@ -756,6 +751,11 @@ export const DefaultDecoration = {
 
   .books-grid {
     grid-template-columns: 1fr;
+  }
+
+  .book-entry {
+    border-top: 2px solid var(--swiss-black);
+    border-left: 2px solid var(--swiss-black);
   }
 
   .entry-title {

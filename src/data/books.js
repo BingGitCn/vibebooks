@@ -40,13 +40,12 @@ export const booksData = [
     layout: 'dual-timeline',
     layoutVariant: 'asymmetric',
     tags: ['战国', '史官', '历史悬疑'],
-    featuredQuote: '"几卷得而复失的残简，一段湮没无闻的史实。为何胡服骑射光耀华夏，赵武灵王却只能困死沙丘？"',
+    featuredQuote: '几卷得而复失的残简，一段湮没无闻的史实。为何胡服骑射光耀华夏，赵武灵王却只能困死沙丘？',
     specialElement: 'bamboo-scroll',
     interactiveType: 'mystery',
     vibeDescription: '从民国考古到战国宫廷，在沙丘迷局中追问权力的代价',
     footerText: '赵武灵王',
-    moodScore: 5.5,
-    worldComponent: 'TrappedInDunesWorld' // 有专属沉浸世界
+    moodScore: 5.5
   },
   // VOL.003 - 罪与罚
   {
@@ -63,13 +62,12 @@ export const booksData = [
     layout: 'cinematic',
     layoutVariant: 'intense',
     tags: ['心理', '救赎', '存在主义'],
-    featuredQuote: '"我是个颤抖的生物，还是我有权利..."',
+    featuredQuote: '我是个颤抖的生物，还是我有权利...',
     specialElement: 'crime-punishment',
     interactiveType: 'cinematic',
     vibeDescription: '一部关于罪恶、良知与救赎的心理史诗',
     footerText: '拉斯科尔尼科夫 & 索尼娅',
-    moodScore: 1.5,
-    worldComponent: 'CrimeAndPunishmentWorld'
+    moodScore: 1.5
   },
   // VOL.004 - 莫斯科绅士
   {
@@ -86,13 +84,12 @@ export const booksData = [
     layout: 'classic',
     layoutVariant: 'classic-serif',
     tags: ['优雅', '历史', '人生'],
-    featuredQuote: '"若命运不给你安排好的生活，那就自己安排一个。"',
+    featuredQuote: '若命运不给你安排好的生活，那就自己安排一个。',
     specialElement: 'hotel-key',
     interactiveType: 'gentle',
     vibeDescription: '在酒店大堂度过的32年人生',
     footerText: 'Count Rostov',
-    moodScore: 8.8,
-    worldComponent: 'MoscowGentlemanWorld' // 时间轴展览系统
+    moodScore: 8.8
   },
   // VOL.005 - 夜晚的潜水艇
   {
@@ -109,13 +106,12 @@ export const booksData = [
     layout: 'dreamy',
     layoutVariant: 'dramatic',
     tags: ['短篇小说', '想象力', '魔幻'],
-    featuredQuote: '"我的想象力是我唯一的财富，也是我的避难所。"',
+    featuredQuote: '我的想象力是我唯一的财富，也是我的避难所。',
     specialElement: 'submarine-porthole',
     interactiveType: 'floating',
     vibeDescription: '九个深潜想象力的故事',
     footerText: '陈春成',
-    moodScore: 7.5,
-    worldComponent: 'NightSubmarineWorld' // 有专属沉浸世界
+    moodScore: 7.5
   },
   // VOL.006 - 小王子
   {
@@ -132,13 +128,12 @@ export const booksData = [
     layout: 'minimal',
     layoutVariant: 'centered',
     tags: ['童话', '哲学', '经典'],
-    featuredQuote: '"你要永远为你驯服的东西负责。"',
+    featuredQuote: '你要永远为你驯服的东西负责。',
     specialElement: 'rose-drawing',
     interactiveType: 'innocent',
     vibeDescription: '写给大人的童话',
     footerText: 'B-612',
     moodScore: 9.5,
-    worldComponent: 'PrinceWorld',
     middleEffect: {
       type: 'vertical-quote',
       value: '本质的东西用眼睛是看不见的'
@@ -159,13 +154,12 @@ export const booksData = [
     layout: 'wandering',
     layoutVariant: 'centered',
     tags: ['旅行', '自由', '三毛'],
-    featuredQuote: '"生命的过程，无论是阳春白雪，还是青菜豆腐，我都得尝尝是什么滋味。"',
+    featuredQuote: '生命的过程，无论是阳春白雪，还是青菜豆腐，我都得尝尝是什么滋味。',
     specialElement: 'compass',
     interactiveType: 'wandering',
     vibeDescription: '在沙漠中安家的自由灵魂',
     footerText: '荷西 & 三毛',
-    moodScore: 8.2,
-    worldComponent: 'SaharaWorld' // 有专属沉浸世界
+    moodScore: 8.2
   },
   // VOL.008 - 刺杀骑士团长
   {
@@ -182,13 +176,12 @@ export const booksData = [
     layout: 'surreal',
     layoutVariant: 'asymmetric',
     tags: ['日本文学', '隐喻', '艺术'],
-    featuredQuote: '"理念，就是那从天而降的东西。"',
+    featuredQuote: '理念，就是那从天而降的东西。',
     specialElement: 'underground-painting',
     interactiveType: 'mysterious',
     vibeDescription: '一幅画背后的双重世界',
     footerText: '村上春树',
-    moodScore: 6.8,
-    worldComponent: 'KillingCommendatoreWorld' // 有专属沉浸世界
+    moodScore: 6.8
   },
   // VOL.009 - 失落的卫星
   {
@@ -205,13 +198,12 @@ export const booksData = [
     layout: 'journey',
     layoutVariant: 'asymmetric',
     tags: ['中亚', '旅行', '纪实'],
-    featuredQuote: '"我意识到，旅行最终抵达的不是某个地方，而是内心的某种状态。"',
+    featuredQuote: '我意识到，旅行最终抵达的不是某个地方，而是内心的某种状态。',
     specialElement: 'route-map',
     interactiveType: 'exploring',
     vibeDescription: '中亚五国的孤独旅行',
     footerText: '刘子超',
-    moodScore: 7.0,
-    worldComponent: 'LostSatelliteWorld' // 有专属沉浸世界
+    moodScore: 7.0
   },
   // VOL.010 - 额尔古纳河右岸
   {
@@ -228,13 +220,12 @@ export const booksData = [
     layout: 'flowing',
     layoutVariant: 'stacked-large',
     tags: ['少数民族', '史诗', '自然'],
-    featuredQuote: '"没有路的时候，我们会迷路；路多了的时候，我们也会迷路。"',
+    featuredQuote: '没有路的时候，我们会迷路；路多了的时候，我们也会迷路。',
     specialElement: 'tent-silhouette',
     interactiveType: 'flowing',
     vibeDescription: '鄂温克族百年兴衰史诗',
     footerText: '迟子建',
-    moodScore: 6.5,
-    worldComponent: 'ErgunRiverWorld' // 有专属沉浸世界
+    moodScore: 6.5
   },
   // VOL.011 - 置身事内
   {
@@ -251,13 +242,12 @@ export const booksData = [
     layout: 'systematic',
     layoutVariant: 'author-top',
     tags: ['经济', '中国', '政策'],
-    featuredQuote: '"生活过得好一点，比大多数宏伟更宏伟。"',
+    featuredQuote: '生活过得好一点，比大多数宏伟更宏伟。',
     specialElement: 'building-blocks',
     interactiveType: 'logical',
     vibeDescription: '读懂中国经济与政府运作',
     footerText: '兰小欢',
     moodScore: 7.8,
-    worldComponent: 'EmbodiedWorld',
     middleEffect: {
       type: 'code-quote',
       value: '> 中国经济.realWorld()\n"生活过得好一点，\n 比大多数宏伟更宏伟"'
@@ -278,13 +268,12 @@ export const booksData = [
     layout: 'mysterious',
     layoutVariant: 'split',
     tags: ['历史', '命运', '南方'],
-    featuredQuote: '"他会找到文城的。"',
+    featuredQuote: '他会找到文城的。',
     specialElement: 'misty-landscape',
     interactiveType: 'haunting',
     vibeDescription: '一个男人的寻找与宿命',
     footerText: '林祥福',
-    moodScore: 4.5,
-    worldComponent: 'WenchengWorld'
+    moodScore: 4.5
   },
   // VOL.013 - 挪威的森林
   {
@@ -301,13 +290,12 @@ export const booksData = [
     layout: 'layered',
     layoutVariant: 'title-bottom',
     tags: ['青春', '爱情', '死亡'],
-    featuredQuote: '"死并非生的对立面，而作为生的一部分永存。"',
+    featuredQuote: '死并非生的对立面，而作为生的一部分永存。',
     specialElement: 'well-memorial',
     interactiveType: 'melancholic',
     vibeDescription: '关于青春、爱与失去的记忆',
     footerText: '渡边 & 直子',
-    moodScore: 4.0,
-    worldComponent: 'NorwegianForestWorld'
+    moodScore: 4.0
   },
   // VOL.014 - 小城与不确定性的墙
   {
@@ -324,13 +312,12 @@ export const booksData = [
     layout: 'boundary',
     layoutVariant: 'minimal-bold',
     tags: ['寓言', '存在', '村上'],
-    featuredQuote: '"一堵墙挡在那里，你想知道的只是墙那边是什么。"',
+    featuredQuote: '一堵墙挡在那里，你想知道的只是墙那边是什么。',
     specialElement: 'shadow-wall',
     interactiveType: 'metaphysical',
     vibeDescription: '关于存在与自我的寓言',
     footerText: '17岁的我',
-    moodScore: 5.5,
-    worldComponent: 'UncertainWallWorld'
+    moodScore: 5.5
   },
   // VOL.015 - 1Q84
   {
@@ -347,13 +334,12 @@ export const booksData = [
     layout: 'dual',
     layoutVariant: 'dramatic',
     tags: ['反乌托邦', '平行世界', '史诗'],
-    featuredQuote: '"天上挂着两个月亮。一新一旧，一大一小。"',
+    featuredQuote: '天上挂着两个月亮。一新一旧，一大一小。',
     specialElement: 'double-moon',
     interactiveType: 'parallel',
     vibeDescription: '两个月亮与两个世界',
     footerText: '青豆 & 天吾',
-    moodScore: 6.2,
-    worldComponent: 'Q84World'
+    moodScore: 6.2
   },
   // VOL.016 - 山月记
   {
@@ -370,13 +356,12 @@ export const booksData = [
     layout: 'fable',
     layoutVariant: 'classic-serif',
     tags: ['日本文学', '寓言', '人性'],
-    featuredQuote: '"因为害怕自己并非明珠而不敢刻苦琢磨，又因为有几分相信自己是明珠，而不能与瓦砾碌碌为伍。"',
+    featuredQuote: '因为害怕自己并非明珠而不敢刻苦琢磨，又因为有几分相信自己是明珠，而不能与瓦砾碌碌为伍。',
     specialElement: 'tiger-moon',
     interactiveType: 'transformative',
     vibeDescription: '关于人性与自我认知的寓言',
     footerText: '李徵',
-    moodScore: 5.8,
-    worldComponent: 'MountainMoonWorld'
+    moodScore: 5.8
   },
   // VOL.017 - 射雕英雄传
   {
@@ -393,13 +378,12 @@ export const booksData = [
     layout: 'epic-battle',
     layoutVariant: 'stacked-large',
     tags: ['武侠', '江湖', '经典'],
-    featuredQuote: '"侠之大者，为国为民。"',
+    featuredQuote: '侠之大者，为国为民。',
     specialElement: 'bow-arrow',
     interactiveType: 'heroic',
     vibeDescription: '江湖中的成长与侠义',
     footerText: '郭靖',
-    moodScore: 8.5,
-    worldComponent: 'ShootingHeroWorld'
+    moodScore: 8.5
   },
   // VOL.018 - 月亮与六便士
   {
@@ -416,13 +400,12 @@ export const booksData = [
     layout: 'contrast',
     layoutVariant: 'split',
     tags: ['艺术', '理想', '人性'],
-    featuredQuote: '"我必须画画，就像溺水的人必须挣扎。"',
+    featuredQuote: '我必须画画，就像溺水的人必须挣扎。',
     specialElement: 'split-world',
     interactiveType: 'contrasting',
     vibeDescription: '理想与现实的永恒冲突',
     footerText: 'Strickland',
-    moodScore: 6.8,
-    worldComponent: 'MoonAndSixpenceWorld'
+    moodScore: 6.8
   },
   // VOL.019 - 明亮的夜晚
   {
@@ -439,13 +422,12 @@ export const booksData = [
     layout: 'generational',
     layoutVariant: 'centered',
     tags: ['女性', '家族', '韩国'],
-    featuredQuote: '"我们就这样，像星星一样，互相照亮着。"',
+    featuredQuote: '我们就这样，像星星一样，互相照亮着。',
     specialElement: 'family-tree',
     interactiveType: 'gentle',
     vibeDescription: '四代女性的命运传承',
     footerText: '曾祖母→我',
     moodScore: 7.8,
-    worldComponent: 'BrightNightWorld',
     middleEffect: {
       type: 'constellation-rotation',
       value: 'four-stars'
@@ -466,13 +448,12 @@ export const booksData = [
     layout: 'simple',
     layoutVariant: 'author-top',
     tags: ['经济', '寓言', '入门'],
-    featuredQuote: '"经济发展不是零和游戏。"',
+    featuredQuote: '经济发展不是零和游戏。',
     specialElement: 'fish-icon',
     interactiveType: 'educational',
     vibeDescription: '用小岛故事理解经济',
     footerText: 'Able, Baker, Cain',
-    moodScore: 7.2,
-    worldComponent: 'SmallIslandEconomicsWorld'
+    moodScore: 7.2
   },
   // VOL.021 - 我的阿勒泰
   {
@@ -489,13 +470,12 @@ export const booksData = [
     layout: 'expansive',
     layoutVariant: 'centered',
     tags: ['新疆', '自然', '治愈'],
-    featuredQuote: '"世界就在手边，躺倒就是睡眠。"',
+    featuredQuote: '世界就在手边，躺倒就是睡眠。',
     specialElement: 'yurt-cloud',
     interactiveType: 'peaceful',
     vibeDescription: '在阿勒泰的四季生活',
     footerText: '李娟',
-    moodScore: 9.0,
-    worldComponent: 'MyAltayWorld'
+    moodScore: 9.0
   },
   // VOL.022 - 我与地坛
   {
@@ -512,7 +492,7 @@ export const booksData = [
     layout: 'contemplative',
     layoutVariant: 'minimal-bold',
     tags: ['生命', '哲学', '北京'],
-    featuredQuote: '"死是一件不必急于求成的事，死是一个必然会降临的节日。"',
+    featuredQuote: '死是一件不必急于求成的事，死是一个必然会降临的节日。',
     specialElement: 'wheelchair-path',
     interactiveType: 'contemplative',
     vibeDescription: '在废弃古园里与命运对话',
@@ -534,7 +514,7 @@ export const booksData = [
     layout: 'bureaucratic',
     layoutVariant: 'asymmetric',
     tags: ['讽刺', '神话', '职场'],
-    featuredQuote: '"这就是体制，每个人都在夹缝中求生存。"',
+    featuredQuote: '这就是体制，每个人都在夹缝中求生存。',
     specialElement: 'cloud-memo',
     interactiveType: 'humorous',
     vibeDescription: '天庭里的职场政治学',
@@ -556,7 +536,7 @@ export const booksData = [
     layout: 'cyclical',
     layoutVariant: 'stacked-large',
     tags: ['魔幻现实', '家族', '拉美'],
-    featuredQuote: '"生命中所有灿烂终将用寂寞偿还。"',
+    featuredQuote: '生命中所有灿烂终将用寂寞偿还。',
     specialElement: 'circular-family',
     interactiveType: 'magical',
     vibeDescription: '一个家族七代的孤独宿命',
@@ -578,7 +558,7 @@ export const booksData = [
     layout: 'unfolding',
     layoutVariant: 'title-bottom',
     tags: ['爱情', '成长', '中国'],
-    featuredQuote: '"我知道你愚蠢、轻浮、虚荣，但我爱你。"',
+    featuredQuote: '我知道你愚蠢、轻浮、虚荣，但我爱你。',
     specialElement: 'lifting-veil',
     interactiveType: 'unfolding',
     vibeDescription: '在霍乱中找到真爱',
@@ -600,7 +580,7 @@ export const booksData = [
     layout: 'grounded',
     layoutVariant: 'stacked-large',
     tags: ['福建', '底层', '生存'],
-    featuredQuote: '"草就是草，活下去就是一切。"',
+    featuredQuote: '草就是草，活下去就是一切。',
     specialElement: 'grass-cluster',
     interactiveType: 'resilient',
     vibeDescription: '普通人的生存史诗',
@@ -622,7 +602,7 @@ export const booksData = [
     layout: 'resilient',
     layoutVariant: 'asymmetric',
     tags: ['人生', '英雄', '命运'],
-    featuredQuote: '"人生海海，山山而川，不过尔尔。"',
+    featuredQuote: '人生海海，山山而川，不过尔尔。',
     specialElement: 'mask-face',
     interactiveType: 'courageous',
     vibeDescription: '一个上校传奇而悲情的一生',
@@ -644,7 +624,7 @@ export const booksData = [
     layout: 'urgent',
     layoutVariant: 'split',
     tags: ['历史', '职场', '幽默'],
-    featuredQuote: '"就算失败，我也想知道，自己倒在距离终点多远的地方。"',
+    featuredQuote: '就算失败，我也想知道，自己倒在距离终点多远的地方。',
     specialElement: 'delivery-route',
     interactiveType: 'urgent',
     vibeDescription: '大唐荔枝转运的职场冒险',
@@ -666,7 +646,7 @@ export const booksData = [
     layout: 'timeless',
     layoutVariant: 'classic-serif',
     tags: ['爱情', '等待', '经典'],
-    featuredQuote: '"等待了五十年九个月零四天。"',
+    featuredQuote: '等待了五十年九个月零四天。',
     specialElement: 'heart-counter',
     interactiveType: 'enduring',
     vibeDescription: '跨越半个世纪的爱情',
@@ -691,7 +671,7 @@ export const booksData = [
     layout: 'cozy',
     layoutVariant: 'centered',
     tags: ['治愈', '日本', '书信'],
-    featuredQuote: '"字是有温度的。"',
+    featuredQuote: '字是有温度的。',
     specialElement: 'ink-brush',
     interactiveType: 'cozy',
     vibeDescription: '镰仓小镇的代笔故事',
@@ -713,7 +693,7 @@ export const booksData = [
     layout: 'observational',
     layoutVariant: 'asymmetric',
     tags: ['意大利', '城市', '诗意'],
-    featuredQuote: '"城市是看不见的，因为它是自然的反面。"',
+    featuredQuote: '城市是看不见的，因为它是自然的反面。',
     specialElement: 'city-leaves',
     interactiveType: 'observant',
     vibeDescription: '在水泥森林中发现自然',
@@ -735,7 +715,7 @@ export const booksData = [
     layout: 'epic-journey',
     layoutVariant: 'dramatic',
     tags: ['复仇', '冒险', '经典'],
-    featuredQuote: '"等待和希望。人类全部智慧就包含在这两个词中。"',
+    featuredQuote: '等待和希望。人类全部智慧就包含在这两个词中。',
     specialElement: 'treasure-chest',
     interactiveType: 'dramatic',
     vibeDescription: '从监狱到伯爵的复仇之路',
@@ -757,7 +737,7 @@ export const booksData = [
     layout: 'spiritual',
     layoutVariant: 'minimal-bold',
     tags: ['哲学', '东方', '自我'],
-    featuredQuote: '"智慧无法被传授，只能被体验。"',
+    featuredQuote: '智慧无法被传授，只能被体验。',
     specialElement: 'river-stones',
     interactiveType: 'spiritual',
     vibeDescription: '一条河流与寻找自我',
@@ -783,7 +763,7 @@ export const booksData = [
     layout: 'trapped',
     layoutVariant: 'split',
     tags: ['悬疑', '推理', '孤岛'],
-    featuredQuote: '"十个小士兵，出门去吃饭，被呛死一个，还剩九个..."',
+    featuredQuote: '十个小士兵，出门去吃饭，被呛死一个，还剩九个...',
     specialElement: 'countdown',
     interactiveType: 'tense',
     vibeDescription: '孤岛上的完美谋杀',
@@ -805,7 +785,7 @@ export const booksData = [
     layout: 'interconnected',
     layoutVariant: 'title-bottom',
     tags: ['治愈', '奇幻', '日本'],
-    featuredQuote: '"你的地图是一张白纸，所以即使想决定目的地，也不知道路在哪里。"',
+    featuredQuote: '你的地图是一张白纸，所以即使想决定目的地，也不知道路在哪里。',
     specialElement: 'mail-box',
     interactiveType: 'heartwarming',
     vibeDescription: '跨越时空的温暖回信',
@@ -827,7 +807,7 @@ export const booksData = [
     layout: 'mathematical',
     layoutVariant: 'split',
     tags: ['推理', '爱情', '数学'],
-    featuredQuote: '"这个世上没有无用的棋子。"',
+    featuredQuote: '这个世上没有无用的棋子。',
     specialElement: 'equation',
     interactiveType: 'calculated',
     vibeDescription: '数学天才的极致牺牲',
@@ -849,7 +829,7 @@ export const booksData = [
     layout: 'dimensional',
     layoutVariant: 'dramatic',
     tags: ['科幻', '宇宙', '文明'],
-    featuredQuote: '"给岁月以文明，而不是给文明以岁月。"',
+    featuredQuote: '给岁月以文明，而不是给文明以岁月。',
     specialElement: 'three-body-orbit',
     interactiveType: 'cosmic',
     vibeDescription: '人类文明与三体文明的博弈',
@@ -858,8 +838,7 @@ export const booksData = [
     middleEffect: {
       type: 'countdown',
       value: '450:00:00'
-    },
-    worldComponent: 'ThreeBodyWorld'
+    }
   },
   // VOL.038 - 白夜行
   {
@@ -877,7 +856,7 @@ export const booksData = [
     layout: 'parallel-tracks',
     layoutVariant: 'asymmetric',
     tags: ['推理', '黑暗', '爱情'],
-    featuredQuote: '"我的天空里没有太阳，总是黑夜，但并不暗，因为有东西代替了太阳。"',
+    featuredQuote: '我的天空里没有太阳，总是黑夜，但并不暗，因为有东西代替了太阳。',
     specialElement: 'broken-silhouette',
     interactiveType: 'haunting',
     vibeDescription: '在黑暗中并肩而行的19年',
