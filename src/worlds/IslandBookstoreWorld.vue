@@ -453,7 +453,6 @@ const eventDetails = {
 /* Header */
 .world-header {
   padding: 6rem 2rem 3rem 2rem;
-  margin-left: 10rem;
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 4rem;
@@ -518,7 +517,6 @@ const eventDetails = {
 /* Section Headers */
 .section-header {
   padding: 3rem 2rem 2rem 2rem;
-  margin-left: 10rem;
 }
 
 .section-number {

@@ -559,7 +559,6 @@ const exitWorld = () => {
 /* Book Header */
 .book-header {
   padding: 6rem 2rem 3rem 2rem;
-  margin-left: 10rem;
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 4rem;
