@@ -75,8 +75,8 @@ export const middleEffectsConfig = {
     value: null
   },
   19: { // 明亮的夜晚
-    type: 'stars-pulse',
-    value: 5
+    type: 'constellation-rotate',
+    value: 'four-stars'
   },
   20: { // 小岛经济学
     type: 'fish-swim',

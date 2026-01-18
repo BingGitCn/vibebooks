@@ -180,13 +180,21 @@
         </svg>
       </div>
 
-      <!-- 019. 明亮的夜晚 - 星星脉动 -->
-      <div v-if="book.middleEffect.type === 'stars-pulse'" class="stars-pulse-effect">
-        <div class="star star-1"></div>
-        <div class="star star-2"></div>
-        <div class="star star-3"></div>
-        <div class="star star-4"></div>
-        <div class="star star-5"></div>
+      <!-- 019. 明亮的夜晚 - 星座旋转 -->
+      <div v-if="book.middleEffect.type === 'constellation-rotate'" class="constellation-rotate-effect">
+        <svg class="constellation-svg" viewBox="0 0 200 200">
+          <!-- 连线 -->
+          <line class="constellation-line" x1="100" y1="20" x2="20" y2="100" />
+          <line class="constellation-line" x1="20" y1="100" x2="100" y2="180" />
+          <line class="constellation-line" x1="100" y1="180" x2="180" y2="100" />
+          <line class="constellation-line" x1="180" y1="100" x2="100" y2="20" />
+          <line class="constellation-line" x1="20" y1="100" x2="180" y2="100" />
+          <line class="constellation-line" x1="100" y1="20" x2="100" y2="180" />
+        </svg>
+        <div class="constellation-star star-top"></div>
+        <div class="constellation-star star-left"></div>
+        <div class="constellation-star star-right"></div>
+        <div class="constellation-star star-bottom"></div>
       </div>
 
       <!-- 020. 小岛经济学 - 鱼游动 -->
@@ -496,7 +504,10 @@ const readBook = () => {
       'MountainMoonWorld': '/world/mountain-moon',
       'ShootingHeroWorld': '/world/shooting-hero',
       'MoonAndSixpenceWorld': '/world/moon-and-sixpence',
-      'ThreeBodyWorld': '/world/three-body'
+      'ThreeBodyWorld': '/world/three-body',
+      'BrightNightWorld': '/world/bright-night',
+      'SmallIslandEconomicsWorld': '/world/small-island-economics',
+      'MyAltayWorld': '/world/my-altay'
     }
 
     const route = routeMap[props.book.worldComponent]
@@ -1698,51 +1709,145 @@ onUnmounted(() => {
   100% { transform: rotateY(360deg); }
 }
 
-/* ========== 019. 明亮的夜晚 - 星星脉动 ========== */
-.stars-pulse-effect {
+/* ========== 019. 明亮的夜晚 - 星座旋转 ========== */
+.constellation-rotate-effect {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.8rem;
+  position: relative;
 }
 
-.star {
-  width: 4px;
-  height: 4px;
+.constellation-svg {
+  width: 80%;
+  height: auto;
+  color: #000000;
+  animation: constellation-slow-rotate 20s linear infinite;
+}
+
+.monochrome-card:hover .constellation-svg {
+  color: #f4d03f;
+}
+
+.constellation-line {
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.4;
+}
+
+.constellation-star {
+  position: absolute;
+  width: 8px;
+  height: 8px;
   background: #000000;
-  transform: rotate(45deg);
+  border-radius: 50%;
   transition: all 0.1s;
 }
 
-.monochrome-card:hover .star {
-  background: #FFFFFF;
+.monochrome-card:hover .constellation-star {
+  background: #f4d03f;
+  box-shadow: 0 0 8px rgba(244, 208, 63, 0.5);
 }
 
-.star-1 {
-  animation: star-pulse 2s ease-in-out infinite;
+.star-top {
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: star-pulse-glow 3s ease-in-out infinite;
 }
 
-.star-2 {
-  animation: star-pulse 2.5s ease-in-out infinite 0.3s;
+.star-left {
+  left: 15%;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: star-pulse-glow 3s ease-in-out infinite 0.5s;
 }
 
-.star-3 {
-  animation: star-pulse 3s ease-in-out infinite 0.6s;
+.star-right {
+  right: 15%;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: star-pulse-glow 3s ease-in-out infinite 1s;
 }
 
-.star-4 {
-  animation: star-pulse 2.2s ease-in-out infinite 0.9s;
+.star-bottom {
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: star-pulse-glow 3s ease-in-out infinite 1.5s;
 }
 
-.star-5 {
-  animation: star-pulse 2.8s ease-in-out infinite 1.2s;
+@keyframes constellation-slow-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-@keyframes star-pulse {
-  0%, 100% { transform: rotate(45deg) scale(1); opacity: 0.3; }
-  50% { transform: rotate(45deg) scale(1.5); opacity: 1; }
+@keyframes star-pulse-glow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translate(-50%, 0) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1.3);
+  }
+}
+
+.monochrome-card:hover .star-top,
+.monochrome-card:hover .star-bottom {
+  animation: star-pulse-glow-hover 3s ease-in-out infinite;
+}
+
+.monochrome-card:hover .star-left {
+  animation: star-pulse-glow-hover-left 3s ease-in-out infinite 0.5s;
+}
+
+.monochrome-card:hover .star-right {
+  animation: star-pulse-glow-hover-right 3s ease-in-out infinite 1s;
+}
+
+@keyframes star-pulse-glow-hover {
+  0%, 100% {
+    opacity: 0.7;
+    transform: translate(-50%, 0) scale(1);
+    box-shadow: 0 0 8px rgba(244, 208, 63, 0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1.4);
+    box-shadow: 0 0 15px rgba(244, 208, 63, 0.8);
+  }
+}
+
+@keyframes star-pulse-glow-hover-left {
+  0%, 100% {
+    opacity: 0.7;
+    transform: translateY(-50%) scale(1);
+    box-shadow: 0 0 8px rgba(244, 208, 63, 0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.4);
+    box-shadow: 0 0 15px rgba(244, 208, 63, 0.8);
+  }
+}
+
+@keyframes star-pulse-glow-hover-right {
+  0%, 100% {
+    opacity: 0.7;
+    transform: translateY(-50%) scale(1);
+    box-shadow: 0 0 8px rgba(244, 208, 63, 0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.4);
+    box-shadow: 0 0 15px rgba(244, 208, 63, 0.8);
+  }
 }
 
 /* ========== 020. 小岛经济学 - 鱼游动 ========== */

@@ -444,7 +444,12 @@ export const booksData = [
     interactiveType: 'gentle',
     vibeDescription: '四代女性的命运传承',
     footerText: '曾祖母→我',
-    moodScore: 7.8
+    moodScore: 7.8,
+    worldComponent: 'BrightNightWorld',
+    middleEffect: {
+      type: 'constellation-rotation',
+      value: 'four-stars'
+    }
   },
   // VOL.020 - 小岛经济学
   {
@@ -466,7 +471,8 @@ export const booksData = [
     interactiveType: 'educational',
     vibeDescription: '用小岛故事理解经济',
     footerText: 'Able, Baker, Cain',
-    moodScore: 7.2
+    moodScore: 7.2,
+    worldComponent: 'SmallIslandEconomicsWorld'
   },
   // VOL.021 - 我的阿勒泰
   {
@@ -488,7 +494,8 @@ export const booksData = [
     interactiveType: 'peaceful',
     vibeDescription: '在阿勒泰的四季生活',
     footerText: '李娟',
-    moodScore: 9.0
+    moodScore: 9.0,
+    worldComponent: 'MyAltayWorld'
   },
   // VOL.022 - 我与地坛
   {

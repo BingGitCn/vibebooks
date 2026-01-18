@@ -126,7 +126,9 @@ const readBook = () => {
       'MoscowGentlemanWorld': '/world/moscow-gentleman',
       'CrimeAndPunishmentWorld': '/world/crime-and-punishment',
       'SaharaWorld': '/world/sahara',
-      'KillingCommendatoreWorld': '/world/killing-commendatore'
+      'KillingCommendatoreWorld': '/world/killing-commendatore',
+      'SmallIslandEconomicsWorld': '/world/small-island-economics',
+      'MyAltayWorld': '/world/my-altay'
     }
 
     const route = routeMap[book.value.worldComponent]

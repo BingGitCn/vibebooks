@@ -115,6 +115,21 @@ const routes = [
     path: '/world/three-body',
     name: 'ThreeBodyWorld',
     component: () => import('../worlds/ThreeBodyWorld.vue')
+  },
+  {
+    path: '/world/bright-night',
+    name: 'BrightNightWorld',
+    component: () => import('../worlds/BrightNightWorld.vue')
+  },
+  {
+    path: '/world/small-island-economics',
+    name: 'SmallIslandEconomicsWorld',
+    component: () => import('../worlds/SmallIslandEconomics.vue')
+  },
+  {
+    path: '/world/my-altay',
+    name: 'MyAltayWorld',
+    component: () => import('../worlds/MyAltay.vue')
   }
 ]
 
