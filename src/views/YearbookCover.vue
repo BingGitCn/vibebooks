@@ -5,7 +5,7 @@
       <!-- Top navigation strip -->
       <nav class="top-strip swiss-border-bottom">
         <div class="strip-content">
-          <span class="volume-label">VOL. 2025</span>
+          <span class="volume-label">VOL. {{ currentYear }}</span>
           <span class="separator"></span>
           <span class="archive-label">THOUGHT ARCHIVE</span>
         </div>
@@ -108,6 +108,7 @@ const chapters = ref([
   { id: 6, name: 'CLASSIC', route: '/yearbook/classic', count: 0, accent: '#FF3000' },
 ])
 
+const currentYear = ref(new Date().getFullYear())
 const issueDate = ref('')
 
 onMounted(() => {

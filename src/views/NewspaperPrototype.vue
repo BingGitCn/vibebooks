@@ -160,7 +160,7 @@
           <p class="footer-text">主编：Claude Sonnet</p>
         </div>
         <div class="footer-center">
-          <p class="footer-text">© 2025 Vibe Daily Books</p>
+          <p class="footer-text">© {{ currentYear }} Vibe Daily Books</p>
           <p class="footer-text">书籍 Vibe 宇宙 · 思想档案馆</p>
         </div>
         <div class="footer-right">
@@ -182,6 +182,8 @@ import StandardCard from '../components/StandardCard.vue'
 import { booksData } from '../data/books.js'
 
 const router = useRouter()
+
+const currentYear = ref(new Date().getFullYear())
 
 // 分类映射
 const categoryMap = {

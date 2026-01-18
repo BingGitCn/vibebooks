@@ -16,7 +16,7 @@
     <div class="intro-container">
       <!-- Volume indicator -->
       <div class="volume-indicator">
-        <span class="volume-text">VOL. 2025</span>
+        <span class="volume-text">VOL. {{ currentYear }}</span>
         <span class="separator">|</span>
         <span class="issue-text">THOUGHT ARCHIVE</span>
       </div>

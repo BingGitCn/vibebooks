@@ -8,7 +8,7 @@
             <span class="arrow">←</span> BACK
           </button>
           <span class="separator"></span>
-          <span class="volume-label">VOL. 2025</span>
+          <span class="volume-label">VOL. {{ currentYear }}</span>
         </div>
       </nav>
 
@@ -104,6 +104,7 @@ import booksData from '../data/books'
 const router = useRouter()
 const route = useRoute()
 
+const currentYear = ref(new Date().getFullYear())
 const categorySlug = ref('')
 const category = ref('')
 const chapterId = ref(1)
