@@ -94,7 +94,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import booksDataData from '../data/booksData'
+import booksData from '../data/books'
 
 const router = useRouter()
 
