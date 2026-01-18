@@ -5,9 +5,11 @@
       <!-- Top navigation strip -->
       <nav class="top-strip swiss-border-bottom">
         <div class="strip-content">
-          <span class="volume-label">VOL. {{ currentYear }}</span>
+          <button class="home-link" @click="goHome">
+            <span class="arrow">←</span> HOME
+          </button>
           <span class="separator"></span>
-          <span class="archive-label">THOUGHT ARCHIVE</span>
+          <span class="volume-label">VOL. {{ currentYear }}</span>
         </div>
       </nav>
 
@@ -26,8 +28,6 @@
             <span class="title-line">BOOK</span>
             <span class="title-line accent">UNIVERSE</span>
           </h1>
-
-          <p class="subtitle">A SWISS-STYLE YEARBOOK OF IDEAS</p>
 
           <!-- Chapter listing -->
           <div class="chapters-list">
@@ -134,6 +134,10 @@ const navigateToChapter = (route) => {
 const goToFirstChapter = () => {
   router.push(chapters.value[0].route)
 }
+
+const goHome = () => {
+  router.push('/')
+}
 </script>
 
 <style scoped>
@@ -167,6 +171,35 @@ const goToFirstChapter = () => {
   font-weight: 900;
   font-size: 0.75rem;
   letter-spacing: 0.2em;
+}
+
+.home-link {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  background: transparent;
+  border: none;
+  color: var(--swiss-white);
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease-out;
+}
+
+.home-link:hover {
+  color: var(--swiss-accent);
+}
+
+.home-link .arrow {
+  display: inline-block;
+  transition: transform 0.2s ease-out;
+}
+
+.home-link:hover .arrow {
+  transform: translateX(-4px);
 }
 
 .separator {
@@ -242,15 +275,6 @@ const goToFirstChapter = () => {
 
 .title-line.accent {
   color: var(--swiss-accent);
-}
-
-.subtitle {
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  letter-spacing: 0.3em;
-  color: var(--swiss-text-secondary);
-  margin-bottom: 4rem;
 }
 
 /* Chapters list */
@@ -481,10 +505,6 @@ const goToFirstChapter = () => {
 
   .geometric-accent {
     display: none;
-  }
-
-  .subtitle {
-    font-size: 0.75rem;
   }
 
   .chapter-item {
