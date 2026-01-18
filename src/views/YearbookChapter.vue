@@ -41,7 +41,10 @@
             v-for="(book, index) in books"
             :key="book.id"
             class="book-entry swiss-border-bottom swiss-border-right"
-            :class="{ 'featured': index < 2 }"
+            :class="[
+              { 'featured': index < 2 },
+              `entry-${categorySlug}`
+            ]"
             @click="goToBook(book)"
           >
             <!-- Entry header -->
@@ -481,6 +484,95 @@ export const DefaultDecoration = {
   background-color: var(--swiss-muted);
 }
 
+/* Category-specific hover effects */
+/* FICTION - 瑞士红反转 */
+.entry-fiction:hover {
+  background-color: var(--swiss-accent) !important;
+  border-color: var(--swiss-accent) !important;
+}
+
+.entry-fiction:hover * {
+  color: var(--swiss-white) !important;
+}
+
+/* PHILOSOPHY - 深黑反转 */
+.entry-philosophy:hover {
+  background-color: #1a1a1a !important;
+}
+
+.entry-philosophy:hover .entry-header,
+.entry-philosophy:hover .entry-footer {
+  background-color: #000 !important;
+  border-color: #000 !important;
+}
+
+.entry-philosophy:hover * {
+  color: var(--swiss-white) !important;
+}
+
+/* ECONOMICS - 黑色反转 */
+.entry-economics:hover {
+  background-color: var(--swiss-black) !important;
+}
+
+.entry-economics:hover .entry-header,
+.entry-economics:hover .entry-footer {
+  background-color: #000 !important;
+  border-color: var(--swiss-accent) !important;
+}
+
+.entry-economics:hover * {
+  color: var(--swiss-white) !important;
+}
+
+/* MYSTERY - 瑞士红反转 */
+.entry-mystery:hover {
+  background-color: var(--swiss-accent) !important;
+}
+
+.entry-mystery:hover .entry-header,
+.entry-mystery:hover .entry-footer {
+  background-color: #CC0000 !important;
+  border-color: #CC0000 !important;
+}
+
+.entry-mystery:hover * {
+  color: var(--swiss-white) !important;
+}
+
+/* ROMANCE - 柔和的反转 */
+.entry-romance:hover {
+  background-color: var(--swiss-accent) !important;
+}
+
+.entry-romance:hover .entry-header {
+  background-color: #FF6B6B !important;
+  border-color: #FF6B6B !important;
+}
+
+.entry-romance:hover * {
+  color: var(--swiss-white) !important;
+}
+
+/* CLASSIC - 严肃的黑色 */
+.entry-classic:hover {
+  background-color: var(--swiss-black) !important;
+}
+
+.entry-classic:hover .entry-header,
+.entry-classic:hover .entry-footer {
+  background-color: #1a1a1a !important;
+}
+
+.entry-classic:hover .entry-tag {
+  background-color: var(--swiss-white) !important;
+  color: var(--swiss-black) !important;
+}
+
+.entry-classic:hover * {
+  color: var(--swiss-white) !important;
+}
+
 .book-entry.featured {
   grid-column: span 2;
 }
@@ -697,7 +789,8 @@ export const DefaultDecoration = {
 .line-fiction {
   position: absolute;
   background-color: var(--swiss-black);
-  opacity: 0.1;
+  opacity: 0.25;
+  transition: all 0.3s ease-out;
 }
 
 .line-fiction.line-1 {
@@ -736,9 +829,10 @@ export const DefaultDecoration = {
 
 .circle-philosophy {
   position: absolute;
-  border: 2px solid var(--swiss-black);
+  border: 3px solid var(--swiss-black);
   border-radius: 50%;
-  opacity: 0.15;
+  opacity: 0.25;
+  transition: all 0.3s ease-out;
 }
 
 .circle-philosophy.circle-outer {
@@ -755,7 +849,7 @@ export const DefaultDecoration = {
   width: 80px;
   height: 80px;
   background-color: var(--swiss-accent);
-  opacity: 0.2;
+  opacity: 0.35;
 }
 
 /* ECONOMICS - Bar chart elements */
@@ -768,8 +862,9 @@ export const DefaultDecoration = {
 .bar-economics {
   position: absolute;
   background-color: var(--swiss-black);
-  opacity: 0.1;
+  opacity: 0.25;
   bottom: 50px;
+  transition: all 0.3s ease-out;
 }
 
 .bar-economics.bar-1 {
@@ -795,7 +890,7 @@ export const DefaultDecoration = {
   width: 200px;
   height: 2px;
   background-color: var(--swiss-accent);
-  opacity: 0.2;
+  opacity: 0.35;
   bottom: 40px;
   left: 50px;
   transform: rotate(-10deg);
@@ -816,17 +911,17 @@ export const DefaultDecoration = {
   font-family: 'Inter', sans-serif;
   font-weight: 900;
   font-size: 120px;
-  color: var(--swiss-black);
-  opacity: 0.08;
+  color: var(--swiss-accent);
+  opacity: 0.2;
 }
 
 .dot-mystery {
   position: absolute;
   width: 12px;
   height: 12px;
-  background-color: var(--swiss-black);
+  background-color: var(--swiss-accent);
   border-radius: 50%;
-  opacity: 0.15;
+  opacity: 0.3;
 }
 
 .dot-mystery.dot-1 {
@@ -855,9 +950,10 @@ export const DefaultDecoration = {
   position: absolute;
   width: 150px;
   height: 150px;
-  border: 2px solid var(--swiss-black);
+  border: 3px solid var(--swiss-black);
   border-radius: 50%;
-  opacity: 0.1;
+  opacity: 0.25;
+  transition: all 0.3s ease-out;
 }
 
 .curve-romance.curve-1 {
@@ -880,7 +976,7 @@ export const DefaultDecoration = {
   width: 60px;
   height: 60px;
   background-color: var(--swiss-accent);
-  opacity: 0.15;
+  opacity: 0.3;
   clip-path: polygon(
     50% 0%,
     100% 35%,
@@ -900,8 +996,9 @@ export const DefaultDecoration = {
 
 .square-classic {
   position: absolute;
-  border: 2px solid var(--swiss-black);
-  opacity: 0.1;
+  border: 3px solid var(--swiss-black);
+  opacity: 0.25;
+  transition: all 0.3s ease-out;
 }
 
 .square-classic.square-1 {
@@ -921,7 +1018,7 @@ export const DefaultDecoration = {
 .line-classic {
   position: absolute;
   background-color: var(--swiss-accent);
-  opacity: 0.15;
+  opacity: 0.3;
 }
 
 .line-classic.line-h {
