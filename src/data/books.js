@@ -297,7 +297,8 @@ export const booksData = [
     interactiveType: 'melancholic',
     vibeDescription: '关于青春、爱与失去的记忆',
     footerText: '渡边 & 直子',
-    moodScore: 4.0
+    moodScore: 4.0,
+    worldComponent: 'NorwegianWoodWorld' // 有专属沉浸世界
   },
   // VOL.014 - 小城与不确定性的墙
   {
@@ -700,7 +701,8 @@ export const booksData = [
     interactiveType: 'observant',
     vibeDescription: '在水泥森林中发现自然',
     footerText: 'Marcovaldo',
-    moodScore: 7.8
+    moodScore: 7.8,
+    worldComponent: 'MarcovaldoWorld' // 有专属沉浸世界
   },
   // VOL.032 - 基督山伯爵
   {
