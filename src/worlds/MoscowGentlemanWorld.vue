@@ -623,7 +623,16 @@ const exitWorld = () => {
 
 .room-card:not(.expanded):hover .room-number,
 .room-card:not(.expanded):hover .room-name,
-.room-card:not(.expanded):hover .room-desc,
+.room-card:not(.expanded):hover .room-desc {
+  color: var(--swiss-white) !important;
+}
+
+/* room-character 区域 hover 时也要变色 */
+.room-card:not(.expanded):hover .room-character {
+  background-color: var(--swiss-accent);
+  border-color: var(--swiss-accent);
+}
+
 .room-card:not(.expanded):hover .char-name,
 .room-card:not(.expanded):hover .char-title {
   color: var(--swiss-white) !important;
