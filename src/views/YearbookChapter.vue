@@ -485,6 +485,12 @@ export const DefaultDecoration = {
   border-color: var(--swiss-accent) !important;
 }
 
+.entry-fiction:hover .entry-header,
+.entry-fiction:hover .entry-footer {
+  background-color: #CC0000 !important;
+  border-color: #CC0000 !important;
+}
+
 .entry-fiction:hover * {
   color: var(--swiss-white) !important;
 }
