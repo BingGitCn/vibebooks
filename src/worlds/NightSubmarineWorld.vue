@@ -437,7 +437,6 @@ const exitWorld = () => {
 /* Section Headers */
 .section-header {
   padding: 3rem 2rem 2rem 2rem;
-  margin-left: 12rem;
 }
 
 .section-number {
@@ -813,8 +812,7 @@ const exitWorld = () => {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
-  padding: 2rem;
-  padding-left: 12rem;
+  padding: 2rem 0;
 }
 
 .quote-card {
