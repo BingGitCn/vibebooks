@@ -97,6 +97,11 @@ const routes = [
     component: () => import('../worlds/VeiledWorld.vue')
   },
   {
+    path: '/world/grass-roots',
+    name: 'GrassRootsWorld',
+    component: () => import('../worlds/GrassRootsWorld.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')

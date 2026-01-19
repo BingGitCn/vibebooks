@@ -595,7 +595,8 @@ export const booksData = [
     interactiveType: 'resilient',
     vibeDescription: '普通人的生存史诗',
     footerText: '东石镇',
-    moodScore: 6.0
+    moodScore: 6.0,
+    worldComponent: 'GrassRootsWorld'
   },
   // VOL.027 - 人生海海
   {
