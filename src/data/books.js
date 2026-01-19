@@ -323,7 +323,8 @@ export const booksData = [
     interactiveType: 'metaphysical',
     vibeDescription: '关于存在与自我的寓言',
     footerText: '17岁的我',
-    moodScore: 5.5
+    moodScore: 5.5,
+    worldComponent: 'UncertainWallWorld' // 有专属沉浸世界
   },
   // VOL.015 - 1Q84
   {
