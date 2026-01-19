@@ -797,7 +797,8 @@ export const booksData = [
     interactiveType: 'heartwarming',
     vibeDescription: '跨越时空的温暖回信',
     footerText: '浪矢杂货店',
-    moodScore: 9.2
+    moodScore: 9.2,
+    worldComponent: 'NamiyaZakatenWorld' // 有专属沉浸世界
   },
   // VOL.036 - 嫌疑人X的献身
   {

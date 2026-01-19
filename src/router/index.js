@@ -57,6 +57,11 @@ const routes = [
     component: () => import('../worlds/WenchengWorld.vue')
   },
   {
+    path: '/world/namiya-zakaten',
+    name: 'NamiyaZakatenWorld',
+    component: () => import('../worlds/NamiyaZakatenWorld.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')
