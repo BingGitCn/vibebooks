@@ -42,6 +42,11 @@ const routes = [
     component: () => import('../worlds/MarcovaldoWorld.vue')
   },
   {
+    path: '/world/killing-commendatore',
+    name: 'KillingCommendatoreWorld',
+    component: () => import('../worlds/KillingCommendatore.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')

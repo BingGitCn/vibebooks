@@ -171,7 +171,7 @@ export const booksData = [
     subtitle: 'Killing Commendatore',
     author: '村上春树',
     category: 'FICTION',
-    accentColor: '#7b4b8a',
+    accentColor: '#1a237e',
     geometric: 'metaphor',
     quote: '理念是从天而降的',
     typography: 'modern',
@@ -183,7 +183,8 @@ export const booksData = [
     interactiveType: 'mysterious',
     vibeDescription: '一幅画背后的双重世界',
     footerText: '村上春树',
-    moodScore: 6.8
+    moodScore: 6.8,
+    worldComponent: 'KillingCommendatoreWorld' // 有专属沉浸世界
   },
   // VOL.009 - 失落的卫星
   {
