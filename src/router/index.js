@@ -72,6 +72,11 @@ const routes = [
     component: () => import('../worlds/LitchiRoadWorld.vue')
   },
   {
+    path: '/world/life-sea',
+    name: 'LifeSeaWorld',
+    component: () => import('../worlds/LifeSeaWorld.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')

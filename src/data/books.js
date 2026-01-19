@@ -613,7 +613,8 @@ export const booksData = [
     interactiveType: 'courageous',
     vibeDescription: '一个上校传奇而悲情的一生',
     footerText: '麦家',
-    moodScore: 7.0
+    moodScore: 7.0,
+    worldComponent: 'LifeSeaWorld' // 有专属沉浸世界
   },
   // VOL.028 - 长安的荔枝
   {
