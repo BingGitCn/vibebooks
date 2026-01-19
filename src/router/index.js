@@ -82,6 +82,11 @@ const routes = [
     component: () => import('../worlds/UncertainWallWorld.vue')
   },
   {
+    path: '/world/moon-sixpence',
+    name: 'MoonAndSixpenceWorld',
+    component: () => import('../worlds/MoonAndSixpenceWorld.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')

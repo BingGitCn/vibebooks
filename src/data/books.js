@@ -412,7 +412,8 @@ export const booksData = [
     interactiveType: 'contrasting',
     vibeDescription: '理想与现实的永恒冲突',
     footerText: 'Strickland',
-    moodScore: 6.8
+    moodScore: 6.8,
+    worldComponent: 'MoonAndSixpenceWorld'
   },
   // VOL.019 - 明亮的夜晚
   {
