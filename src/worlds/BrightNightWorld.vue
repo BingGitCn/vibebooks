@@ -25,8 +25,8 @@
     <section class="section-characters">
       <div class="section-header swiss-border-bottom">
         <p class="section-number" data-number="01">CHARACTERS</p>
-        <h2 class="section-title">女性たち</h2>
-        <p class="section-subtitle">四代女人的故事</p>
+        <h2 class="section-title">여성들</h2>
+        <p class="section-subtitle">네 대 여자의 이야기</p>
       </div>
 
       <div class="characters-grid">
@@ -188,8 +188,8 @@
     <section class="section-relationships">
       <div class="section-header swiss-border-bottom">
         <p class="section-number" data-number="02">RELATIONSHIPS</p>
-        <h2 class="section-title">関係性</h2>
-        <p class="section-subtitle">女人的羁绊</p>
+        <h2 class="section-title">관계</h2>
+        <p class="section-subtitle">여자들의 유대</p>
       </div>
 
       <div class="relationships-timeline">
@@ -474,8 +474,8 @@
     <section class="section-themes">
       <div class="section-header swiss-border-bottom">
         <p class="section-number" data-number="03">THEMES</p>
-        <h2 class="section-title">テーマ</h2>
-        <p class="section-subtitle">核心主题</p>
+        <h2 class="section-title">주제</h2>
+        <p class="section-subtitle">핵심 주제</p>
       </div>
 
       <div class="themes-grid">
@@ -509,8 +509,8 @@
     <section class="section-quotes">
       <div class="section-header swiss-border-bottom">
         <p class="section-number" data-number="04">QUOTES</p>
-        <h2 class="section-title">引用</h2>
-        <p class="section-subtitle">书中的话语</p>
+        <h2 class="section-title">인용</h2>
+        <p class="section-subtitle">책 속의 말들</p>
       </div>
 
       <div class="quotes-grid">
