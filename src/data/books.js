@@ -228,7 +228,8 @@ export const booksData = [
     interactiveType: 'flowing',
     vibeDescription: '鄂温克族百年兴衰史诗',
     footerText: '迟子建',
-    moodScore: 6.5
+    moodScore: 6.5,
+    worldComponent: 'ErgunaRiverWorld' // 有专属沉浸世界
   },
   // VOL.011 - 置身事内
   {

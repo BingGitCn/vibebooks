@@ -47,6 +47,11 @@ const routes = [
     component: () => import('../worlds/KillingCommendatore.vue')
   },
   {
+    path: '/world/erguna-river',
+    name: 'ErgunaRiverWorld',
+    component: () => import('../worlds/ErgunaRiverWorld.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')

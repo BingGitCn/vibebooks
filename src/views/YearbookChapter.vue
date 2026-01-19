@@ -221,7 +221,8 @@ const goToBook = (book) => {
       'NightSubmarineWorld': '/world/night-submarine',
       'NorwegianWoodWorld': '/world/norwegian-wood',
       'MarcovaldoWorld': '/world/marcovaldo',
-      'KillingCommendatoreWorld': '/world/killing-commendatore'
+      'KillingCommendatoreWorld': '/world/killing-commendatore',
+      'ErgunaRiverWorld': '/world/erguna-river'
     }
     const route = routeMap[book.worldComponent]
     if (route) router.push(route)
