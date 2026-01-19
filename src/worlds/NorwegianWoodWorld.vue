@@ -1064,7 +1064,6 @@ const exitWorld = () => {
   .locations-grid,
   .statistics-grid,
   .quotes-grid {
-    margin-left: 0;
     padding-left: 2rem;
   }
 

@@ -1174,7 +1174,6 @@ const exitWorld = () => {
   .rooms-grid,
   .decades-timeline,
   .section-quotes {
-    margin-left: 0;
     padding-left: 2rem;
   }
 

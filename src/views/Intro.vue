@@ -1,5 +1,5 @@
 <template>
-  <div class="swiss-intro swiss-grid-pattern swiss-noise">
+  <div class="swiss-intro swiss-grid-pattern swiss-noise" @click="enterYearbook">
     <!-- Geometric decoration - top left -->
     <div class="geo-decoration geo-top-left">
       <div class="geo-circle"></div>
@@ -22,7 +22,7 @@
       </div>
 
       <!-- Main title -->
-      <h1 class="main-title" @click="enterYearbook">
+      <h1 class="main-title">
         <span class="title-line">BOOK</span>
         <span class="title-line accent">UNIVERSE</span>
       </h1>
@@ -51,10 +51,9 @@
       </div>
 
       <!-- CTA Button -->
-      <button class="enter-button" @click="enterYearbook">
-        <span class="button-text">ENTER YEARBOOK</span>
-        <span class="button-arrow">→</span>
-      </button>
+      <a href="/yearbook" class="enter-button" @click.stop>
+        ENTER YEARBOOK →
+      </a>
     </div>
 
     <!-- Bottom indicator -->
@@ -251,6 +250,7 @@ onMounted(() => {
 
 /* CTA Button */
 .enter-button {
+  display: inline-block;
   font-family: 'Inter', sans-serif;
   font-weight: 700;
   font-size: 0.875rem;
@@ -259,27 +259,21 @@ onMounted(() => {
   background-color: var(--swiss-black);
   color: var(--swiss-white);
   border: 3px solid var(--swiss-black);
-  cursor: pointer;
+  text-decoration: none;
   text-transform: uppercase;
-  display: inline-flex;
-  align-items: center;
-  gap: 1rem;
+  cursor: pointer;
   transition: all 0.2s ease-out;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: auto;
+  position: relative;
+  z-index: 100;
 }
 
 .enter-button:hover {
   background-color: var(--swiss-accent);
   border-color: var(--swiss-accent);
   transform: translateY(-2px);
-}
-
-.button-arrow {
-  display: inline-block;
-  transition: transform 0.2s ease-out;
-}
-
-.enter-button:hover .button-arrow {
-  transform: translateX(4px);
 }
 
 /* Bottom indicator */
@@ -308,6 +302,7 @@ onMounted(() => {
   font-size: 0.625rem;
   letter-spacing: 0.2em;
   color: var(--swiss-text-secondary);
+  pointer-events: auto;
 }
 
 @keyframes pulse-dot {

@@ -925,7 +925,6 @@ const exitWorld = () => {
   .stories-grid,
   .themes-grid,
   .section-quotes {
-    margin-left: 0;
     padding-left: 2rem;
   }
 

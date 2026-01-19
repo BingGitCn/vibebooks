@@ -5,30 +5,29 @@
       <span class="exit-arrow">←</span> EXIT
     </button>
 
-    <!-- Main Container -->
-    <div class="swiss-container">
-      <!-- Header -->
-      <header class="world-header swiss-border-bottom">
-        <div class="header-left">
-          <p class="volume-label">VOL.006</p>
-          <h1 class="world-title">岛上书店</h1>
-          <p class="world-subtitle">The Storied Life of A.J. Fikry</p>
-        </div>
-        <div class="header-right">
-          <div class="archive-label">ARCHIVE 001</div>
-        </div>
-      </header>
+    <!-- Header -->
+    <header class="book-header swiss-border-bottom">
+      <div class="header-content">
+        <p class="book-vol">VOL.006</p>
+        <h1 class="book-title">岛上书店</h1>
+        <p class="book-subtitle">The Storied Life of A.J. Fikry</p>
+        <p class="book-author">加布里·泽文 · 2014</p>
+      </div>
+      <div class="header-meta">
+        <p class="meta-label">FICTION</p>
+        <p class="meta-years">ISLAND BOOKSTORE</p>
+      </div>
+    </header>
 
-      <!-- Content Area -->
-      <main class="world-main">
-        <!-- Section 01: Characters -->
-        <section class="section-characters swiss-border-bottom">
-          <div class="section-header">
-            <p class="section-number">01</p>
-            <h2 class="section-title">CHARACTERS</h2>
-          </div>
+    <!-- Section 01: Characters -->
+    <section class="section-characters swiss-border-bottom">
+      <div class="section-header">
+        <p class="section-number">SECTION 01</p>
+        <h2 class="section-title">CHARACTERS</h2>
+        <p class="section-subtitle">People in the Story</p>
+      </div>
 
-          <div class="characters-grid">
+      <div class="characters-grid">
             <!-- Character 1 -->
             <div class="character-card swiss-border swiss-hover-accent clickable" :class="{ 'expanded': expandedCharacter === 0 }" @click="toggleCharacter(0)">
               <div class="char-number">01</div>
@@ -115,14 +114,15 @@
           </div>
         </section>
 
-        <!-- Section 02: Timeline -->
-        <section class="section-timeline swiss-border-bottom">
-          <div class="section-header">
-            <p class="section-number">02</p>
-            <h2 class="section-title">TIMELINE</h2>
-          </div>
+    <!-- Section 02: Timeline -->
+    <section class="section-timeline swiss-border-bottom">
+      <div class="section-header">
+        <p class="section-number">SECTION 02</p>
+        <h2 class="section-title">TIMELINE</h2>
+        <p class="section-subtitle">Story Progression</p>
+      </div>
 
-          <div class="timeline-events">
+      <div class="timeline-events">
             <div class="event-item clickable" :class="{ 'expanded': expandedEvent === 0 }" @click="toggleEvent(0)">
               <p class="event-year">BEFORE</p>
               <div class="event-content">
@@ -233,14 +233,15 @@
           </div>
         </section>
 
-        <!-- Section 03: Quotes -->
-        <section class="section-quotes">
-          <div class="section-header">
-            <p class="section-number">03</p>
-            <h2 class="section-title">QUOTES</h2>
-          </div>
+    <!-- Section 03: Quotes -->
+    <section class="section-quotes">
+      <div class="section-header">
+        <p class="section-number">SECTION 03</p>
+        <h2 class="section-title">QUOTES</h2>
+        <p class="section-subtitle">Words from the Book</p>
+      </div>
 
-          <div class="quotes-grid">
+      <div class="quotes-grid">
             <div class="quote-card">
               <div class="quote-spine"></div>
               <div class="quote-border-top"></div>
@@ -318,10 +319,8 @@
                 <span class="source-role">终章</span>
               </div>
             </div>
-          </div>
-        </section>
-      </main>
-    </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -411,19 +410,6 @@ const eventDetails = {
 .island-bookstore-world {
   min-height: 100vh;
   background-color: var(--swiss-white);
-  position: relative;
-}
-
-/* 覆盖 .swiss-container 使其与其他页面对齐一致 */
-.island-bookstore-world > .swiss-container {
-  max-width: none;
-  margin: 0;
-  padding: 0;
-}
-
-/* 确保噪点层不阻止点击 */
-.island-bookstore-world::before {
-  pointer-events: none !important;
 }
 
 /* Exit Button */
@@ -450,8 +436,8 @@ const eventDetails = {
   font-size: 1.25rem;
 }
 
-/* Header */
-.world-header {
+/* Book Header */
+.book-header {
   padding: 6rem 2rem 3rem 2rem;
   display: grid;
   grid-template-columns: 1fr auto;
@@ -459,59 +445,63 @@ const eventDetails = {
   align-items: center;
 }
 
-.header-left {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.book-vol {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: 0.875rem;
+  letter-spacing: 0.2em;
+  color: var(--swiss-accent);
+  margin: 0 0 1rem 0;
 }
 
-.volume-label {
+.book-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin: 0 0 0.5rem 0;
+}
+
+.book-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 1.125rem;
+  font-style: italic;
+  color: var(--swiss-text-secondary);
+  margin: 0 0 0.5rem 0;
+}
+
+.book-author {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  color: var(--swiss-text-secondary);
+  margin: 0;
+}
+
+.header-meta {
+  text-align: center;
+}
+
+.meta-label {
   font-family: 'Inter', sans-serif;
   font-weight: 900;
   font-size: 0.625rem;
   letter-spacing: 0.2em;
   color: var(--swiss-accent);
-  margin: 0;
+  margin: 0 0 0.5rem 0;
 }
 
-.world-title {
-  font-family: 'Inter', sans-serif;
-  font-weight: 900;
-  font-size: clamp(3rem, 6vw, 5rem);
-  text-transform: uppercase;
-  letter-spacing: -0.03em;
-  line-height: 1;
-  margin: 0;
-}
-
-.world-subtitle {
+.meta-years {
   font-family: 'Inter', sans-serif;
   font-weight: 500;
-  font-size: 0.875rem;
-  letter-spacing: 0.25em;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
   color: var(--swiss-text-secondary);
   margin: 0;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-}
-
-.archive-label {
-  font-family: 'Inter', sans-serif;
-  font-weight: 900;
-  font-size: 0.625rem;
-  letter-spacing: 0.2em;
-  padding: 0.5rem 1rem;
-  background: var(--swiss-black);
-  color: var(--swiss-white);
-}
-
-/* Main Content */
-.world-main {
-  display: flex;
-  flex-direction: column;
 }
 
 /* Section Headers */
@@ -522,18 +512,28 @@ const eventDetails = {
 .section-number {
   font-family: 'Inter', sans-serif;
   font-weight: 900;
-  font-size: 4rem;
-  line-height: 1;
+  font-size: 0.875rem;
+  letter-spacing: 0.2em;
   color: var(--swiss-accent);
-  margin: 0;
+  margin: 0 0 1rem 0;
 }
 
 .section-title {
   font-family: 'Inter', sans-serif;
   font-weight: 900;
-  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-size: 2.5rem;
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin: 0 0 0.5rem 0;
+}
+
+.section-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: 0.25em;
+  color: var(--swiss-text-secondary);
   margin: 0;
 }
 
@@ -914,6 +914,14 @@ const eventDetails = {
 
 /* Responsive */
 @media (max-width: 1024px) {
+  .book-header,
+  .section-header,
+  .characters-grid,
+  .timeline-events,
+  .quotes-grid {
+    padding-left: 2rem;
+  }
+
   .characters-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -929,40 +937,28 @@ const eventDetails = {
   .timeline-events {
     grid-template-columns: 1fr;
   }
-
-  .quote-card:nth-child(2),
-  .quote-card:nth-child(4),
-  .quote-card:nth-child(6) {
-    border-left: 2px solid var(--swiss-border);
-  }
 }
 
 @media (max-width: 768px) {
-  .world-header {
+  .book-header {
     grid-template-columns: 1fr;
-    padding: 2rem 1rem;
-    gap: 1rem;
+    padding: 4rem 1rem 2rem 1rem;
   }
 
-  .header-right {
-    display: none;
-  }
-
-  .world-title {
-    font-size: 2.5rem;
+  .header-meta {
+    order: -1;
+    margin-bottom: 1rem;
   }
 
   .section-header {
     padding: 2rem 1rem 1rem;
   }
 
-  .section-number {
-    font-size: 3rem;
-  }
-
   .characters-grid,
+  .timeline-events,
   .quotes-grid {
     grid-template-columns: 1fr;
+    padding: 1rem;
   }
 
   .event-item {
@@ -978,16 +974,6 @@ const eventDetails = {
   .character-card,
   .quote-card {
     padding: 1.5rem;
-  }
-
-  .event-item {
-    padding: 1.5rem 1rem;
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-
-  .event-year {
-    font-size: 0.875rem;
   }
 
   .char-details,
