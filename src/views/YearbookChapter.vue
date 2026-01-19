@@ -172,13 +172,22 @@ const categoryMap = {
     pattern: 'grid',
     decoration: 'ClassicDecoration',
     accentColor: '#FF3000'
+  },
+  'science-fiction': {
+    name: 'SCIENCE FICTION',
+    title: 'SCIENCE FICTION',
+    subtitle: 'BEYOND THE HORIZON',
+    id: 7,
+    pattern: 'grid',
+    decoration: 'ScienceFictionDecoration',
+    accentColor: '#8b0000'
   }
 }
 
 const categoryTitle = computed(() => categoryMap[categorySlug.value]?.title || '')
 const categorySubtitle = computed(() => categoryMap[categorySlug.value]?.subtitle || '')
 
-const chapters = ['fiction', 'philosophy', 'economics', 'mystery', 'romance', 'classic']
+const chapters = ['fiction', 'philosophy', 'economics', 'mystery', 'romance', 'classic', 'science-fiction']
 const currentIndex = computed(() => chapters.indexOf(categorySlug.value))
 const hasPrevious = computed(() => currentIndex.value > 0)
 const hasNext = computed(() => currentIndex.value < chapters.length - 1)
@@ -234,7 +243,8 @@ const goToBook = (book) => {
       'VeiledWorld': '/world/veiled',
       'GrassRootsWorld': '/world/grass-roots',
       'LittlePrinceWorld': '/world/little-prince',
-      'OneHundredYearsWorld': '/world/one-hundred-years'
+      'OneHundredYearsWorld': '/world/one-hundred-years',
+      'ThreeBodyWorld': '/world/three-body'
     }
     const route = routeMap[book.worldComponent]
     if (route) router.push(route)
@@ -267,7 +277,8 @@ const getCategoryDecoration = () => {
     'economics': 'EconomicsDecoration',
     'mystery': 'MysteryDecoration',
     'romance': 'RomanceDecoration',
-    'classic': 'ClassicDecoration'
+    'classic': 'ClassicDecoration',
+    'science-fiction': 'ScienceFictionDecoration'
   }
   return decorations[categorySlug.value] || 'DefaultDecoration'
 }

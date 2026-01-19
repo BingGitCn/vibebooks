@@ -112,6 +112,11 @@ const routes = [
     component: () => import('../worlds/OneHundredYearsWorld.vue')
   },
   {
+    path: '/world/three-body',
+    name: 'ThreeBodyWorld',
+    component: () => import('../worlds/ThreeBodyWorld.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')

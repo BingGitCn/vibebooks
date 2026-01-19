@@ -106,6 +106,7 @@ const chapters = ref([
   { id: 4, name: 'MYSTERY', route: '/yearbook/mystery', count: 0, accent: '#FF3000' },
   { id: 5, name: 'ROMANCE', route: '/yearbook/romance', count: 0, accent: '#FF3000' },
   { id: 6, name: 'CLASSIC', route: '/yearbook/classic', count: 0, accent: '#FF3000' },
+  { id: 7, name: 'SCIENCE FICTION', route: '/yearbook/science-fiction', count: 0, accent: '#8b0000' },
 ])
 
 const currentYear = ref(new Date().getFullYear())
