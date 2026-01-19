@@ -121,73 +121,82 @@ const books = ref([])
 const categoryMap = {
   'fiction': {
     name: 'FICTION',
-    title: 'FICTION',
-    subtitle: 'WHERE STORIES BREATHE',
+    title: '治愈系',
+    subtitle: 'WARM & GENTLE',
     id: 1,
     pattern: 'diagonal',
     decoration: 'FictionDecoration',
     accentColor: '#FF3000'
   },
-  'philosophy': {
-    name: 'PHILOSOPHY',
-    title: 'PHILOSOPHY',
-    subtitle: 'THINKING ABOUT THINKING',
+  'modern': {
+    name: 'MODERN',
+    title: '现代文学',
+    subtitle: 'MODERN LITERATURE',
     id: 2,
     pattern: 'dots',
-    decoration: 'PhilosophyDecoration',
-    accentColor: '#FF3000'
+    decoration: 'ModernDecoration',
+    accentColor: '#4A7C9F'
   },
-  'economics': {
-    name: 'ECONOMICS',
-    title: 'ECONOMICS',
-    subtitle: 'THE DISMAL SCIENCE',
+  'chinese': {
+    name: 'CHINESE',
+    title: '中国叙事',
+    subtitle: 'CHINESE STORIES',
     id: 3,
     pattern: 'grid',
-    decoration: 'EconomicsDecoration',
-    accentColor: '#FF3000'
-  },
-  'mystery': {
-    name: 'MYSTERY',
-    title: 'MYSTERY',
-    subtitle: 'UNSOLVED PUZZLES',
-    id: 4,
-    pattern: 'noise',
-    decoration: 'MysteryDecoration',
-    accentColor: '#FF3000'
-  },
-  'romance': {
-    name: 'ROMANCE',
-    title: 'ROMANCE',
-    subtitle: 'MATTERS OF THE HEART',
-    id: 5,
-    pattern: 'dots',
-    decoration: 'RomanceDecoration',
-    accentColor: '#FF3000'
+    decoration: 'ChineseDecoration',
+    accentColor: '#C94A4A'
   },
   'classic': {
     name: 'CLASSIC',
-    title: 'CLASSIC',
+    title: '经典文学',
     subtitle: 'TIMELESS TALES',
+    id: 4,
+    pattern: 'noise',
+    decoration: 'ClassicDecoration',
+    accentColor: '#8B7B6A'
+  },
+  'philosophy': {
+    name: 'PHILOSOPHY',
+    title: '哲学思想',
+    subtitle: 'THINK & REFLECT',
+    id: 5,
+    pattern: 'dots',
+    decoration: 'PhilosophyDecoration',
+    accentColor: '#E74C3C'
+  },
+  'mystery': {
+    name: 'MYSTERY',
+    title: '悬疑惊悚',
+    subtitle: 'DARK TALES',
     id: 6,
     pattern: 'grid',
-    decoration: 'ClassicDecoration',
-    accentColor: '#FF3000'
+    decoration: 'MysteryDecoration',
+    accentColor: '#3A3A4A'
   },
-  'science-fiction': {
-    name: 'SCIENCE FICTION',
-    title: 'SCIENCE FICTION',
-    subtitle: 'BEYOND THE HORIZON',
+  'memoir': {
+    name: 'MEMOIR',
+    title: '回忆旅行',
+    subtitle: 'JOURNEYS',
     id: 7,
     pattern: 'grid',
-    decoration: 'ScienceFictionDecoration',
-    accentColor: '#8b0000'
+    decoration: 'MemoirDecoration',
+    accentColor: '#D4A574'
+  },
+  'culture': {
+    name: 'CULTURE',
+    title: '流行文化',
+    subtitle: 'POP CULTURE',
+    id: 8,
+    pattern: 'grid',
+    decoration: 'CultureDecoration',
+    accentColor: '#C94A3A'
   }
 }
 
 const categoryTitle = computed(() => categoryMap[categorySlug.value]?.title || '')
 const categorySubtitle = computed(() => categoryMap[categorySlug.value]?.subtitle || '')
 
-const chapters = ['fiction', 'philosophy', 'economics', 'mystery', 'romance', 'classic', 'science-fiction']
+const chapters = ['fiction', 'modern', 'chinese', 'classic', 'philosophy', 'mystery', 'memoir', 'culture']
 const currentIndex = computed(() => chapters.indexOf(categorySlug.value))
 const hasPrevious = computed(() => currentIndex.value > 0)
 const hasNext = computed(() => currentIndex.value < chapters.length - 1)
@@ -273,12 +282,13 @@ const goToNext = () => {
 const getCategoryDecoration = () => {
   const decorations = {
     'fiction': 'FictionDecoration',
-    'philosophy': 'PhilosophyDecoration',
-    'economics': 'EconomicsDecoration',
-    'mystery': 'MysteryDecoration',
-    'romance': 'RomanceDecoration',
+    'modern': 'ModernDecoration',
+    'chinese': 'ChineseDecoration',
     'classic': 'ClassicDecoration',
-    'science-fiction': 'ScienceFictionDecoration'
+    'philosophy': 'PhilosophyDecoration',
+    'mystery': 'MysteryDecoration',
+    'memoir': 'MemoirDecoration',
+    'culture': 'CultureDecoration'
   }
   return decorations[categorySlug.value] || 'DefaultDecoration'
 }

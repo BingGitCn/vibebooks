@@ -100,13 +100,14 @@ const router = useRouter()
 
 // Get unique categories and count booksData
 const chapters = ref([
-  { id: 1, name: 'FICTION', route: '/yearbook/fiction', count: 0, accent: '#FF3000' },
-  { id: 2, name: 'PHILOSOPHY', route: '/yearbook/philosophy', count: 0, accent: '#FF3000' },
-  { id: 3, name: 'ECONOMICS', route: '/yearbook/economics', count: 0, accent: '#FF3000' },
-  { id: 4, name: 'MYSTERY', route: '/yearbook/mystery', count: 0, accent: '#FF3000' },
-  { id: 5, name: 'ROMANCE', route: '/yearbook/romance', count: 0, accent: '#FF3000' },
-  { id: 6, name: 'CLASSIC', route: '/yearbook/classic', count: 0, accent: '#FF3000' },
-  { id: 7, name: 'SCIENCE FICTION', route: '/yearbook/science-fiction', count: 0, accent: '#8b0000' },
+  { id: 1, name: 'FICTION', route: '/yearbook/fiction', count: 0, accent: '#FF3000', title: '治愈系', subtitle: 'Warm & Gentle' },
+  { id: 2, name: 'MODERN', route: '/yearbook/modern', count: 0, accent: '#4A7C9F', title: '现代文学', subtitle: 'Modern Literature' },
+  { id: 3, name: 'CHINESE', route: '/yearbook/chinese', count: 0, accent: '#C94A4A', title: '中国叙事', subtitle: 'Chinese Stories' },
+  { id: 4, name: 'CLASSIC', route: '/yearbook/classic', count: 0, accent: '#8B7B6A', title: '经典文学', subtitle: 'Timeless Tales' },
+  { id: 5, name: 'PHILOSOPHY', route: '/yearbook/philosophy', count: 0, accent: '#E74C3C', title: '哲学思想', subtitle: 'Think & Reflect' },
+  { id: 6, name: 'MYSTERY', route: '/yearbook/mystery', count: 0, accent: '#3A3A4A', title: '悬疑惊悚', subtitle: 'Dark Tales' },
+  { id: 7, name: 'MEMOIR', route: '/yearbook/memoir', count: 0, accent: '#D4A574', title: '回忆旅行', subtitle: 'Journeys' },
+  { id: 8, name: 'CULTURE', route: '/yearbook/culture', count: 0, accent: '#C94A3A', title: '流行文化', subtitle: 'Pop Culture' }
 ])
 
 const currentYear = ref(new Date().getFullYear())
