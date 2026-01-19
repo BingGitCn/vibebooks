@@ -551,7 +551,8 @@ export const booksData = [
     interactiveType: 'magical',
     vibeDescription: '一个家族七代的孤独宿命',
     footerText: 'Macondo',
-    moodScore: 5.5
+    moodScore: 5.5,
+    worldComponent: 'OneHundredYearsWorld'
   },
   // VOL.025 - 面纱
   {

@@ -107,6 +107,11 @@ const routes = [
     component: () => import('../worlds/LittlePrinceWorld.vue')
   },
   {
+    path: '/world/one-hundred-years',
+    name: 'OneHundredYearsWorld',
+    component: () => import('../worlds/OneHundredYearsWorld.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')
