@@ -682,7 +682,8 @@ export const booksData = [
     interactiveType: 'cozy',
     vibeDescription: '镰仓小镇的代笔故事',
     footerText: '小川糸',
-    moodScore: 9.0
+    moodScore: 9.0,
+    worldComponent: 'CamelliaShopWorld' // 有专属沉浸世界
   },
   // VOL.031 - 马可瓦尔多
   {

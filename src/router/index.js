@@ -62,6 +62,11 @@ const routes = [
     component: () => import('../worlds/NamiyaZakatenWorld.vue')
   },
   {
+    path: '/world/camellia-shop',
+    name: 'CamelliaShopWorld',
+    component: () => import('../worlds/CamelliaShopWorld.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')
