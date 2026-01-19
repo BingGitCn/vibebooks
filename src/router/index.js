@@ -87,6 +87,11 @@ const routes = [
     component: () => import('../worlds/MoonAndSixpenceWorld.vue')
   },
   {
+    path: '/world/bright-night',
+    name: 'BrightNightWorld',
+    component: () => import('../worlds/BrightNightWorld.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')

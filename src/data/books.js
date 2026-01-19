@@ -439,7 +439,8 @@ export const booksData = [
     middleEffect: {
       type: 'constellation-rotation',
       value: 'four-stars'
-    }
+    },
+    worldComponent: 'BrightNightWorld'
   },
   // VOL.020 - 小岛经济学
   {
