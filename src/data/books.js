@@ -139,7 +139,8 @@ export const booksData = [
     middleEffect: {
       type: 'vertical-quote',
       value: '本质的东西用眼睛是看不见的'
-    }
+    },
+    worldComponent: 'LittlePrinceWorld'
   },
   // VOL.007 - 撒哈拉的故事
   {
