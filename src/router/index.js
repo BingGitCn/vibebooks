@@ -67,6 +67,11 @@ const routes = [
     component: () => import('../worlds/CamelliaShopWorld.vue')
   },
   {
+    path: '/world/litchi-road',
+    name: 'LitchiRoadWorld',
+    component: () => import('../worlds/LitchiRoadWorld.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')

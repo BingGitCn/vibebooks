@@ -635,7 +635,8 @@ export const booksData = [
     interactiveType: 'urgent',
     vibeDescription: '大唐荔枝转运的职场冒险',
     footerText: '李善德',
-    moodScore: 8.2
+    moodScore: 8.2,
+    worldComponent: 'LitchiRoadWorld' // 有专属沉浸世界
   },
   // VOL.029 - 霍乱时期的爱情
   {
