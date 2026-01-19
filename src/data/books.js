@@ -572,7 +572,8 @@ export const booksData = [
     interactiveType: 'unfolding',
     vibeDescription: '在霍乱中找到真爱',
     footerText: 'Kitty',
-    moodScore: 6.5
+    moodScore: 6.5,
+    worldComponent: 'VeiledWorld'
   },
   // VOL.026 - 草民
   {

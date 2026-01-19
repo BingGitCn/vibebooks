@@ -92,6 +92,11 @@ const routes = [
     component: () => import('../worlds/BrightNightWorld.vue')
   },
   {
+    path: '/world/veiled',
+    name: 'VeiledWorld',
+    component: () => import('../worlds/VeiledWorld.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')
