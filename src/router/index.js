@@ -52,6 +52,11 @@ const routes = [
     component: () => import('../worlds/ErgunaRiverWorld.vue')
   },
   {
+    path: '/world/wencheng',
+    name: 'WenchengWorld',
+    component: () => import('../worlds/WenchengWorld.vue')
+  },
+  {
     path: '/book/:id',
     name: 'BookImmersive',
     component: () => import('../views/BookImmersive.vue')

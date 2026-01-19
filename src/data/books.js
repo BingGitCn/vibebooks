@@ -277,7 +277,8 @@ export const booksData = [
     interactiveType: 'haunting',
     vibeDescription: '一个男人的寻找与宿命',
     footerText: '林祥福',
-    moodScore: 4.5
+    moodScore: 4.5,
+    worldComponent: 'WenchengWorld' // 有专属沉浸世界
   },
   // VOL.013 - 挪威的森林
   {
