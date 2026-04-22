@@ -513,102 +513,37 @@ export const DefaultDecoration = {
   flex-direction: column;
 }
 
-.book-entry:hover {
-  background-color: var(--swiss-muted);
+/* 统一的 hover 效果 - 红色和黑色交替 */
+
+/* 奇数项 - 红色 hover */
+.book-entry:nth-child(odd):hover {
+  background-color: #FF3000 !important;
+  border-color: #FF3000 !important;
 }
 
-/* Category-specific hover effects */
-/* FICTION - 瑞士红反转 */
-.entry-fiction:hover {
-  background-color: var(--swiss-accent) !important;
-  border-color: var(--swiss-accent) !important;
-}
-
-.entry-fiction:hover .entry-header,
-.entry-fiction:hover .entry-footer {
+.book-entry:nth-child(odd):hover .entry-header,
+.book-entry:nth-child(odd):hover .entry-footer {
   background-color: #CC0000 !important;
   border-color: #CC0000 !important;
 }
 
-.entry-fiction:hover * {
+.book-entry:nth-child(odd):hover * {
   color: var(--swiss-white) !important;
 }
 
-/* PHILOSOPHY - 深黑反转 */
-.entry-philosophy:hover {
+/* 偶数项 - 黑色 hover */
+.book-entry:nth-child(even):hover {
   background-color: #1a1a1a !important;
+  border-color: #1a1a1a !important;
 }
 
-.entry-philosophy:hover .entry-header,
-.entry-philosophy:hover .entry-footer {
-  background-color: #000 !important;
-  border-color: #000 !important;
+.book-entry:nth-child(even):hover .entry-header,
+.book-entry:nth-child(even):hover .entry-footer {
+  background-color: #000000 !important;
+  border-color: #000000 !important;
 }
 
-.entry-philosophy:hover * {
-  color: var(--swiss-white) !important;
-}
-
-/* ECONOMICS - 黑色反转 */
-.entry-economics:hover {
-  background-color: var(--swiss-black) !important;
-}
-
-.entry-economics:hover .entry-header,
-.entry-economics:hover .entry-footer {
-  background-color: #000 !important;
-  border-color: var(--swiss-accent) !important;
-}
-
-.entry-economics:hover * {
-  color: var(--swiss-white) !important;
-}
-
-/* MYSTERY - 瑞士红反转 */
-.entry-mystery:hover {
-  background-color: var(--swiss-accent) !important;
-}
-
-.entry-mystery:hover .entry-header,
-.entry-mystery:hover .entry-footer {
-  background-color: #CC0000 !important;
-  border-color: #CC0000 !important;
-}
-
-.entry-mystery:hover * {
-  color: var(--swiss-white) !important;
-}
-
-/* ROMANCE - 柔和的反转 */
-.entry-romance:hover {
-  background-color: var(--swiss-accent) !important;
-}
-
-.entry-romance:hover .entry-header {
-  background-color: #FF6B6B !important;
-  border-color: #FF6B6B !important;
-}
-
-.entry-romance:hover * {
-  color: var(--swiss-white) !important;
-}
-
-/* CLASSIC - 严肃的黑色 */
-.entry-classic:hover {
-  background-color: var(--swiss-black) !important;
-}
-
-.entry-classic:hover .entry-header,
-.entry-classic:hover .entry-footer {
-  background-color: #1a1a1a !important;
-}
-
-.entry-classic:hover .entry-tag {
-  background-color: var(--swiss-white) !important;
-  color: var(--swiss-black) !important;
-}
-
-.entry-classic:hover * {
+.book-entry:nth-child(even):hover * {
   color: var(--swiss-white) !important;
 }
 

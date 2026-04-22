@@ -16,6 +16,70 @@
 }
 
 /* ============================================
+   CATEGORY-SPECIFIC ACCENT COLORS
+   ============================================ */
+
+/* FICTION - Swiss Red */
+.category-fiction {
+  --swiss-accent: #FF3000;
+  --swiss-accent-dark: #CC0000;
+}
+
+/* PHILOSOPHY - Deep Black */
+.category-philosophy {
+  --swiss-accent: #1A1A1A;
+  --swiss-accent-dark: #000000;
+}
+
+/* CLASSIC - Gold */
+.category-classic {
+  --swiss-accent: #C9A962;
+  --swiss-accent-dark: #A68B4B;
+}
+
+/* MYSTERY - Deep Red */
+.category-mystery {
+  --swiss-accent: #CC0000;
+  --swiss-accent-dark: #990000;
+}
+
+/* MEMOIR - Forest Green */
+.category-memoir {
+  --swiss-accent: #2d5a27;
+  --swiss-accent-dark: #1e3d1a;
+}
+
+/* CHINESE - Deep Blue */
+.category-chinese {
+  --swiss-accent: #1a365d;
+  --swiss-accent-dark: #0f2440;
+}
+
+/* MODERN - Purple */
+.category-modern {
+  --swiss-accent: #553c9a;
+  --swiss-accent-dark: #3c2a6e;
+}
+
+/* ECONOMICS - Navy Blue */
+.category-economics {
+  --swiss-accent: #1e3a8a;
+  --swiss-accent-dark: #172554;
+}
+
+/* SCIENCE FICTION - Cyan */
+.category-science-fiction {
+  --swiss-accent: #0891b2;
+  --swiss-accent-dark: #0e7490;
+}
+
+/* ROMANCE - Soft Red */
+.category-romance {
+  --swiss-accent: #FF6B6B;
+  --swiss-accent-dark: #EE5A5A;
+}
+
+/* ============================================
    SWISS PATTERN TEXTURES
    ============================================ */
 
@@ -197,15 +261,54 @@
 }
 
 /* ============================================
-   ANIMATION UTILITIES
+   ANIMATION UTILITIES - RESTRAINED PHILOSOPHY
    ============================================ */
 
+/*
+ * 克制感动画原则：
+ * 1. 最快：100ms（颜色反转）
+ * 2. 次快：150ms（背景变化）
+ * 3. 最慢：200ms（位置变化）
+ * 4. 禁止：>300ms, translateY, box-shadow 动画
+ */
+
+/* 颜色反转 - 最快 100ms */
+.swiss-transition-instant {
+  transition: background-color 0.1s ease-out,
+              color 0.1s ease-out,
+              border-color 0.1s ease-out;
+}
+
+/* 背景变化 - 次快 150ms */
+.swiss-hover-invert {
+  transition: background-color 0.15s ease-out,
+              color 0.15s ease-out,
+              border-color 0.15s ease-out;
+}
+
+/* 位置变化 - 最慢 200ms */
+.swiss-hover-accent {
+  transition: background-color 0.15s ease-out,
+              border-color 0.15s ease-out,
+              color 0.15s ease-out;
+}
+
+/* Legacy - 保持兼容但推荐使用上面的类 */
 .swiss-transition {
   transition: all 0.2s ease-out;
 }
 
 .swiss-transition-fast {
   transition: all 0.15s ease-linear;
+}
+
+/* 禁止的动画模式 - 用于覆盖 */
+.swiss-no-lift {
+  transform: none !important;
+}
+
+.swiss-no-shadow {
+  box-shadow: none !important;
 }
 
 /* ============================================

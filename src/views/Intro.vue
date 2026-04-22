@@ -1,5 +1,9 @@
 <template>
   <div class="swiss-intro swiss-grid-pattern swiss-noise" @click="enterYearbook">
+    <!-- Atmospheric effects -->
+    <div class="stardust-overlay"></div>
+    <div ref="lightPointsContainer" class="light-points"></div>
+
     <!-- Geometric decoration - top left -->
     <div class="geo-decoration geo-top-left">
       <div class="geo-circle"></div>
@@ -15,25 +19,29 @@
     <!-- Main content -->
     <div class="intro-container">
       <!-- Volume indicator -->
-      <div class="volume-indicator">
+      <div class="volume-indicator fade-in-gentle" style="--delay: 0s">
         <span class="volume-text">VOL. {{ currentYear }}</span>
         <span class="separator">|</span>
         <span class="issue-text">THOUGHT ARCHIVE</span>
       </div>
 
       <!-- Main title -->
-      <h1 class="main-title">
+      <h1 class="main-title fade-in-gentle" style="--delay: 0.2s">
         <span class="title-line">BOOK</span>
         <span class="title-line accent">UNIVERSE</span>
       </h1>
 
-      <!-- Subtitle -->
-      <p class="subtitle">
-        A SWISS-STYLE YEARBOOK OF IDEAS
+      <!-- Poetic subtitle -->
+      <p class="subtitle fade-in-gentle" style="--delay: 0.4s">
+        <span class="subtitle-main">每一本书，都值得被探索</span>
+        <span class="subtitle-sub">Where stories breathe</span>
       </p>
 
+      <!-- Poetic divider -->
+      <div class="poetic-divider fade-in-gentle" style="--delay: 0.5s"></div>
+
       <!-- Stats -->
-      <div class="stats-container">
+      <div class="stats-container fade-in-gentle" style="--delay: 0.6s">
         <div class="stat-item">
           <span class="stat-number">{{ totalBooks }}</span>
           <span class="stat-label">ENTRIES</span>
@@ -51,13 +59,13 @@
       </div>
 
       <!-- CTA Button -->
-      <a href="/yearbook" class="enter-button" @click.stop>
+      <a href="/yearbook" class="enter-button fade-in-gentle" style="--delay: 0.8s" @click.stop>
         ENTER YEARBOOK →
       </a>
     </div>
 
     <!-- Bottom indicator -->
-    <div class="bottom-indicator">
+    <div class="bottom-indicator fade-in-gentle" style="--delay: 1s">
       <div class="indicator-dot"></div>
       <span class="indicator-text">SCROLL OR CLICK TO ENTER</span>
     </div>
@@ -65,11 +73,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import booksData from '../data/books'
+import { useAtmosphere } from '@/composables/useAtmosphere'
 
 const router = useRouter()
+const lightPointsContainer = ref(null)
+const { createLightPoints, initScrollReveal } = useAtmosphere()
 
 const currentYear = ref(new Date().getFullYear())
 const totalBooks = computed(() => booksData.length)
@@ -79,23 +90,66 @@ const enterYearbook = () => {
   router.push('/yearbook')
 }
 
+let lightPoints = []
+
 onMounted(() => {
-  // Add any initialization here
+  // 创建光点粒子效果
+  if (lightPointsContainer.value) {
+    lightPoints = createLightPoints(lightPointsContainer.value, 12)
+  }
+
+  // 初始化滚动揭示效果
+  initScrollReveal()
+})
+
+onUnmounted(() => {
+  // 清理光点
+  lightPoints.forEach(point => point.remove())
 })
 </script>
 
 <style scoped>
 @import '../styles/swiss-style.css';
+@import '../styles/atmosphere.css';
 
 .swiss-intro {
   min-height: 100vh;
-  background-color: var(--swiss-white);
+  background: linear-gradient(135deg, #FFFEFC 0%, #FAFAFA 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
   cursor: pointer;
+}
+
+/* 氛围光晕 */
+.swiss-intro::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 48, 0, 0.03) 0%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: gentle-breathe 6s ease-in-out infinite;
+}
+
+@keyframes gentle-breathe {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
 }
 
 /* Geometric decorations */
@@ -175,7 +229,7 @@ onMounted(() => {
   color: var(--swiss-accent);
 }
 
-/* Main title */
+/* Main title - 诗意光晕 */
 .main-title {
   font-family: 'Inter', sans-serif;
   font-weight: 900;
@@ -186,6 +240,41 @@ onMounted(() => {
   margin: 0 0 2rem 0;
   cursor: pointer;
   transition: transform 0.3s ease-out;
+  position: relative;
+}
+
+/* 标题光晕效果 */
+.main-title .accent {
+  position: relative;
+  z-index: 1;
+}
+
+.main-title .accent::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 48, 0, 0.15) 0%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  animation: title-glow 3s ease-in-out infinite;
+}
+
+@keyframes title-glow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
 }
 
 .main-title:hover {
@@ -200,14 +289,47 @@ onMounted(() => {
   color: var(--swiss-accent);
 }
 
-/* Subtitle */
+/* Subtitle - 诗意化 */
 .subtitle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 3rem 0;
+}
+
+.subtitle-main {
   font-family: 'Inter', sans-serif;
   font-weight: 500;
-  font-size: clamp(0.875rem, 2vw, 1.25rem);
-  letter-spacing: 0.3em;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  letter-spacing: 0.2em;
+  color: var(--swiss-black);
+  margin: 0;
+}
+
+.subtitle-sub {
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+  letter-spacing: 0.4em;
   color: var(--swiss-text-secondary);
-  margin: 0 0 4rem 0;
+  font-style: italic;
+  margin: 0;
+  opacity: 0.7;
+}
+
+/* 诗意分隔线 */
+.poetic-divider {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--swiss-accent),
+    transparent
+  );
+  margin: 0 auto 3rem;
+  opacity: 0.3;
 }
 
 /* Stats */
@@ -248,7 +370,7 @@ onMounted(() => {
   opacity: 0.2;
 }
 
-/* CTA Button */
+/* CTA Button - 诗意交互 */
 .enter-button {
   display: inline-block;
   font-family: 'Inter', sans-serif;
@@ -262,18 +384,43 @@ onMounted(() => {
   text-decoration: none;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.2s ease-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
   -webkit-user-select: none;
   pointer-events: auto;
   position: relative;
   z-index: 100;
+  overflow: hidden;
+}
+
+/* 按钮光晕效果 */
+.enter-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(
+    circle,
+    rgba(255, 48, 0, 0.3) 0%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  transition: width 0.5s ease, height 0.5s ease;
+  z-index: -1;
+}
+
+.enter-button:hover::before {
+  width: 300px;
+  height: 300px;
 }
 
 .enter-button:hover {
   background-color: var(--swiss-accent);
   border-color: var(--swiss-accent);
   transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 48, 0, 0.25);
 }
 
 /* Bottom indicator */

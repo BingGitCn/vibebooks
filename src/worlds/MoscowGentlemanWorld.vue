@@ -385,8 +385,11 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useScrollToTop } from '@/composables/useScrollToTop'
 
 const router = useRouter()
+// 进入书籍页面时滚动到顶部
+useScrollToTop()
 
 // State management
 const expandedRoom = ref(null)

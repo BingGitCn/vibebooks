@@ -3,8 +3,23 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    name: 'Intro',
-    component: () => import('../views/Intro.vue')
+    name: 'PsycheEntry',
+    component: () => import('../views/PsycheEntry.vue')
+  },
+  {
+    path: '/hall',
+    name: 'PsycheIntro',
+    component: () => import('../views/PsycheIntro.vue')
+  },
+  {
+    path: '/school/:id',
+    name: 'PsychologySchool',
+    component: () => import('../views/PsychologySchool.vue')
+  },
+  {
+    path: '/concept/:id',
+    name: 'PsychologyConcept',
+    component: () => import('../views/PsychologyConcept.vue')
   },
   {
     path: '/yearbook',
@@ -127,10 +142,28 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
+    // 如果有保存的位置（浏览器后退/前进），使用保存的位置
     if (savedPosition) {
       return savedPosition
     }
-    return { top: 0 }
+
+    // 进入思维实验或概念页面，滚动到顶部
+    if (to.path.startsWith('/experiment/') || to.path.startsWith('/concept/')) {
+      return { top: 0, behavior: 'smooth' }
+    }
+
+    // 如果是进入书籍世界页面（/world/*），始终滚动到顶部
+    if (to.path.startsWith('/world/')) {
+      return { top: 0, behavior: 'smooth' }
+    }
+
+    // 如果是从书籍页面返回到章节页，不滚动，保持当前位置
+    if (from.path.startsWith('/world/') && to.path.startsWith('/yearbook/')) {
+      return false
+    }
+
+    // 其他情况，滚动到顶部
+    return { top: 0, behavior: 'smooth' }
   }
 })
 

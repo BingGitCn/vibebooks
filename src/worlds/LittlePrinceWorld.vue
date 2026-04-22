@@ -5,8 +5,7 @@
 
     <!-- EXIT button -->
     <button class="exit-btn swiss-hover-invert" @click="exitWorld">
-      <span class="exit-arrow">←</span>
-      EXIT
+      <span class="exit-arrow">←</span> EXIT
     </button>
 
     <!-- Header -->
@@ -32,129 +31,15 @@
       </div>
 
       <div class="friends-grid">
-        <!-- Friend 1: Little Prince -->
-        <div
-          class="friend-card swiss-border swiss-hover-accent clickable"
-          :class="{ expanded: expandedFriend === 0 }"
-          @click="toggleFriend(0)"
-        >
-          <div class="friend-icon">⭐</div>
-          <div class="friend-info">
-            <h3 class="friend-name">小王子</h3>
-            <p class="friend-role">来自 B-612 星球的旅行者</p>
-            <p class="friend-desc">金发、围巾、44次日落</p>
-          </div>
-          <div class="friend-quote swiss-dots">
-            "所有的大人都<br/>曾经是小孩<br/>虽然只有少数人记得"
-          </div>
-          <div class="friend-details" v-if="expandedFriend === 0">
-            <div class="detail-section">
-              <p class="detail-label">身份</p>
-              <p class="detail-text">来自B-612小星球的旅行者，有着一头金发，总是围着一条黄色围巾。他深爱着他的玫瑰，却因为不懂得如何去爱而选择离开。</p>
-            </div>
-            <div class="detail-section">
-              <p class="detail-label">特点</p>
-              <p class="detail-text">纯真、好奇、会问很多"为什么"。他不喜欢大人们的世界，因为大人们只关心数字、权力和虚荣。</p>
-            </div>
-            <div class="detail-section">
-              <p class="detail-label">意义</p>
-              <p class="detail-text">代表纯真和童心，提醒我们不要在成长中失去最初的那份善良和好奇心。</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Friend 2: Rose -->
-        <div
-          class="friend-card swiss-border swiss-hover-accent clickable"
-          :class="{ expanded: expandedFriend === 1 }"
-          @click="toggleFriend(1)"
-        >
-          <div class="friend-icon">🌹</div>
-          <div class="friend-info">
-            <h3 class="friend-name">玫瑰</h3>
-            <p class="friend-role">骄傲又脆弱的爱</p>
-            <p class="friend-desc">四根刺、美丽、虚荣</p>
-          </div>
-          <div class="friend-quote swiss-dots">
-            "我当然爱你<br/>没有让你感觉到<br/>是我的错"
-          </div>
-          <div class="friend-details" v-if="expandedFriend === 1">
-            <div class="detail-section">
-              <p class="detail-label">身份</p>
-              <p class="detail-text">B-612星球上唯一的玫瑰，美丽而骄傲。她有四根刺来保护自己，却掩饰不住内心的脆弱。</p>
-            </div>
-            <div class="detail-section">
-              <p class="detail-label">性格</p>
-              <p class="detail-text">虚荣、骄傲、撒娇。她让小王子为她盖玻璃罩，为她浇水，却不懂得如何表达爱。</p>
-            </div>
-            <div class="detail-section">
-              <p class="detail-label">意义</p>
-              <p class="detail-text">代表不完美但真实的爱。爱需要学习，需要用心去感受，而不是只用耳朵听。</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Friend 3: Fox -->
-        <div
-          class="friend-card swiss-border swiss-hover-accent clickable"
-          :class="{ expanded: expandedFriend === 2 }"
-          @click="toggleFriend(2)"
-        >
-          <div class="friend-icon">🦊</div>
-          <div class="friend-info">
-            <h3 class="friend-name">狐狸</h3>
-            <p class="friend-role">驯养的智慧导师</p>
-            <p class="friend-desc">秘密、责任、用心看</p>
-          </div>
-          <div class="friend-quote swiss-dots">
-            "正是你为你的玫瑰<br/>花费的时间<br/>才使得她如此重要"
-          </div>
-          <div class="friend-details" v-if="expandedFriend === 2">
-            <div class="detail-section">
-              <p class="detail-label">角色</p>
-              <p class="detail-text">地球上的智慧狐狸，教会了小王子什么是"驯养"。他说驯养就是建立联系，让彼此变得独一无二。</p>
-            </div>
-            <div class="detail-section">
-              <p class="detail-label">秘密</p>
-              <p class="detail-text">"只有用心才能看清楚，本质的东西用眼睛是看不见的。"这是狐狸给小王子最重要的礼物。</p>
-            </div>
-            <div class="detail-section">
-              <p class="detail-label">意义</p>
-              <p class="detail-text">代表智慧和爱的真谛。爱不是占有，而是建立联系，并永远为对方负责。</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Friend 4: Pilot -->
-        <div
-          class="friend-card swiss-border swiss-hover-accent clickable"
-          :class="{ expanded: expandedFriend === 3 }"
-          @click="toggleFriend(3)"
-        >
-          <div class="friend-icon">✈️</div>
-          <div class="friend-info">
-            <h3 class="friend-name">飞行员</h3>
-            <p class="friend-role">沙漠中的相遇者</p>
-            <p class="friend-desc">叙述者、画家、孤独</p>
-          </div>
-          <div class="friend-quote swiss-dots">
-            "我画画<br/>但大人不懂<br/>所以我不再画了"
-          </div>
-          <div class="friend-details" v-if="expandedFriend === 3">
-            <div class="detail-section">
-              <p class="detail-label">身份</p>
-              <p class="detail-text">飞行员，飞机迫降在撒哈拉沙漠。在那里遇见了小王子，成为了唯一理解小王子的大人。</p>
-            </div>
-            <div class="detail-section">
-              <p class="detail-label">故事</p>
-              <p class="detail-text">小时候画过吞了 elephant 的蟒蛇，但大人只看到帽子。于是他放弃了画画，直到遇见小王子。</p>
-            </div>
-            <div class="detail-section">
-              <p class="detail-label">意义</p>
-              <p class="detail-text">代表那些还记得童年、还保有童心的大人。他是小王子与大人世界之间的桥梁。</p>
-            </div>
-          </div>
-        </div>
+        <EntityCard
+          v-for="(friend, index) in friends"
+          :key="index"
+          :number="index + 1"
+          :entity="friend"
+          :is-expanded="expandedFriend === index"
+          texture="swiss-dots"
+          @click="toggleFriend(index)"
+        />
       </div>
     </section>
 
@@ -167,110 +52,29 @@
       </div>
 
       <div class="planets-timeline">
-        <!-- Planet 1: B-612 -->
         <div
+          v-for="(planet, index) in planets"
+          :key="index"
           class="planet-card swiss-border clickable"
-          :class="{ expanded: expandedPlanet === 0 }"
-          @click="togglePlanet(0)"
+          :class="{ expanded: expandedPlanet === index }"
+          @click="togglePlanet(index)"
         >
           <div class="planet-header">
-            <span class="planet-number">01</span>
-            <h3 class="planet-name">B-612</h3>
-            <span class="planet-tag">HOME</span>
+            <span class="planet-number">{{ String(index + 1).padStart(2, '0') }}</span>
+            <h3 class="planet-name">{{ planet.name }}</h3>
+            <span class="planet-tag">{{ planet.tag }}</span>
           </div>
           <div class="planet-content">
-            <p class="planet-title">家园与玫瑰</p>
-            <p class="planet-desc">很小、有火山、玫瑰、猴面包树</p>
-            <div class="planet-details" v-if="expandedPlanet === 0">
-              <div class="detail-section">
-                <p class="detail-label">环境</p>
-                <p class="detail-text">B-612星球很小，只有两座活火山和一座死火山，每天可以看44次日落。那里还有可怕的猴面包树，必须及时清理。</p>
-              </div>
-              <div class="detail-section">
-                <p class="detail-label">玫瑰</p>
-                <p class="detail-text">星球上最美的花，也是唯一的玫瑰。她骄傲、虚荣、脆弱，却让小王子学会了什么是爱。</p>
-              </div>
-              <div class="detail-section">
-                <p class="detail-label">意义</p>
-                <p class="detail-text">代表起点和归属。无论走多远，心中总有一个地方叫做家，那里有我们最珍视的东西。</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Planet 2: Small Planets -->
-        <div
-          class="planet-card swiss-border clickable"
-          :class="{ expanded: expandedPlanet === 1 }"
-          @click="togglePlanet(1)"
-        >
-          <div class="planet-header">
-            <span class="planet-number">02</span>
-            <h3 class="planet-name">小星球群</h3>
-            <span class="planet-tag">ASTEROIDS</span>
-          </div>
-          <div class="planet-content">
-            <p class="planet-title">大人们的荒诞世界</p>
-            <p class="planet-desc">国王、爱慕虚荣的人、酒鬼、商人、点灯人、地理学家</p>
-            <div class="planet-details" v-if="expandedPlanet === 1">
-              <div class="detail-section">
-                <p class="detail-label">国王</p>
-                <p class="detail-text">统治一切，却没有任何臣民。代表权力的虚妄。</p>
-              </div>
-              <div class="detail-section">
-                <p class="detail-label">爱慕虚荣的人</p>
-                <p class="detail-text">只听得进赞美。代表虚荣的空洞。</p>
-              </div>
-              <div class="detail-section">
-                <p class="detail-label">酒鬼</p>
-                <p class="detail-text">为了忘记羞愧而喝酒。代表逃避的循环。</p>
-              </div>
-              <div class="detail-section">
-                <p class="detail-label">商人</p>
-                <p class="detail-text">数星星，声称拥有它们。代表贪婪的荒谬。</p>
-              </div>
-              <div class="detail-section">
-                <p class="detail-label">点灯人</p>
-                <p class="detail-text">唯一不为自己工作的人。代表忠诚与责任。</p>
-              </div>
-              <div class="detail-section">
-                <p class="detail-label">意义</p>
-                <p class="detail-text">大人世界的荒诞映射。提醒我们不要成为只关心数字、权力和虚荣的大人。</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Planet 3: Earth -->
-        <div
-          class="planet-card swiss-border clickable"
-          :class="{ expanded: expandedPlanet === 2 }"
-          @click="togglePlanet(2)"
-        >
-          <div class="planet-header">
-            <span class="planet-number">03</span>
-            <h3 class="planet-name">地球</h3>
-            <span class="planet-tag">DESTINY</span>
-          </div>
-          <div class="planet-content">
-            <p class="planet-title">遇见狐狸，学会用心看</p>
-            <p class="planet-desc">沙漠、玫瑰园、蛇、告别</p>
-            <div class="planet-details" v-if="expandedPlanet === 2">
-              <div class="detail-section">
-                <p class="detail-label">撒哈拉</p>
-                <p class="detail-text">在沙漠中遇见飞行员，也遇见了狐狸。学会了什么是驯养，什么是用心去看。</p>
-              </div>
-              <div class="detail-section">
-                <p class="detail-label">玫瑰园</p>
-                <p class="detail-text">看到5000朵玫瑰，明白自己的玫瑰依然独一无二，因为"你为你的玫瑰花费了时间"。</p>
-              </div>
-              <div class="detail-section">
-                <p class="detail-label">告别</p>
-                <p class="detail-text">让蛇咬了自己，抛下沉重的躯壳，回到B-612，回到玫瑰身边。</p>
-              </div>
-              <div class="detail-section">
-                <p class="detail-label">意义</p>
-                <p class="detail-text">地球是成长的终点，也是回归的起点。在这里，小王子学会了爱的真谛。</p>
+            <p class="planet-title">{{ planet.title }}</p>
+            <p class="planet-desc">{{ planet.desc }}</p>
+            <div class="planet-details" v-if="expandedPlanet === index">
+              <div
+                v-for="(detail, dIndex) in planet.details"
+                :key="dIndex"
+                class="detail-section"
+              >
+                <p class="detail-label">{{ detail.label }}</p>
+                <p class="detail-text">{{ detail.text }}</p>
               </div>
             </div>
           </div>
@@ -287,69 +91,18 @@
       </div>
 
       <div class="wisdom-grid">
-        <div class="wisdom-card">
+        <div
+          v-for="(wisdom, index) in wisdoms"
+          :key="index"
+          class="wisdom-card swiss-border swiss-hover-accent"
+        >
           <div class="wisdom-spine"></div>
           <div class="wisdom-border-top"></div>
-          <p class="wisdom-text">只有用心才能看清楚，本质的东西用眼睛是看不见的</p>
+          <p class="wisdom-text">{{ wisdom.text }}</p>
           <div class="wisdom-border-bottom"></div>
           <div class="wisdom-source">
-            <span class="source-name">狐狸</span>
-            <span class="source-role">秘密</span>
-          </div>
-        </div>
-
-        <div class="wisdom-card">
-          <div class="wisdom-spine"></div>
-          <div class="wisdom-border-top"></div>
-          <p class="wisdom-text">正是你为你的玫瑰花费的时间，才使得你的玫瑰变得如此重要</p>
-          <div class="wisdom-border-bottom"></div>
-          <div class="wisdom-source">
-            <span class="source-name">狐狸</span>
-            <span class="source-role">驯养</span>
-          </div>
-        </div>
-
-        <div class="wisdom-card">
-          <div class="wisdom-spine"></div>
-          <div class="wisdom-border-top"></div>
-          <p class="wisdom-text">你要永远为你驯服的东西负责</p>
-          <div class="wisdom-border-bottom"></div>
-          <div class="wisdom-source">
-            <span class="source-name">狐狸</span>
-            <span class="source-role">责任</span>
-          </div>
-        </div>
-
-        <div class="wisdom-card">
-          <div class="wisdom-spine"></div>
-          <div class="wisdom-border-top"></div>
-          <p class="wisdom-text">所有的大人都曾经是小孩，虽然只有少数人记得</p>
-          <div class="wisdom-border-bottom"></div>
-          <div class="wisdom-source">
-            <span class="source-name">小王子</span>
-            <span class="source-role">成长</span>
-          </div>
-        </div>
-
-        <div class="wisdom-card">
-          <div class="wisdom-spine"></div>
-          <div class="wisdom-border-top"></div>
-          <p class="wisdom-text">星星发亮是为了让每个人有一天都能找到属于自己的星星</p>
-          <div class="wisdom-border-bottom"></div>
-          <div class="wisdom-source">
-            <span class="source-name">小王子</span>
-            <span class="source-role">寻找</span>
-          </div>
-        </div>
-
-        <div class="wisdom-card">
-          <div class="wisdom-spine"></div>
-          <div class="wisdom-border-top"></div>
-          <p class="wisdom-text">如果你爱上了某个星球上的一朵花，那么只要在夜晚仰望星空，就会觉得漫天的繁星就像一朵朵盛开的花</p>
-          <div class="wisdom-border-bottom"></div>
-          <div class="wisdom-source">
-            <span class="source-name">小王子</span>
-            <span class="source-role">爱</span>
+            <span class="source-name">{{ wisdom.source }}</span>
+            <span class="source-role">{{ wisdom.role }}</span>
           </div>
         </div>
       </div>
@@ -360,8 +113,14 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useScrollToTop } from '@/composables/useScrollToTop'
+import EntityCard from '@/components/world/EntityCard.vue'
 
 const router = useRouter()
+
+// 进入书籍页面时滚动到顶部
+useScrollToTop()
+
 const expandedFriend = ref(null)
 const expandedPlanet = ref(null)
 
@@ -386,6 +145,192 @@ const togglePlanet = (index) => {
     expandedFriend.value = null
   }
 }
+
+// Friends 数据 - 使用三级标签系统
+const friends = [
+  {
+    name: '小王子',
+    role: '来自 B-612 星球的旅行者',
+    desc: '金发、围巾、44次日落',
+    quote: '所有的大人都<br/>曾经是小孩<br/>虽然只有少数人记得',
+    details: [
+      {
+        label: 'IDENTITY',
+        text: '来自B-612小星球的旅行者，有着一头金发，总是围着一条黄色围巾。他深爱着他的玫瑰，却因为不懂得如何去爱而选择离开。'
+      },
+      {
+        label: 'NATURE',
+        text: '纯真、好奇、会问很多"为什么"。他不喜欢大人们的世界，因为大人们只关心数字、权力和虚荣。'
+      },
+      {
+        label: 'MEANING',
+        text: '代表纯真和童心，提醒我们不要在成长中失去最初的那份善良和好奇心。'
+      }
+    ]
+  },
+  {
+    name: '玫瑰',
+    role: '骄傲又脆弱的爱',
+    desc: '四根刺、美丽、虚荣',
+    quote: '我当然爱你<br/>没有让你感觉到<br/>是我的错',
+    details: [
+      {
+        label: 'IDENTITY',
+        text: 'B-612星球上唯一的玫瑰，美丽而骄傲。她有四根刺来保护自己，却掩饰不住内心的脆弱。'
+      },
+      {
+        label: 'NATURE',
+        text: '虚荣、骄傲、撒娇。她让小王子为她盖玻璃罩，为她浇水，却不懂得如何表达爱。'
+      },
+      {
+        label: 'MEANING',
+        text: '代表不完美但真实的爱。爱需要学习，需要用心去感受，而不是只用耳朵听。'
+      }
+    ]
+  },
+  {
+    name: '狐狸',
+    role: '驯养的智慧导师',
+    desc: '秘密、责任、用心看',
+    quote: '正是你为你的玫瑰<br/>花费的时间<br/>才使得她如此重要',
+    details: [
+      {
+        label: 'IDENTITY',
+        text: '地球上的智慧狐狸，教会了小王子什么是"驯养"。他说驯养就是建立联系，让彼此变得独一无二。'
+      },
+      {
+        label: 'NATURE',
+        text: '智慧、耐心、深刻。它教会小王子最重要的秘密："只有用心才能看清楚，本质的东西用眼睛是看不见的。"'
+      },
+      {
+        label: 'MEANING',
+        text: '代表智慧和爱的真谛。爱不是占有，而是建立联系，并永远为对方负责。'
+      }
+    ]
+  },
+  {
+    name: '飞行员',
+    role: '沙漠中的相遇者',
+    desc: '叙述者、画家、孤独',
+    quote: '我画画<br/>但大人不懂<br/>所以我不再画了',
+    details: [
+      {
+        label: 'IDENTITY',
+        text: '飞行员，飞机迫降在撒哈拉沙漠。在那里遇见了小王子，成为了唯一理解小王子的大人。'
+      },
+      {
+        label: 'NATURE',
+        text: '孤独、敏感、保有童心。小时候画过吞了elephant的蟒蛇，但大人只看到帽子。于是他放弃了画画。'
+      },
+      {
+        label: 'MEANING',
+        text: '代表那些还记得童年、还保有童心的大人。他是小王子与大人世界之间的桥梁。'
+      }
+    ]
+  }
+]
+
+// Planets 数据 - 使用三级标签系统
+const planets = [
+  {
+    name: 'B-612',
+    tag: 'HOME',
+    title: '家园与玫瑰',
+    desc: '很小、有火山、玫瑰、猴面包树',
+    details: [
+      {
+        label: 'ENVIRONMENT',
+        text: 'B-612星球很小，只有两座活火山和一座死火山，每天可以看44次日落。那里还有可怕的猴面包树，必须及时清理。'
+      },
+      {
+        label: 'ROSE',
+        text: '星球上最美的花，也是唯一的玫瑰。她骄傲、虚荣、脆弱，却让小王子学会了什么是爱。'
+      },
+      {
+        label: 'MEANING',
+        text: '代表起点和归属。无论走多远，心中总有一个地方叫做家，那里有我们最珍视的东西。'
+      }
+    ]
+  },
+  {
+    name: '小星球群',
+    tag: 'ASTEROIDS',
+    title: '大人们的荒诞世界',
+    desc: '国王、爱慕虚荣的人、酒鬼、商人、点灯人、地理学家',
+    details: [
+      {
+        label: 'KING',
+        text: '统治一切，却没有任何臣民。代表权力的虚妄。'
+      },
+      {
+        label: 'VAIN',
+        text: '只听得进赞美。代表虚荣的空洞。'
+      },
+      {
+        label: 'DRUNKARD',
+        text: '为了忘记羞愧而喝酒。代表逃避的循环。'
+      },
+      {
+        label: 'MEANING',
+        text: '大人世界的荒诞映射。提醒我们不要成为只关心数字、权力和虚荣的大人。'
+      }
+    ]
+  },
+  {
+    name: '地球',
+    tag: 'DESTINY',
+    title: '遇见狐狸，学会用心看',
+    desc: '沙漠、玫瑰园、蛇、告别',
+    details: [
+      {
+        label: 'SAHARA',
+        text: '在沙漠中遇见飞行员，也遇见了狐狸。学会了什么是驯养，什么是用心去看。'
+      },
+      {
+        label: 'GARDEN',
+        text: '看到5000朵玫瑰，明白自己的玫瑰依然独一无二，因为"你为你的玫瑰花费了时间"。'
+      },
+      {
+        label: 'MEANING',
+        text: '地球是成长的终点，也是回归的起点。在这里，小王子学会了爱的真谛。'
+      }
+    ]
+  }
+]
+
+// Wisdom 数据
+const wisdoms = [
+  {
+    text: '只有用心才能看清楚，本质的东西用眼睛是看不见的',
+    source: '狐狸',
+    role: '秘密'
+  },
+  {
+    text: '正是你为你的玫瑰花费的时间，才使得你的玫瑰变得如此重要',
+    source: '狐狸',
+    role: '驯养'
+  },
+  {
+    text: '你要永远为你驯服的东西负责',
+    source: '狐狸',
+    role: '责任'
+  },
+  {
+    text: '所有的大人都曾经是小孩，虽然只有少数人记得',
+    source: '小王子',
+    role: '成长'
+  },
+  {
+    text: '星星发亮是为了让每个人有一天都能找到属于自己的星星',
+    source: '小王子',
+    role: '寻找'
+  },
+  {
+    text: '如果你爱上了某个星球上的一朵花，那么只要在夜晚仰望星空，就会觉得漫天的繁星就像一朵朵盛开的花',
+    source: '小王子',
+    role: '爱'
+  }
+]
 </script>
 
 <style scoped>
@@ -439,7 +384,10 @@ const togglePlanet = (index) => {
   align-items: center;
   gap: 0.5rem;
   z-index: 100;
-  transition: all 0.15s ease-out;
+
+  /* 克制感：快速动画 */
+  transition: background-color 0.15s ease-out,
+              color 0.15s ease-out;
 }
 
 .exit-btn:hover {
@@ -572,103 +520,6 @@ const togglePlanet = (index) => {
   z-index: 1;
 }
 
-.friend-card {
-  padding: 2rem;
-  background: #FFFFFF;
-  border: 2px solid #1A1A1A;
-  cursor: pointer;
-  transition: all 0.15s ease-out;
-}
-
-.friend-card:not(.expanded):hover {
-  background: #d4a574;
-  border-color: #d4a574;
-}
-
-.friend-card:not(.expanded):hover * {
-  color: #FFFFFF;
-}
-
-.friend-icon {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-.friend-info {
-  margin-bottom: 1.5rem;
-}
-
-.friend-name {
-  font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 1.25rem;
-  letter-spacing: 0.05em;
-  margin: 0 0 0.5rem;
-  color: #1A1A1A;
-}
-
-.friend-role {
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  color: #666666;
-  margin: 0 0 0.5rem;
-}
-
-.friend-desc {
-  font-family: 'Inter', sans-serif;
-  font-weight: 400;
-  font-size: 0.875rem;
-  color: #999999;
-  margin: 0;
-}
-
-.friend-quote {
-  padding: 1.5rem;
-  font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  color: #1A1A1A;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background-image: radial-gradient(circle, #d4a574 1px, transparent 1px);
-  background-size: 8px 8px;
-}
-
-.friend-details {
-  padding: 1.5rem 0;
-  border-top: 2px solid #1A1A1A;
-  margin-top: 1.5rem;
-}
-
-.detail-section {
-  margin-bottom: 1rem;
-}
-
-.detail-section:last-child {
-  margin-bottom: 0;
-}
-
-.detail-label {
-  font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  color: #d4a574;
-  margin: 0 0 0.5rem;
-}
-
-.detail-text {
-  font-family: 'Inter', sans-serif;
-  font-weight: 400;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: #1A1A1A;
-  margin: 0;
-}
-
 /* Planets Section */
 .planets-timeline {
   padding: 0 2rem 3rem;
@@ -681,7 +532,10 @@ const togglePlanet = (index) => {
   border: 2px solid #1A1A1A;
   margin-bottom: 1.5rem;
   cursor: pointer;
-  transition: all 0.15s ease-out;
+
+  /* 克制感：快速动画 */
+  transition: background-color 0.15s ease-out,
+              border-color 0.15s ease-out;
 }
 
 .planet-card:last-child {
@@ -772,15 +626,21 @@ const togglePlanet = (index) => {
 
 .wisdom-card {
   background: #FFFFFF;
-  border: 2px solid #1A1A1A;
   padding: 2rem;
   position: relative;
-  transition: all 0.15s ease-out;
+
+  /* 克制感：移除花哨动画 */
+  transition: background-color 0.15s ease-out,
+              border-color 0.15s ease-out;
 }
 
 .wisdom-card:hover {
+  background: #d4a574;
   border-color: #d4a574;
-  transform: translateY(-2px);
+}
+
+.wisdom-card:hover * {
+  color: #FFFFFF !important;
 }
 
 .wisdom-spine {
@@ -838,6 +698,33 @@ const togglePlanet = (index) => {
   color: #666666;
 }
 
+/* Detail Sections */
+.detail-section {
+  margin-bottom: 1rem;
+}
+
+.detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.detail-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: #d4a574;
+  margin: 0 0 0.5rem;
+}
+
+.detail-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #1A1A1A;
+  margin: 0;
+}
+
 /* Swiss Style Utilities */
 .swiss-border-bottom {
   border-bottom: 2px solid #1A1A1A;
@@ -847,11 +734,6 @@ const togglePlanet = (index) => {
   border: 2px solid #1A1A1A;
 }
 
-.swiss-hover-invert:hover {
-  background: #FFFFFF;
-  color: #1A1A1A;
-}
-
 .swiss-hover-accent:hover {
   background: #d4a574;
   border-color: #d4a574;
@@ -859,30 +741,6 @@ const togglePlanet = (index) => {
 
 .swiss-hover-accent:hover * {
   color: #FFFFFF;
-}
-
-.swiss-dots {
-  background-image: radial-gradient(circle, #d4a574 1px, transparent 1px);
-  background-size: 8px 8px;
-}
-
-.swiss-grid-pattern {
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-
-.swiss-noise::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-  pointer-events: none;
-  opacity: 0.5;
 }
 
 .clickable {

@@ -1,5 +1,9 @@
 <template>
   <div class="yearbook-cover swiss-grid-pattern swiss-noise">
+    <!-- Atmospheric effects -->
+    <div class="stardust-overlay"></div>
+    <div ref="lightPointsContainer" class="light-points"></div>
+
     <!-- Main geometric composition -->
     <div class="cover-container swiss-container">
       <!-- Top navigation strip -->
@@ -92,11 +96,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import booksData from '../data/books'
+import { useAtmosphere } from '@/composables/useAtmosphere'
 
 const router = useRouter()
+const lightPointsContainer = ref(null)
+const { createLightPoints, initScrollReveal } = useAtmosphere()
 
 // Get unique categories and count booksData
 const chapters = ref([
@@ -113,6 +120,8 @@ const chapters = ref([
 const currentYear = ref(new Date().getFullYear())
 const issueDate = ref('')
 
+let lightPoints = []
+
 onMounted(() => {
   // Count booksData per category
   booksData.forEach(book => {
@@ -125,6 +134,19 @@ onMounted(() => {
   // Set issue date
   const now = new Date()
   issueDate.value = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase()
+
+  // 创建光点粒子效果
+  if (lightPointsContainer.value) {
+    lightPoints = createLightPoints(lightPointsContainer.value, 8)
+  }
+
+  // 初始化滚动揭示效果
+  initScrollReveal()
+})
+
+onUnmounted(() => {
+  // 清理光点
+  lightPoints.forEach(point => point.remove())
 })
 
 const totalBooks = computed(() => booksData.length)
@@ -143,10 +165,34 @@ const goHome = () => {
 </script>
 
 <style scoped>
+@import '../styles/atmosphere.css';
+
 .yearbook-cover {
   min-height: 100vh;
-  background-color: var(--swiss-white);
+  background: linear-gradient(135deg, #FFFEFC 0%, #F8F8F8 100%);
   position: relative;
+}
+
+/* 氛围光晕 */
+.yearbook-cover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    ellipse at 30% 20%,
+    rgba(255, 48, 0, 0.02) 0%,
+    transparent 50%
+  ),
+  radial-gradient(
+    ellipse at 70% 80%,
+    rgba(74, 124, 159, 0.02) 0%,
+    transparent 50%
+  );
+  pointer-events: none;
+  z-index: 0;
 }
 
 .cover-container {
@@ -260,7 +306,7 @@ const goHome = () => {
   background-color: var(--swiss-accent);
 }
 
-/* Main title */
+/* Main title - 诗意光晕 */
 .main-title {
   font-family: 'Inter', sans-serif;
   font-weight: 900;
@@ -269,6 +315,41 @@ const goHome = () => {
   line-height: 0.85;
   letter-spacing: -0.05em;
   margin: 0 0 2rem 0;
+  position: relative;
+}
+
+/* 标题光晕效果 */
+.main-title .accent {
+  position: relative;
+  z-index: 1;
+}
+
+.main-title .accent::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 48, 0, 0.12) 0%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  animation: title-breathe 4s ease-in-out infinite;
+}
+
+@keyframes title-breathe {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
 }
 
 .title-line {
@@ -292,14 +373,38 @@ const goHome = () => {
   gap: 1rem;
   padding: 0.75rem 1rem;
   cursor: pointer;
-  transition: all 0.15s ease-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-left: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 章节卡片光晕效果 */
+.chapter-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 48, 0, 0.05) 0%,
+    transparent 100%
+  );
+  transition: width 0.4s ease;
+  z-index: 0;
+}
+
+.chapter-item:hover::before {
+  width: 100%;
 }
 
 .chapter-item:hover {
   background-color: var(--swiss-muted);
   border-left-color: var(--swiss-accent);
   padding-left: 1.5rem;
+  transform: translateX(4px);
 }
 
 .chapter-number {

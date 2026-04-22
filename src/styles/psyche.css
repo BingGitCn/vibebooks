@@ -1,0 +1,84 @@
+/* ========================================
+   The Mind Gallery — Design System
+   心理学知识站 · 暖色、轻盈、积极
+   ======================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+:root {
+  /* 暖白色系 */
+  --p-bg: #FAF9F6;
+  --p-bg-warm: #F5F3EE;
+  --p-text: #2C2C2C;
+  --p-text-light: #6B6560;
+  --p-border: rgba(44, 44, 44, 0.08);
+  --p-surface: #F0EDE8;
+  --p-card: rgba(245, 243, 238, 0.7);
+
+  /* 六个流派各自的色调 */
+  --c-psychoanalysis: #6B5B95;
+  --c-behaviorism: #D4A843;
+  --c-humanistic: #5B9A6F;
+  --c-cognitive: #4A90A4;
+  --c-developmental: #C47D4E;
+  --c-social: #B85C5C;
+
+  /* 字体 */
+  --font-serif: 'Crimson Pro', 'Noto Serif SC', Georgia, serif;
+  --font-sans: 'Inter', 'Noto Serif SC', sans-serif;
+
+  /* 间距 */
+  --sp-xs: 0.5rem;
+  --sp-sm: 1rem;
+  --sp-md: 1.5rem;
+  --sp-lg: 3rem;
+  --sp-xl: 5rem;
+
+  /* 动画 */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--p-bg);
+  color: var(--p-text);
+  font-family: var(--font-serif);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== 通用淡入 ===== */
+.fade-up {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== 浮动 ===== */
+@keyframes gentle-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes gentle-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 768px) {
+  :root {
+    --sp-lg: 2rem;
+    --sp-xl: 3rem;
+  }
+}

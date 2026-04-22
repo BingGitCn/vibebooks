@@ -492,8 +492,11 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useScrollToTop } from '@/composables/useScrollToTop'
 
 const router = useRouter()
+// 进入书籍页面时滚动到顶部
+useScrollToTop()
 
 const expandedCharacter = ref(null)
 const expandedTime = ref(null)
@@ -752,14 +755,15 @@ section {
   background-color: #fff;
   padding: 2rem;
   cursor: pointer;
-  transition: all 0.3s ease-out;
+  transition: background-color 0.15s ease-out, border-color 0.15s ease-out;
   display: flex;
   flex-direction: column;
 }
 
 .character-card:hover:not(.expanded) {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(123, 138, 154, 0.3);
+  /* 移除上浮效果 - 克制感 */
+  /* transform: translateY(-4px); */
+  /* 移除阴影动画 - 克制感 */
   border-color: #7b8a9a;
 }
 
@@ -858,12 +862,12 @@ section {
   background-color: #fff;
   padding: 2rem;
   cursor: pointer;
-  transition: all 0.3s ease-out;
+  transition: background-color 0.15s ease-out, border-color 0.15s ease-out;
 }
 
 .time-card:hover:not(.expanded) {
   transform: translateX(8px);
-  box-shadow: 0 8px 24px rgba(123, 138, 154, 0.3);
+  /* 移除阴影动画 - 克制感 */
   border-color: #7b8a9a;
 }
 
@@ -955,12 +959,13 @@ section {
   background-color: #fff;
   padding: 2rem;
   cursor: pointer;
-  transition: all 0.3s ease-out;
+  transition: background-color 0.15s ease-out, border-color 0.15s ease-out;
 }
 
 .concept-card:hover:not(.expanded) {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(123, 138, 154, 0.3);
+  /* 移除上浮效果 - 克制感 */
+  /* transform: translateY(-4px); */
+  /* 移除阴影动画 - 克制感 */
   border-color: #7b8a9a;
 }
 
@@ -1108,7 +1113,7 @@ section {
 /* Expand transition */
 .expand-enter-active,
 .expand-leave-active {
-  transition: all 0.3s ease-out;
+  transition: background-color 0.15s ease-out, border-color 0.15s ease-out;
 }
 
 .expand-enter-from,

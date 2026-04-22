@@ -575,8 +575,11 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useScrollToTop } from '@/composables/useScrollToTop'
 
 const router = useRouter()
+// 进入书籍页面时滚动到顶部
+useScrollToTop()
 const expandedCharacter = ref(null)
 const expandedRelationship = ref(null)
 
@@ -1074,7 +1077,7 @@ const toggleRelationship = (index) => {
 /* Expand Transition */
 .expand-enter-active,
 .expand-leave-active {
-  transition: all 0.3s ease-out;
+  transition: background-color 0.15s ease-out, border-color 0.15s ease-out;
   max-height: 1000px;
   overflow: hidden;
 }
