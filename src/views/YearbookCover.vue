@@ -1,5 +1,5 @@
 <template>
-  <div class="yearbook-cover swiss-grid-pattern swiss-noise">
+  <div class="yearbook-cover swiss-grid-pattern swiss-noise" :class="{ loaded }">
     <!-- Atmospheric effects -->
     <div class="stardust-overlay"></div>
     <div ref="lightPointsContainer" class="light-points"></div>
@@ -7,7 +7,7 @@
     <!-- Main geometric composition -->
     <div class="cover-container swiss-container">
       <!-- Top navigation strip -->
-      <nav class="top-strip swiss-border-bottom">
+      <nav class="top-strip swiss-border-bottom cover-enter" :style="{ transitionDelay: '0.1s' }">
         <div class="strip-content">
           <button class="home-link" @click="goHome">
             <span class="arrow">←</span> HOME
@@ -28,7 +28,7 @@
           </div>
 
           <!-- Main title -->
-          <h1 class="main-title">
+          <h1 class="main-title cover-enter" :style="{ transitionDelay: '0.2s' }">
             <span class="title-line">BOOK</span>
             <span class="title-line accent">UNIVERSE</span>
           </h1>
@@ -36,9 +36,10 @@
           <!-- Chapter listing -->
           <div class="chapters-list">
             <div
-              v-for="chapter in chapters"
+              v-for="(chapter, i) in chapters"
               :key="chapter.id"
-              class="chapter-item"
+              class="chapter-item cover-enter"
+              :style="{ transitionDelay: (0.35 + i * 0.06) + 's' }"
               @click="navigateToChapter(chapter.route)"
             >
               <span class="chapter-number" :style="{ color: chapter.accent }">
@@ -81,7 +82,7 @@
       </section>
 
       <!-- Bottom strip with page navigation -->
-      <footer class="bottom-strip swiss-border-top">
+      <footer class="bottom-strip swiss-border-top cover-enter" :style="{ transitionDelay: '0.9s' }">
         <div class="strip-left">
           <span class="page-indicator">COVER</span>
         </div>
@@ -104,6 +105,8 @@ import { useAtmosphere } from '@/composables/useAtmosphere'
 const router = useRouter()
 const lightPointsContainer = ref(null)
 const { createLightPoints, initScrollReveal } = useAtmosphere()
+
+const loaded = ref(false)
 
 // Get unique categories and count booksData
 const chapters = ref([
@@ -142,6 +145,9 @@ onMounted(() => {
 
   // 初始化滚动揭示效果
   initScrollReveal()
+
+  // 触发入场动画
+  requestAnimationFrame(() => { loaded.value = true })
 })
 
 onUnmounted(() => {
@@ -166,6 +172,19 @@ const goHome = () => {
 
 <style scoped>
 @import '../styles/atmosphere.css';
+
+/* === 入场动画 - 诗意渐现 === */
+.cover-enter {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.loaded .cover-enter {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 .yearbook-cover {
   min-height: 100vh;
@@ -333,22 +352,22 @@ const goHome = () => {
   height: 100%;
   background: radial-gradient(
     circle,
-    rgba(255, 48, 0, 0.12) 0%,
+    rgba(255, 48, 0, 0.10) 0%,
     transparent 70%
   );
   transform: translate(-50%, -50%);
   z-index: -1;
-  animation: title-breathe 4s ease-in-out infinite;
+  animation: title-breathe 6s ease-in-out infinite;
 }
 
 @keyframes title-breathe {
   0%, 100% {
-    opacity: 0.5;
+    opacity: 0.4;
     transform: translate(-50%, -50%) scale(1);
   }
   50% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1.08);
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.06);
   }
 }
 
@@ -364,7 +383,7 @@ const goHome = () => {
 .chapters-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .chapter-item {
@@ -373,7 +392,7 @@ const goHome = () => {
   gap: 1rem;
   padding: 0.75rem 1rem;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   border-left: 2px solid transparent;
   position: relative;
   overflow: hidden;
@@ -401,10 +420,10 @@ const goHome = () => {
 }
 
 .chapter-item:hover {
-  background-color: var(--swiss-muted);
+  background-color: rgba(0, 0, 0, 0.02);
   border-left-color: var(--swiss-accent);
   padding-left: 1.5rem;
-  transform: translateX(4px);
+  transform: translateX(2px);
 }
 
 .chapter-number {
@@ -462,6 +481,12 @@ const goHome = () => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  animation: geo-breathe 8s ease-in-out infinite;
+}
+
+@keyframes geo-breathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  50% { transform: translate(-50%, -50%) scale(1.03); opacity: 0.9; }
 }
 
 .geo-rect-vertical {

@@ -18,10 +18,16 @@
 
     <!-- 主内容 -->
     <div class="entry-content">
-      <!-- 主标题 -->
+      <!-- 主标题 - 逐字浮现 -->
       <div class="entry-title-group">
-        <h1 class="entry-title fade-up" :class="{ visible: show }" :style="{ transitionDelay: '0.1s' }">
-          人的内心<br>是一片旷野
+        <h1 class="entry-title">
+          <span
+            v-for="(char, i) in titleChars"
+            :key="i"
+            class="char"
+            :class="{ visible: show }"
+            :style="{ transitionDelay: (0.3 + i * 0.06) + 's' }"
+          >{{ char === ' ' ? '\u00A0' : char }}</span>
         </h1>
       </div>
 
@@ -30,7 +36,7 @@
         to="/hall"
         class="entry-btn fade-up"
         :class="{ visible: show }"
-        :style="{ transitionDelay: '0.5s' }"
+        :style="{ transitionDelay: '1.2s' }"
       >
         <span class="btn-text">走进去</span>
         <span class="btn-arrow">→</span>
@@ -38,7 +44,7 @@
     </div>
 
     <!-- 底部 -->
-    <footer class="entry-footer fade-up" :class="{ visible: show }" :style="{ transitionDelay: '1s' }">
+    <footer class="entry-footer fade-up" :class="{ visible: show }" :style="{ transitionDelay: '1.6s' }">
       <span class="footer-text">THE MIND GALLERY &middot; 一座关于心灵的档案馆</span>
       <span class="footer-year">2026</span>
     </footer>
@@ -46,10 +52,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from 'vue'
+import { ref, computed, onMounted, reactive } from 'vue'
 
 const show = ref(false)
 const parallax = reactive({ transform: 'translate(0, 0)' })
+
+// 逐字浮现的标题
+const titleText = '人的内心是一片旷野'
+const titleChars = computed(() => titleText.split(''))
 
 function onMouse(e) {
   const cx = window.innerWidth / 2
@@ -104,33 +114,33 @@ onMounted(() => {
 
 .orb-1 {
   width: 380px; height: 380px;
-  background: radial-gradient(circle, rgba(107,91,149,0.07) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(107,91,149,0.06) 0%, transparent 70%);
   top: -10%; right: -5%;
-  animation: drift-a 12s ease-in-out infinite;
+  animation: drift-a 18s ease-in-out infinite;
 }
 .orb-2 {
   width: 260px; height: 260px;
-  background: radial-gradient(circle, rgba(91,154,111,0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(91,154,111,0.05) 0%, transparent 70%);
   bottom: 8%; left: -3%;
-  animation: drift-b 10s ease-in-out infinite 1s;
+  animation: drift-b 14s ease-in-out infinite 1s;
 }
 .orb-3 {
   width: 180px; height: 180px;
-  background: radial-gradient(circle, rgba(74,144,164,0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(74,144,164,0.05) 0%, transparent 70%);
   top: 35%; right: 12%;
-  animation: drift-a 9s ease-in-out infinite 2.5s;
+  animation: drift-a 16s ease-in-out infinite 2.5s;
 }
 .orb-4 {
   width: 100px; height: 100px;
-  background: radial-gradient(circle, rgba(212,168,67,0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(212,168,67,0.06) 0%, transparent 70%);
   top: 18%; left: 15%;
-  animation: drift-b 7s ease-in-out infinite 0.5s;
+  animation: drift-b 12s ease-in-out infinite 0.5s;
 }
 .orb-5 {
   width: 220px; height: 220px;
-  background: radial-gradient(circle, rgba(196,125,78,0.05) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(196,125,78,0.04) 0%, transparent 70%);
   bottom: 20%; right: -8%;
-  animation: drift-a 11s ease-in-out infinite 3s;
+  animation: drift-a 20s ease-in-out infinite 3s;
 }
 
 @keyframes drift-a {
@@ -210,7 +220,23 @@ onMounted(() => {
   font-weight: 300;
   letter-spacing: 0.08em;
   color: var(--p-text);
-  line-height: 1.25;
+  line-height: 1.35;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* 逐字浮现 */
+.char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.char.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* 按钮 */

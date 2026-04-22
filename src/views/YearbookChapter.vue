@@ -36,15 +36,16 @@
 
       <!-- Books grid -->
       <main class="chapter-main">
-        <div class="books-grid">
+        <div class="books-grid" ref="gridRef">
           <article
             v-for="(book, index) in books"
             :key="book.id"
-            class="book-entry swiss-border-bottom swiss-border-right"
+            class="book-entry swiss-border-bottom swiss-border-right entry-reveal"
             :class="[
               { 'featured': index < 2 },
               `entry-${categorySlug}`
             ]"
+            :style="{ transitionDelay: (index * 0.05) + 's' }"
             @click="goToBook(book)"
           >
             <!-- Entry header -->
@@ -105,18 +106,39 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import booksData from '../data/books'
 
 const router = useRouter()
 const route = useRoute()
+const gridRef = ref(null)
 
 const currentYear = ref(new Date().getFullYear())
 const categorySlug = ref('')
 const category = ref('')
 const chapterId = ref(1)
 const books = ref([])
+
+let observer = null
+
+const initEntryReveal = () => {
+  if (observer) observer.disconnect()
+  if (!gridRef.value) return
+
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed')
+        observer.unobserve(entry.target)
+      }
+    })
+  }, { rootMargin: '0px 0px -40px 0px', threshold: 0.05 })
+
+  gridRef.value.querySelectorAll('.entry-reveal').forEach(el => {
+    observer.observe(el)
+  })
+}
 
 const categoryMap = {
   'fiction': {
@@ -208,18 +230,23 @@ const truncate = (text, length) => {
 
 const loadCategoryData = () => {
   categorySlug.value = route.params.category
-  console.log('Loading category:', categorySlug.value)
   const catInfo = categoryMap[categorySlug.value]
   category.value = catInfo?.name || ''
   chapterId.value = catInfo?.id || 1
 
   // Filter books by category
   books.value = booksData.filter(b => b.category === catInfo?.name)
-  console.log('Found books:', books.value.length)
+
+  // 初始化滚动揭示
+  nextTick(() => initEntryReveal())
 }
 
 onMounted(() => {
   loadCategoryData()
+})
+
+onUnmounted(() => {
+  if (observer) observer.disconnect()
 })
 
 // Watch for route changes
@@ -377,6 +404,18 @@ export const DefaultDecoration = {
 </script>
 
 <style scoped>
+/* === 入场动画 - 书籍条目渐现 === */
+.entry-reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.entry-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .yearbook-chapter {
   min-height: 100vh;
   background-color: var(--swiss-white);
@@ -508,7 +547,7 @@ export const DefaultDecoration = {
 
 .book-entry {
   cursor: pointer;
-  transition: all 0.15s ease-out;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
 }
@@ -657,7 +696,7 @@ export const DefaultDecoration = {
   font-weight: 700;
   opacity: 0;
   transform: translateX(-8px);
-  transition: all 0.15s ease-out;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .book-entry:hover .entry-arrow {

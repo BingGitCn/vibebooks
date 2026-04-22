@@ -4,9 +4,9 @@
     <canvas ref="canvas" class="immersive-canvas"></canvas>
 
     <!-- 内容层 -->
-    <div class="content-layer">
+    <div class="content-layer" :class="{ loaded: contentReady }">
       <!-- 返回按钮 -->
-      <button class="back-btn" @click="goBack">
+      <button class="back-btn immersive-enter" :style="{ transitionDelay: '0.3s' }" @click="goBack">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
@@ -15,7 +15,7 @@
 
       <!-- 书籍内容 -->
       <div class="book-immersive">
-        <header class="immersive-header">
+        <header class="immersive-header immersive-enter" :style="{ transitionDelay: '0.5s' }">
           <div class="header-badge">{{ book.category }}</div>
           <h1 class="immersive-title">{{ book.title }}</h1>
           <p v-if="book.subtitle" class="immersive-subtitle">{{ book.subtitle }}</p>
@@ -23,17 +23,17 @@
         </header>
 
         <!-- 引用区域 -->
-        <blockquote class="immersive-quote">
+        <blockquote class="immersive-quote immersive-enter" :style="{ transitionDelay: '0.8s' }">
           "{{ book.quote }}"
         </blockquote>
 
         <!-- 标签 -->
-        <div class="book-tags">
+        <div class="book-tags immersive-enter" :style="{ transitionDelay: '1.0s' }">
           <span v-for="tag in book.tags" :key="tag" class="tag">{{ tag }}</span>
         </div>
 
         <!-- 交互提示 -->
-        <div class="interaction-hint">
+        <div class="interaction-hint immersive-enter" :style="{ transitionDelay: '1.2s' }">
           <p>移动鼠标探索{{ bookTitle }}的宇宙</p>
           <div class="hint-dots">
             <span></span>
@@ -54,6 +54,7 @@ import booksData from '../data/books.js'
 const router = useRouter()
 const route = useRoute()
 const canvas = ref(null)
+const contentReady = ref(false)
 
 const bookId = parseInt(route.params.id)
 const book = computed(() => booksData.find(b => b.id === bookId) || booksData[0])
@@ -247,6 +248,10 @@ const goBack = () => {
 
 onMounted(() => {
   initCanvas()
+  // 延迟触发内容入场动画
+  requestAnimationFrame(() => {
+    setTimeout(() => { contentReady.value = true }, 100)
+  })
 })
 
 onUnmounted(() => {
@@ -257,6 +262,18 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+/* === 入场动画 - 诗意渐现 === */
+.immersive-enter {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.loaded .immersive-enter {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .immersive-container {
   position: relative;
   width: 100vw;
@@ -349,16 +366,16 @@ onUnmounted(() => {
   letter-spacing: 0.15em;
   margin-bottom: 1rem;
   color: #fff;
-  text-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
-  animation: title-glow 4s ease-in-out infinite;
+  text-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+  animation: title-glow 6s ease-in-out infinite;
 }
 
 @keyframes title-glow {
   0%, 100% {
-    text-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+    text-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
   }
   50% {
-    text-shadow: 0 0 60px rgba(255, 255, 255, 0.5);
+    text-shadow: 0 0 60px rgba(255, 255, 255, 0.35);
   }
 }
 
@@ -389,18 +406,6 @@ onUnmounted(() => {
   color: rgba(255, 255, 255, 0.9);
   border-left: 2px solid rgba(255, 255, 255, 0.3);
   position: relative;
-  animation: fade-in-up 1.5s ease-out;
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 /* 标签 */
@@ -455,15 +460,15 @@ onUnmounted(() => {
   height: 6px;
   background: rgba(255, 255, 255, 0.4);
   border-radius: 50%;
-  animation: pulse-dot 1.5s ease-in-out infinite;
+  animation: pulse-dot 2.5s ease-in-out infinite;
 }
 
 .hint-dots span:nth-child(2) {
-  animation-delay: 0.2s;
+  animation-delay: 0.3s;
 }
 
 .hint-dots span:nth-child(3) {
-  animation-delay: 0.4s;
+  animation-delay: 0.6s;
 }
 
 @keyframes pulse-dot {
@@ -472,8 +477,8 @@ onUnmounted(() => {
     transform: scale(1);
   }
   50% {
-    opacity: 1;
-    transform: scale(1.2);
+    opacity: 0.8;
+    transform: scale(1.15);
   }
 }
 
