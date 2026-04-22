@@ -22,6 +22,11 @@ const routes = [
     component: () => import('../views/PsychologyConcept.vue')
   },
   {
+    path: '/figure/:id',
+    name: 'FigureDetail',
+    component: () => import('../views/FigureDetail.vue')
+  },
+  {
     path: '/yearbook',
     name: 'YearbookCover',
     component: () => import('../views/YearbookCover.vue')
@@ -142,28 +147,13 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
-    // 如果有保存的位置（浏览器后退/前进），使用保存的位置
-    if (savedPosition) {
-      return savedPosition
-    }
-
-    // 进入思维实验或概念页面，滚动到顶部
-    if (to.path.startsWith('/experiment/') || to.path.startsWith('/concept/')) {
-      return { top: 0, behavior: 'smooth' }
-    }
-
-    // 如果是进入书籍世界页面（/world/*），始终滚动到顶部
-    if (to.path.startsWith('/world/')) {
-      return { top: 0, behavior: 'smooth' }
-    }
-
     // 如果是从书籍页面返回到章节页，不滚动，保持当前位置
     if (from.path.startsWith('/world/') && to.path.startsWith('/yearbook/')) {
       return false
     }
 
-    // 其他情况，滚动到顶部
-    return { top: 0, behavior: 'smooth' }
+    // 所有页面直接滚到顶部（不用 smooth，避免看到滑动过程）
+    return { top: 0 }
   }
 })
 

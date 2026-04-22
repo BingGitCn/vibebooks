@@ -39,13 +39,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.6s ease;
+/* === 页面切换过渡 === */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
-.fade-enter-from,
-.fade-leave-to {
+.page-enter-from {
   opacity: 0;
+  transform: translateY(8px);
+}
+.page-leave-to {
+  opacity: 0;
+}
+.page-enter-to,
+.page-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>

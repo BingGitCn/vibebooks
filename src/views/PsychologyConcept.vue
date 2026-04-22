@@ -70,7 +70,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { getSchool, getConcept, concepts as allConcepts } from '../data/psychology'
 
@@ -84,25 +84,33 @@ const relatedConcepts = computed(() =>
   concept.value ? allConcepts.filter(c => c.school === concept.value.school && c.id !== concept.value.id).slice(0, 6) : []
 )
 
+function toTop() {
+  window.scrollTo({ top: 0, behavior: 'instant' })
+  document.documentElement.scrollTop = 0
+  document.body.scrollTop = 0
+}
+
 function init() {
+  toTop()
   show.value = false
   secVis.value = [false, false, false]
-  window.scrollTo(0, 0)
-
-  requestAnimationFrame(() => {
-    show.value = true
-    setTimeout(() => {
-      const secs = document.querySelectorAll('.concept-page .fade-up')
-      const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            const idx = Array.from(secs).indexOf(e.target)
-            if (idx >= 0) secVis.value[idx] = true
-          }
-        })
-      }, { threshold: 0.1 })
-      secs.forEach(s => obs.observe(s))
-    }, 100)
+  nextTick(() => {
+    toTop()
+    requestAnimationFrame(() => {
+      show.value = true
+      setTimeout(() => {
+        const secs = document.querySelectorAll('.concept-page .fade-up')
+        const obs = new IntersectionObserver(entries => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              const idx = Array.from(secs).indexOf(e.target)
+              if (idx >= 0) secVis.value[idx] = true
+            }
+          })
+        }, { threshold: 0.1 })
+        secs.forEach(s => obs.observe(s))
+      }, 100)
+    })
   })
 }
 
@@ -215,6 +223,18 @@ watch(() => route.params.id, init)
   flex: 1;
   height: 1px;
   background: var(--p-border);
+  transform-origin: left;
+}
+
+.desc-block.visible .sec-line,
+.example-block.visible .sec-line,
+.related-block.visible .sec-line {
+  animation: line-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes line-reveal {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 
 /* === 概述 === */
@@ -238,6 +258,16 @@ watch(() => route.params.id, init)
   padding: 1.5rem;
   background: var(--p-surface);
   border-left: 3px solid var(--accent, var(--p-border));
+  position: relative;
+}
+.example-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 40px; height: 40px;
+  border-right: 1px solid var(--accent, var(--p-border));
+  border-bottom: 1px solid var(--accent, var(--p-border));
+  opacity: 0.3;
 }
 
 .example-text {

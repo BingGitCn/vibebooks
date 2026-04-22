@@ -19,7 +19,8 @@
       </h1>
 
       <p class="subtitle fade-up" :class="{ visible: show }" :style="{ transitionDelay: '0.2s' }">
-        从不同的方向，走向同一个谜
+        六盏灯，各自照亮了内心的一间暗室<br>
+        它们彼此争论，却在不经意间拼出了同一张地图
       </p>
 
       <!-- 分隔线 -->
@@ -63,6 +64,8 @@ import { schools } from '../data/psychology'
 
 const show = ref(false)
 onMounted(() => {
+  window.scrollTo({ top: 0, behavior: 'instant' })
+  document.documentElement.scrollTop = 0
   requestAnimationFrame(() => { show.value = true })
 })
 </script>
@@ -139,6 +142,12 @@ onMounted(() => {
   width: 6px; height: 6px;
   border-radius: 50%;
   background: var(--c-cognitive);
+  animation: dot-pulse 3s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.3); }
 }
 
 /* 标题 */
@@ -165,6 +174,13 @@ onMounted(() => {
   background: var(--c-cognitive);
   opacity: 0.4;
   margin-bottom: 3rem;
+  transform-origin: left;
+  animation: line-draw 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+}
+
+@keyframes line-draw {
+  from { transform: scaleX(0); opacity: 0; }
+  to { transform: scaleX(1); opacity: 0.4; }
 }
 
 /* === 流派网格 === */
@@ -189,10 +205,25 @@ onMounted(() => {
   transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s ease;
 }
 
+.school-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: radial-gradient(circle at 50% 0%, var(--accent), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
 .school-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 32px rgba(0,0,0,0.06);
   border-color: var(--accent);
+}
+
+.school-card:hover::after {
+  opacity: 0.04;
 }
 
 .card-icon {

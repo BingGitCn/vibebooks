@@ -2,7 +2,7 @@
   <div class="school-page" v-if="school">
     <!-- 导航 -->
     <nav class="top-bar">
-      <router-link to="/" class="back-link">← ALL SCHOOLS</router-link>
+      <router-link to="/hall" class="back-link">← 展馆</router-link>
       <span class="bar-code">{{ school.nameEn }}</span>
     </nav>
 
@@ -24,100 +24,73 @@
 
     <div class="page-body">
       <!-- 提灯者 -->
-      <section class="section fade-up" v-if="schoolFigures.length" :class="{ visible: sectionsVis[0] }">
-        <div class="sec-head clickable" @click="toggleSection(0)">
+      <section class="section" v-if="schoolFigures.length">
+        <div class="sec-head">
           <span class="sec-num">01</span>
           <h2 class="sec-title">提灯者</h2>
-          <span class="sec-count">{{ schoolFigures.length }}人</span>
           <span class="sec-line"></span>
-          <span class="sec-toggle" :class="{ open: openSections[0] }">+</span>
         </div>
-        <div class="sec-body" :class="{ collapsed: !openSections[0] }">
-          <div class="figures-list">
-            <div
-              v-for="fig in schoolFigures"
-              :key="fig.id"
-              class="fig-row"
-              @click="toggleFigure(fig.id)"
-            >
-              <div class="fig-summary">
-                <div class="fig-left">
-                  <p class="fig-name">{{ fig.name }}</p>
-                  <p class="fig-years">{{ fig.years }}</p>
-                </div>
-                <p class="fig-quote-short">{{ fig.quote }}</p>
-                <span class="fig-toggle">{{ expandedFig === fig.id ? '−' : '+' }}</span>
+        <p class="sec-epigraph">他们举起火把，照进内心的暗处</p>
+        <div class="figures-list">
+          <router-link
+            v-for="fig in schoolFigures"
+            :key="fig.id"
+            :to="`/figure/${fig.id}`"
+            class="fig-row"
+          >
+            <div class="fig-summary">
+              <div class="fig-left">
+                <p class="fig-name">{{ fig.name }}</p>
+                <p class="fig-years">{{ fig.years }}</p>
               </div>
-              <div class="fig-detail" v-if="expandedFig === fig.id">
-                <div class="fig-detail-inner">
-                  <p class="fig-en">{{ fig.nameEn }}</p>
-                  <div class="fig-theories" v-if="fig.theories">
-                    <span class="fig-label">留下的思想</span>
-                    <div class="fig-tags">
-                      <span v-for="t in fig.theories" :key="t" class="fig-tag">{{ t }}</span>
-                    </div>
-                  </div>
-                  <p class="fig-contrib">{{ fig.contribution }}</p>
-                  <div class="fig-works" v-if="fig.works">
-                    <span class="fig-label">写过的书</span>
-                    <ul class="fig-works-list">
-                      <li v-for="w in fig.works" :key="w">{{ w }}</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+              <p class="fig-quote-short">{{ fig.quote }}</p>
+              <span class="fig-arrow">→</span>
             </div>
-          </div>
+          </router-link>
         </div>
       </section>
 
       <!-- 他们留下的词语 -->
-      <section class="section fade-up" v-if="schoolConcepts.length" :class="{ visible: sectionsVis[1] }">
-        <div class="sec-head clickable" @click="toggleSection(1)">
+      <section class="section" v-if="schoolConcepts.length">
+        <div class="sec-head">
           <span class="sec-num">02</span>
           <h2 class="sec-title">他们留下的词语</h2>
-          <span class="sec-count">{{ schoolConcepts.length }}个</span>
           <span class="sec-line"></span>
-          <span class="sec-toggle" :class="{ open: openSections[1] }">+</span>
         </div>
-        <div class="sec-body" :class="{ collapsed: !openSections[1] }">
-          <div class="concepts-list">
-            <router-link
-              v-for="c in schoolConcepts"
-              :key="c.id"
-              :to="`/concept/${c.id}`"
-              class="concept-row"
-            >
-              <span class="concept-en">{{ c.nameEn }}</span>
-              <span class="concept-name">{{ c.name }}</span>
-              <span class="concept-arrow">→</span>
-            </router-link>
-          </div>
+        <p class="sec-epigraph">每一个词，都是一扇被推开的门</p>
+        <div class="concepts-list">
+          <router-link
+            v-for="c in schoolConcepts"
+            :key="c.id"
+            :to="`/concept/${c.id}`"
+            class="concept-row"
+          >
+            <span class="concept-en">{{ c.nameEn }}</span>
+            <span class="concept-name">{{ c.name }}</span>
+            <span class="concept-arrow">→</span>
+          </router-link>
         </div>
       </section>
 
       <!-- 在控制与偶然之间 -->
-      <section class="section fade-up" v-if="schoolExperiments.length" :class="{ visible: sectionsVis[2] }">
-        <div class="sec-head clickable" @click="toggleSection(2)">
+      <section class="section" v-if="schoolExperiments.length">
+        <div class="sec-head">
           <span class="sec-num">03</span>
           <h2 class="sec-title">在控制与偶然之间</h2>
-          <span class="sec-count">{{ schoolExperiments.length }}个</span>
           <span class="sec-line"></span>
-          <span class="sec-toggle" :class="{ open: openSections[2] }">+</span>
         </div>
-        <div class="sec-body" :class="{ collapsed: !openSections[2] }">
-          <div class="experiments-list">
-            <div v-for="exp in schoolExperiments" :key="exp.id" class="experiment-card">
-              <div class="exp-head">
-                <span class="exp-year">{{ exp.year }}</span>
-                <h3 class="exp-name">{{ exp.name }}</h3>
-              </div>
-              <p class="exp-en">{{ exp.nameEn }}</p>
-              <p class="exp-desc">{{ exp.description }}</p>
-              <div class="exp-sig">
-                <span class="sig-label">它改变了什么</span>
-                <span>{{ exp.significance }}</span>
-              </div>
+        <p class="sec-epigraph">他们设计实验，像设计一场冒险</p>
+        <div class="experiments-list">
+          <div v-for="exp in schoolExperiments" :key="exp.id" class="experiment-card">
+            <div class="exp-head">
+              <span class="exp-year">{{ exp.year }}</span>
+              <h3 class="exp-name">{{ exp.name }}</h3>
+            </div>
+            <p class="exp-en">{{ exp.nameEn }}</p>
+            <p class="exp-desc">{{ exp.description }}</p>
+            <div class="exp-sig">
+              <span class="sig-label">它改变了什么</span>
+              <span>{{ exp.significance }}</span>
             </div>
           </div>
         </div>
@@ -148,15 +121,12 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { schools, figures, concepts as allConcepts, experiments as allExperiments, getSchool } from '../data/psychology'
 
 const route = useRoute()
 const show = ref(false)
-const sectionsVis = ref([false, false, false])
-const openSections = reactive([false, false, false])
-const expandedFig = ref(null)
 
 const school = computed(() => getSchool(route.params.id))
 
@@ -173,37 +143,18 @@ const otherSchools = computed(() =>
   school.value ? schools.filter(s => s.id !== school.value.id) : []
 )
 
-function toggleSection(idx) {
-  openSections[idx] = !openSections[idx]
-}
-
-function toggleFigure(id) {
-  expandedFig.value = expandedFig.value === id ? null : id
+function toTop() {
+  window.scrollTo({ top: 0, behavior: 'instant' })
+  document.documentElement.scrollTop = 0
+  document.body.scrollTop = 0
 }
 
 function init() {
+  toTop()
   show.value = false
-  sectionsVis.value = [false, false, false]
-  openSections[0] = false
-  openSections[1] = false
-  openSections[2] = false
-  expandedFig.value = null
-  window.scrollTo(0, 0)
-
-  requestAnimationFrame(() => {
-    show.value = true
-    setTimeout(() => {
-      const secs = document.querySelectorAll('.section.fade-up')
-      const obs = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            const idx = Array.from(secs).indexOf(e.target)
-            if (idx >= 0) sectionsVis.value[idx] = true
-          }
-        })
-      }, { threshold: 0.1 })
-      secs.forEach(s => obs.observe(s))
-    }, 100)
+  nextTick(() => {
+    toTop()
+    requestAnimationFrame(() => { show.value = true })
   })
 }
 
@@ -312,18 +263,7 @@ watch(() => route.params.id, init)
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 0;
-  transition: margin-bottom 0.35s var(--ease);
-}
-
-.sec-head.clickable {
-  cursor: pointer;
-  user-select: none;
-  padding: 0.5rem 0;
-}
-
-.sec-head.clickable:hover .sec-title {
-  color: var(--accent, var(--p-text));
+  margin-bottom: 0.5rem;
 }
 
 .sec-num {
@@ -340,61 +280,59 @@ watch(() => route.params.id, init)
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  transition: color 0.2s;
-}
-
-.sec-count {
-  font-family: var(--font-sans);
-  font-size: 0.625rem;
-  font-weight: 500;
-  color: var(--p-text-light);
-  opacity: 0.5;
 }
 
 .sec-line {
   flex: 1;
   height: 1px;
   background: var(--p-border);
+  transform-origin: left;
+  animation: line-grow 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.sec-toggle {
-  font-family: var(--font-sans);
+@keyframes line-grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.sec-epigraph {
+  font-family: var(--font-serif);
   font-size: 0.875rem;
-  font-weight: 300;
+  font-style: italic;
   color: var(--p-text-light);
-  transition: transform 0.3s var(--ease);
-  width: 1rem;
-  text-align: center;
+  opacity: 0.6;
+  margin-bottom: 1.5rem;
+  animation: fade-in 0.6s ease 0.3s both;
 }
 
-.sec-toggle.open {
-  transform: rotate(45deg);
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 0.6; transform: translateY(0); }
 }
 
-/* === 可折叠区块内容 === */
-.sec-body {
-  overflow: hidden;
-  max-height: 2000px;
-  opacity: 1;
-  transition: max-height 0.5s var(--ease), opacity 0.35s ease, margin-top 0.35s var(--ease);
-  margin-top: 1.25rem;
-}
-
-.sec-body.collapsed {
-  max-height: 0;
-  opacity: 0;
-  margin-top: 0;
-}
-
-/* === 人物列表（折叠式） === */
+/* === 人物列表 === */
 .figures-list {
   display: flex;
   flex-direction: column;
 }
 
 .fig-row {
+  display: block;
   border-bottom: 1px solid var(--p-border);
+  text-decoration: none;
+  color: var(--p-text);
   cursor: pointer;
+  animation: row-in 0.5s ease both;
+}
+
+.fig-row:nth-child(1) { animation-delay: 0.15s; }
+.fig-row:nth-child(2) { animation-delay: 0.25s; }
+.fig-row:nth-child(3) { animation-delay: 0.35s; }
+.fig-row:nth-child(4) { animation-delay: 0.45s; }
+
+@keyframes row-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .fig-row:last-child { border-bottom: none; }
@@ -407,13 +345,9 @@ watch(() => route.params.id, init)
   transition: padding-left 0.25s var(--ease);
 }
 
-.fig-row:hover .fig-summary {
-  padding-left: 0.5rem;
-}
+.fig-row:hover .fig-summary { padding-left: 0.5rem; }
 
-.fig-left {
-  min-width: 140px;
-}
+.fig-left { min-width: 140px; }
 
 .fig-name {
   font-family: var(--font-serif);
@@ -444,108 +378,17 @@ watch(() => route.params.id, init)
   border-left: 2px solid var(--accent, var(--p-border));
 }
 
-.fig-toggle {
+.fig-arrow {
   font-family: var(--font-sans);
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 300;
   color: var(--p-text-light);
   opacity: 0;
-  transition: opacity 0.25s;
+  transform: translateX(-4px);
+  transition: all 0.25s var(--ease);
 }
 
-.fig-row:hover .fig-toggle { opacity: 1; }
-
-.fig-detail {
-  padding: 0 0 1.25rem 0;
-  animation: slide-down 0.3s var(--ease);
-}
-
-@keyframes slide-down {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.fig-detail-inner {
-  padding: 1.25rem;
-  margin-left: 0;
-  background: var(--p-surface);
-  border: 1px solid var(--p-border);
-}
-
-.fig-en {
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 400;
-  color: var(--p-text-light);
-  letter-spacing: 0.05em;
-  margin-bottom: 0.75rem;
-}
-
-.fig-label {
-  display: block;
-  font-family: var(--font-sans);
-  font-size: 0.5625rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent, var(--p-text-light));
-  margin-bottom: 0.5rem;
-}
-
-.fig-theories {
-  margin-bottom: 1rem;
-}
-
-.fig-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.375rem;
-}
-
-.fig-tag {
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  padding: 0.25rem 0.625rem;
-  background: rgba(107, 91, 149, 0.08);
-  border: 1px solid rgba(107, 91, 149, 0.15);
-  color: var(--p-text);
-}
-
-.fig-contrib {
-  font-family: var(--font-serif);
-  font-size: 0.8125rem;
-  line-height: 1.7;
-  color: var(--p-text-light);
-  margin-bottom: 1rem;
-}
-
-.fig-works {
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--p-border);
-}
-
-.fig-works-list {
-  list-style: none;
-  padding: 0;
-}
-
-.fig-works-list li {
-  font-family: var(--font-serif);
-  font-size: 0.8125rem;
-  font-style: italic;
-  color: var(--p-text-light);
-  padding: 0.25rem 0;
-  padding-left: 0.75rem;
-  position: relative;
-}
-
-.fig-works-list li::before {
-  content: '·';
-  position: absolute;
-  left: 0;
-  color: var(--accent, var(--p-text-light));
-}
+.fig-row:hover .fig-arrow { opacity: 1; transform: translateX(0); color: var(--accent); }
 
 /* === 概念列表（简化） === */
 .concepts-list {
@@ -563,7 +406,15 @@ watch(() => route.params.id, init)
   color: var(--p-text);
   cursor: pointer;
   transition: padding-left 0.3s var(--ease);
+  animation: row-in 0.5s ease both;
 }
+
+.concept-row:nth-child(1) { animation-delay: 0.15s; }
+.concept-row:nth-child(2) { animation-delay: 0.22s; }
+.concept-row:nth-child(3) { animation-delay: 0.29s; }
+.concept-row:nth-child(4) { animation-delay: 0.36s; }
+.concept-row:nth-child(5) { animation-delay: 0.43s; }
+.concept-row:nth-child(6) { animation-delay: 0.50s; }
 
 .concept-row:hover { padding-left: 0.5rem; }
 .concept-row:last-child { border-bottom: none; }
