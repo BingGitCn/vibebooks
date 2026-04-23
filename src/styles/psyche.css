@@ -1,102 +1,224 @@
 /* ========================================
-   The Mind Gallery — Design System
-   心理学知识站 · 暖色、轻盈、积极
+   PSYCHE — 墨 · 光 · 呼吸
+   The mind is not a museum.
+   It's a living thing that breathes.
    ======================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200;300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Space+Mono:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
 
 :root {
-  /* 暖白色系 */
-  --p-bg: #FAF9F6;
-  --p-bg-warm: #F5F3EE;
-  --p-text: #2C2C2C;
-  --p-text-light: #6B6560;
-  --p-border: rgba(44, 44, 44, 0.08);
-  --p-surface: #F0EDE8;
-  --p-card: rgba(245, 243, 238, 0.7);
+  /* 主色调：深墨底 + 暖光 */
+  --p-bg: #0a0a0b;
+  --p-bg-elevated: #111113;
+  --p-bg-card: #161618;
+  --p-bg-hover: #1c1c1f;
 
-  /* 六个流派各自的色调 */
-  --c-psychoanalysis: #6B5B95;
-  --c-behaviorism: #D4A843;
-  --c-humanistic: #5B9A6F;
-  --c-cognitive: #4A90A4;
-  --c-developmental: #C47D4E;
-  --c-social: #B85C5C;
+  /* 文字：月光层 */
+  --p-text: #e8e4de;
+  --p-text-mid: #9e9a93;
+  --p-text-ghost: #6e6a63;
+  --p-text-bright: #f5f1eb;
+
+  /* 边框 */
+  --p-border: rgba(232, 228, 222, 0.08);
+  --p-border-strong: rgba(232, 228, 222, 0.16);
+
+  /* 六条路 · 六种呼吸 */
+  --c-psychoanalysis: #9B8EC4;
+  --c-behaviorism: #E2C36B;
+  --c-humanistic: #7EC49A;
+  --c-cognitive: #6BB8D1;
+  --c-developmental: #D4946A;
+  --c-social: #D47272;
 
   /* 字体 */
-  --font-serif: 'Crimson Pro', 'Noto Serif SC', Georgia, serif;
-  --font-sans: 'Inter', 'Noto Serif SC', sans-serif;
+  --font-serif: 'Noto Serif SC', 'EB Garamond', 'Songti SC', Georgia, serif;
+  --font-display: 'Playfair Display', 'Noto Serif SC', Georgia, serif;
+  --font-mono: 'Space Mono', 'Courier New', monospace;
+  --font-body: 'EB Garamond', 'Noto Serif SC', Georgia, serif;
 
-  /* 间距 */
-  --sp-xs: 0.5rem;
-  --sp-sm: 1rem;
-  --sp-md: 1.5rem;
-  --sp-lg: 3rem;
-  --sp-xl: 5rem;
-
-  /* 动画 */
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-soft: cubic-bezier(0.25, 1, 0.5, 1);
+  /* 运动 */
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+
 body {
   background: var(--p-bg);
   color: var(--p-text);
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-/* ===== 通用淡入 ===== */
+::selection {
+  background: rgba(155, 142, 196, 0.3);
+  color: var(--p-text-bright);
+}
+
+/* ===== 呼吸动画系统 ===== */
 .fade-up {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  transform: translateY(30px);
+  transition: opacity 1s var(--ease), transform 1s var(--ease);
 }
 .fade-up.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* ===== 浮动 ===== */
-@keyframes gentle-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-@keyframes gentle-rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes pulse-soft {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
-/* ===== 响应式 ===== */
-@media (max-width: 768px) {
-  :root {
-    --sp-lg: 2rem;
-    --sp-xl: 3rem;
+/* 墨水晕染 */
+@keyframes ink-spread {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+    filter: blur(20px);
+  }
+  40% {
+    opacity: 0.6;
+    filter: blur(10px);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.08;
+    filter: blur(0px);
   }
 }
 
-/* ===== 尊重用户的动画偏好 ===== */
+/* 柔和呼吸 */
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.9;
+  }
+}
+
+/* 深呼吸 - 慢 */
+@keyframes breathe-deep {
+  0%, 100% {
+    transform: scale(1) translateY(0);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.04) translateY(-10px);
+    opacity: 0.6;
+  }
+}
+
+/* 文字浮现 */
+@keyframes text-emerge {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+/* 漂浮 */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-6px) rotate(0.5deg);
+  }
+  66% {
+    transform: translateY(-3px) rotate(-0.3deg);
+  }
+}
+
+/* 光晕脉动 */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(var(--glow-rgb), 0.1);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(var(--glow-rgb), 0.25);
+  }
+}
+
+/* 线条生长 */
+@keyframes line-grow {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* 淡入浮动 */
+@keyframes float-in {
+  from {
+    opacity: 0;
+    transform: translateY(40px) rotate(-0.5deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+/* 墨滴 */
+@keyframes ink-drop {
+  0% {
+    transform: scale(0) translateY(-20px);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 0.06;
+  }
+}
+
+/* 闪烁 */
+@keyframes flicker {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+/* 无障碍：减弱动画 */
 @media (prefers-reduced-motion: reduce) {
   .fade-up {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
   }
-  .fade-up.visible {
-    opacity: 1 !important;
-    transform: none !important;
-  }
   * {
     animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--p-text-ghost);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--p-text-mid);
 }

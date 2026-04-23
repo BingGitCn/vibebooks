@@ -1,82 +1,82 @@
 <template>
-  <div class="figure-page" v-if="figure && school">
-    <!-- 导航 -->
-    <nav class="top-bar">
-      <router-link :to="`/school/${school.id}`" class="back-link">← {{ school.name }}</router-link>
-      <span class="bar-code">{{ figure.nameEn }}</span>
+  <div class="portrait" v-if="figure && school">
+    <nav class="p-nav">
+      <router-link :to="`/school/${school.id}`" class="p-back">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M12 8H4M4 8L7 5M4 8L7 11" stroke="currentColor" stroke-width="1"/>
+        </svg>
+        <span>{{ school.name }}</span>
+      </router-link>
+      <span class="p-dot" :style="{ background: school.accent }"></span>
     </nav>
 
-    <div class="page-body">
-      <!-- 头部 -->
-      <header class="fig-header fade-up" :class="{ visible: show }" :style="{ '--accent': school.accent }">
-        <p class="fig-school">{{ school.name }} · {{ school.period }}</p>
-        <h1 class="fig-name">{{ figure.name }}</h1>
-        <p class="fig-en">{{ figure.nameEn }}</p>
-        <p class="fig-years">{{ figure.years }}</p>
+    <div class="p-body" :style="{ '--accent': school.accent }">
+      <!-- 人物名 -->
+      <header class="p-hero fade-up" :class="{ visible: show }">
+        <div class="p-glow"></div>
+        <div class="p-from">
+          <span class="p-from-school">{{ school.name }}</span>
+          <span class="p-from-divider"></span>
+          <span class="p-from-period">{{ school.period }}</span>
+        </div>
+        <h1 class="p-name">{{ figure.name }}</h1>
+        <p class="p-en">{{ figure.nameEn }}</p>
+        <p class="p-years">{{ figure.years }}</p>
       </header>
 
       <!-- 引言 -->
-      <section class="fig-section fade-up" :class="{ visible: secVis[0] }">
-        <div class="sec-head">
-          <span class="sec-dot"></span>
-          <h2 class="sec-title">TA 说过</h2>
-          <span class="sec-line"></span>
-        </div>
-        <div class="quote-card">
-          <p class="quote-text">{{ figure.quote }}</p>
-        </div>
+      <section class="p-quote-section fade-up" :class="{ visible: secVis[0] }">
+        <div class="quote-mark">"</div>
+        <p class="p-quote">{{ figure.quote }}</p>
+        <div class="quote-line"></div>
       </section>
 
-      <!-- 留下的思想 -->
-      <section class="fig-section fade-up" :class="{ visible: secVis[1] }">
-        <div class="sec-head">
-          <span class="sec-dot"></span>
-          <h2 class="sec-title">留下的思想</h2>
-          <span class="sec-line"></span>
+      <!-- 思想 -->
+      <section class="p-section fade-up" :class="{ visible: secVis[1] }">
+        <p class="p-label">留下的思想</p>
+        <div class="p-tags" v-if="figure.theories">
+          <span v-for="t in figure.theories" :key="t" class="p-tag">{{ t }}</span>
         </div>
-        <div class="fig-tags" v-if="figure.theories">
-          <span v-for="t in figure.theories" :key="t" class="fig-tag">{{ t }}</span>
-        </div>
-        <p class="fig-contrib">{{ figure.contribution }}</p>
+        <p class="p-contrib">{{ figure.contribution }}</p>
       </section>
 
-      <!-- 写过的书 -->
-      <section class="fig-section fade-up" :class="{ visible: secVis[2] }" v-if="figure.works">
-        <div class="sec-head">
-          <span class="sec-dot"></span>
-          <h2 class="sec-title">写过的书</h2>
-          <span class="sec-line"></span>
-        </div>
-        <ul class="fig-works-list">
+      <!-- 著作 -->
+      <section class="p-section fade-up" :class="{ visible: secVis[2] }" v-if="figure.works">
+        <p class="p-label">写过的书</p>
+        <ul class="p-works">
           <li v-for="w in figure.works" :key="w">{{ w }}</li>
         </ul>
       </section>
 
-      <!-- 同流派的其他人 -->
-      <section class="fig-section fade-up" :class="{ visible: secVis[3] }">
-        <div class="sec-head">
-          <span class="sec-dot"></span>
-          <h2 class="sec-title">同路人</h2>
-          <span class="sec-line"></span>
-        </div>
-        <div class="related-figures">
-          <router-link
-            v-for="f in otherFigures"
-            :key="f.id"
-            :to="`/figure/${f.id}`"
-            class="related-fig"
-          >
-            <span class="rf-name">{{ f.name }}</span>
-            <span class="rf-years">{{ f.years }}</span>
-            <span class="rf-arrow">→</span>
+      <!-- 同路人 -->
+      <section class="p-section fade-up" :class="{ visible: secVis[3] }">
+        <p class="p-label">同路人</p>
+        <div class="p-peers">
+          <router-link v-for="f in otherFigures" :key="f.id"
+            :to="`/figure/${f.id}`" class="p-peer">
+            <span class="peer-name">{{ f.name }}</span>
+            <span class="peer-go">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M3 6H9M9 6L7 4M9 6L7 8" stroke="currentColor" stroke-width="1"/>
+              </svg>
+            </span>
           </router-link>
         </div>
       </section>
 
-      <!-- 底部 -->
-      <div class="bottom-link">
-        <router-link :to="`/school/${school.id}`" class="back-btn">← 返回 {{ school.name }}</router-link>
-        <router-link to="/hall" class="back-btn">展馆</router-link>
+      <div class="p-foot">
+        <router-link :to="`/school/${school.id}`" class="p-link">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M9 6H3M3 6L5 4M3 6L5 8" stroke="currentColor" stroke-width="1"/>
+          </svg>
+          {{ school.name }}
+        </router-link>
+        <router-link to="/hall" class="p-link">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <circle cx="6" cy="6" r="4" stroke="currentColor" stroke-width="1"/>
+          </svg>
+          展馆
+        </router-link>
       </div>
     </div>
   </div>
@@ -99,20 +99,17 @@ const otherFigures = computed(() =>
 
 function toTop() {
   window.scrollTo({ top: 0, behavior: 'instant' })
-  document.documentElement.scrollTop = 0
-  document.body.scrollTop = 0
+  document.documentElement.scrollTop = 0; document.body.scrollTop = 0
 }
 
 function init() {
-  toTop()
-  show.value = false
-  secVis.value = [false, false, false, false]
+  toTop(); show.value = false; secVis.value = [false, false, false, false]
   nextTick(() => {
     toTop()
     requestAnimationFrame(() => {
       show.value = true
       setTimeout(() => {
-        const secs = document.querySelectorAll('.figure-page .fade-up')
+        const secs = document.querySelectorAll('.portrait .fade-up')
         const obs = new IntersectionObserver(entries => {
           entries.forEach(e => {
             if (e.isIntersecting) {
@@ -132,143 +129,228 @@ watch(() => route.params.id, init)
 </script>
 
 <style scoped>
-@import '../styles/psyche.css';
+.portrait { min-height: 100vh; background: var(--p-bg); }
 
-.figure-page { min-height: 100vh; background: var(--p-bg); }
-
-.top-bar {
+.p-nav {
   position: sticky; top: 0; z-index: 100;
   display: flex; justify-content: space-between; align-items: center;
-  padding: 1rem 2rem;
-  background: rgba(250,249,246,0.92); backdrop-filter: blur(10px);
+  padding: 1.25rem 2rem;
+  background: rgba(10, 10, 11, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--p-border);
 }
-.back-link {
-  font-family: var(--font-sans); font-size: 0.6875rem; font-weight: 500;
-  letter-spacing: 0.12em; color: var(--p-text-light); text-decoration: none; transition: color 0.2s;
+
+.p-back {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-mono); font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  color: var(--p-text-ghost); text-decoration: none;
+  transition: color 0.2s;
 }
-.back-link:hover { color: var(--accent, var(--p-text)); }
-.bar-code {
-  font-family: var(--font-sans); font-size: 0.625rem; font-weight: 600;
-  letter-spacing: 0.2em; color: var(--accent, var(--p-text-light));
+.p-back:hover { color: var(--p-text); }
+
+.p-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  animation: breathe 4s ease-in-out infinite;
 }
 
-.page-body { max-width: 640px; margin: 0 auto; padding: 0 2rem 4rem; }
+.p-body { max-width: 560px; margin: 0 auto; padding: 0 2rem 4rem; }
 
-/* 头部 */
-.fig-header {
-  padding: 3.5rem 0 2.5rem; border-bottom: 1px solid var(--p-border); margin-bottom: 2rem;
+/* 英雄 */
+.p-hero {
+  position: relative;
+  padding: 5rem 0 3.5rem;
+  border-bottom: 1px solid var(--p-border);
+  margin-bottom: 2.5rem;
+  overflow: hidden;
 }
-.fig-school {
-  font-family: var(--font-sans); font-size: 0.6875rem; font-weight: 500;
-  letter-spacing: 0.2em; color: var(--accent); margin-bottom: 1rem;
+
+.p-glow {
+  position: absolute;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent), transparent 70%);
+  opacity: 0.04;
+  top: -150px; left: -100px;
+  filter: blur(60px);
+  animation: breathe-deep 8s ease-in-out infinite;
 }
-.fig-name {
-  font-family: var(--font-serif); font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; margin-bottom: 0.25rem;
+
+.p-from {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 2rem;
 }
-.fig-en {
-  font-family: var(--font-sans); font-size: 0.75rem; font-weight: 500;
-  letter-spacing: 0.15em; color: var(--p-text-light); margin-bottom: 0.5rem;
+
+.p-from-school {
+  font-family: var(--font-mono);
+  font-size: 0.5rem; font-weight: 400;
+  letter-spacing: 0.2em; color: var(--accent);
 }
-.fig-years {
-  font-family: var(--font-sans); font-size: 0.625rem; font-weight: 500;
-  letter-spacing: 0.1em; color: var(--p-text-light); opacity: 0.6;
+
+.p-from-divider {
+  display: block;
+  width: 12px; height: 1px;
+  background: var(--p-text-ghost);
+}
+
+.p-from-period {
+  font-family: var(--font-mono);
+  font-size: 0.5rem; font-weight: 400;
+  letter-spacing: 0.15em; color: var(--p-text-ghost);
+}
+
+.p-name {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 7vw, 4rem);
+  font-weight: 200;
+  letter-spacing: 0.08em;
+  color: var(--p-text-bright);
+  margin-bottom: 0.5rem;
+}
+
+.p-en {
+  font-family: var(--font-display);
+  font-size: 0.875rem; font-weight: 400;
+  font-style: italic; letter-spacing: 0.06em; color: var(--p-text-ghost);
+  margin-bottom: 0.75rem;
+}
+
+.p-years {
+  font-family: var(--font-mono);
+  font-size: 0.5rem; font-weight: 400;
+  letter-spacing: 0.2em; color: var(--p-text-ghost);
+}
+
+/* 引言 */
+.p-quote-section {
+  padding: 3rem 0;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--p-border);
+  position: relative;
+}
+
+.quote-mark {
+  font-family: var(--font-display);
+  font-size: 5rem;
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.15;
+  position: absolute;
+  top: 1rem;
+  left: -0.5rem;
+  pointer-events: none;
+}
+
+.p-quote {
+  font-family: var(--font-serif);
+  font-size: clamp(1.375rem, 3vw, 1.75rem);
+  font-weight: 300;
+  line-height: 2.2;
+  color: var(--p-text);
+  letter-spacing: 0.02em;
+  position: relative;
+}
+
+.quote-line {
+  width: 32px; height: 1px;
+  background: var(--accent);
+  opacity: 0.3;
+  margin-top: 2rem;
 }
 
 /* 区块 */
-.fig-section { margin-bottom: 2.5rem; }
+.p-section { margin-bottom: 3rem; }
 
-.sec-head { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
-.sec-dot {
-  width: 6px; height: 6px; border-radius: 50%; background: var(--accent, var(--p-text-light));
-}
-.sec-title {
-  font-family: var(--font-sans); font-size: 0.75rem; font-weight: 600;
-  letter-spacing: 0.15em; text-transform: uppercase; white-space: nowrap;
-}
-.sec-line { flex: 1; height: 1px; background: var(--p-border); transform-origin: left; }
-.fig-section.visible .sec-line { animation: line-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
-
-@keyframes line-reveal {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
+.p-label {
+  font-family: var(--font-serif);
+  font-size: 0.8125rem; font-weight: 300;
+  font-style: italic; color: var(--p-text-ghost);
+  margin-bottom: 1.25rem;
 }
 
-/* 引言卡片 */
-.quote-card {
-  padding: 1.5rem; background: var(--p-surface); border-left: 3px solid var(--accent, var(--p-border));
-  position: relative;
-}
-.quote-card::after {
-  content: '';
-  position: absolute;
-  bottom: 0; right: 0;
-  width: 40px; height: 40px;
-  border-right: 1px solid var(--accent, var(--p-border));
-  border-bottom: 1px solid var(--accent, var(--p-border));
-  opacity: 0.3;
-}
-.quote-text {
-  font-family: var(--font-serif); font-size: 1.0625rem; font-style: italic;
-  line-height: 2; color: var(--p-text);
+/* 标签 */
+.p-tags { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-bottom: 1.5rem; }
+
+.p-tag {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  padding: 0.25rem 0.625rem;
+  border: 1px solid var(--p-border-strong);
+  color: var(--p-text-mid);
+  letter-spacing: 0.05em;
 }
 
-/* 理论标签 */
-.fig-tags { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-bottom: 1rem; }
-.fig-tag {
-  font-family: var(--font-sans); font-size: 0.6875rem; font-weight: 500;
-  padding: 0.25rem 0.625rem; border: 1px solid var(--p-border); color: var(--p-text);
-}
-.fig-contrib {
-  font-family: var(--font-serif); font-size: 0.9375rem; line-height: 1.8; color: var(--p-text-light);
+.p-contrib {
+  font-family: var(--font-serif); font-size: 0.9375rem;
+  line-height: 2; color: var(--p-text-mid);
 }
 
 /* 著作 */
-.fig-works-list { list-style: none; padding: 0; }
-.fig-works-list li {
-  font-family: var(--font-serif); font-size: 0.875rem; font-style: italic;
-  color: var(--p-text-light); padding: 0.375rem 0 0.375rem 1rem; position: relative;
+.p-works { list-style: none; }
+
+.p-works li {
+  font-family: var(--font-serif); font-size: 0.875rem;
+  font-style: italic; color: var(--p-text-mid);
+  padding: 0.75rem 0 0.75rem 1.5rem;
+  position: relative;
   border-bottom: 1px solid var(--p-border);
 }
-.fig-works-list li:last-child { border-bottom: none; }
-.fig-works-list li::before {
-  content: '·'; position: absolute; left: 0; color: var(--accent, var(--p-text-light));
+.p-works li:last-child { border-bottom: none; }
+
+.p-works li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.5;
+  transform: translateY(-50%);
 }
 
 /* 同路人 */
-.related-figures { display: flex; flex-direction: column; }
-.related-fig {
-  display: flex; align-items: center; gap: 1rem; padding: 0.875rem 0;
-  border-bottom: 1px solid var(--p-border); text-decoration: none; color: var(--p-text);
-  cursor: pointer; transition: padding-left 0.25s var(--ease);
-}
-.related-fig:last-child { border-bottom: none; }
-.related-fig:hover { padding-left: 0.5rem; }
-.rf-name { font-family: var(--font-serif); font-size: 0.9375rem; font-weight: 600; }
-.rf-years {
-  font-family: var(--font-sans); font-size: 0.625rem; font-weight: 500;
-  letter-spacing: 0.1em; color: var(--p-text-light); flex: 1;
-}
-.rf-arrow {
-  font-family: var(--font-sans); font-size: 0.75rem; font-weight: 300;
-  color: var(--p-text-light); opacity: 0; transform: translateX(-4px);
-  transition: all 0.25s var(--ease);
-}
-.related-fig:hover .rf-arrow { opacity: 1; transform: translateX(0); color: var(--accent); }
+.p-peers { display: flex; flex-direction: column; }
 
-/* 底部 */
-.bottom-link {
-  display: flex; justify-content: space-between; padding-top: 2rem;
-  border-top: 1px solid var(--p-border);
+.p-peer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--p-border);
+  text-decoration: none; color: var(--p-text);
+  cursor: pointer;
+  transition: padding-left 0.35s var(--ease);
 }
-.back-btn {
-  font-family: var(--font-sans); font-size: 0.75rem; font-weight: 500;
-  letter-spacing: 0.1em; color: var(--p-text-light); text-decoration: none; transition: color 0.2s;
+.p-peer:last-child { border-bottom: none; }
+.p-peer:hover { padding-left: 0.75rem; }
+
+.peer-name {
+  font-family: var(--font-serif); font-size: 0.9375rem; font-weight: 400;
+  transition: color 0.25s;
 }
-.back-btn:hover { color: var(--accent, var(--p-text)); }
+.p-peer:hover .peer-name { color: var(--accent); }
+
+.peer-go {
+  color: var(--accent);
+  opacity: 0; transition: opacity 0.25s;
+}
+.p-peer:hover .peer-go { opacity: 0.7; }
+
+.p-foot {
+  display: flex; justify-content: space-between;
+  padding-top: 2rem; border-top: 1px solid var(--p-border);
+}
+
+.p-link {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-mono); font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  color: var(--p-text-ghost); text-decoration: none;
+  transition: color 0.2s;
+}
+.p-link:hover { color: var(--accent); }
 
 @media (max-width: 768px) {
-  .page-body { padding: 0 1.25rem 3rem; }
-  .top-bar { padding: 1rem 1.25rem; }
+  .p-body { padding: 0 1.25rem 3rem; }
+  .p-nav { padding: 1rem 1.25rem; }
 }
 </style>

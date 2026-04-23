@@ -32,8 +32,8 @@ html {
 
 body {
   font-family: 'Source Serif 4', Georgia, serif;
-  background: var(--background);
-  color: var(--foreground);
+  background: #0a0a0b;
+  color: #e8e4de;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

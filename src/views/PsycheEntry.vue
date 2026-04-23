@@ -1,53 +1,78 @@
 <template>
-  <div class="entry-page" @mousemove="onMouse">
-    <!-- 浮动装饰层 -->
-    <div class="orbs" :style="parallax">
-      <div class="orb orb-1"></div>
-      <div class="orb orb-2"></div>
-      <div class="orb orb-3"></div>
-      <div class="orb orb-4"></div>
-      <div class="orb orb-5"></div>
+  <div class="entry" @mousemove="onMouse" ref="pageEl">
+    <!-- 漂浮墨迹 -->
+    <div class="ink-layer" :style="parallax">
+      <div class="ink ink-1"></div>
+      <div class="ink ink-2"></div>
+      <div class="ink ink-3"></div>
+      <div class="ink ink-4"></div>
     </div>
 
-    <!-- 线条装饰 -->
-    <div class="lines">
-      <div class="line line-v" :class="{ draw: show }"></div>
-      <div class="line line-h" :class="{ draw: show }"></div>
-      <div class="line line-circle" :class="{ draw: show }"></div>
+    <!-- 漂浮粒子 -->
+    <div class="particles">
+      <span v-for="n in 12" :key="n" class="particle"
+            :style="{
+              left: (Math.random() * 100) + '%',
+              top: (Math.random() * 100) + '%',
+              animationDelay: (Math.random() * 8) + 's',
+              animationDuration: (6 + Math.random() * 8) + 's'
+            }"
+      ></span>
     </div>
 
     <!-- 主内容 -->
-    <div class="entry-content">
+    <div class="entry-center">
+      <!-- 上方标注 -->
+      <p class="line-0"
+         :class="{ on: show }"
+         :style="{ animationDelay: '0.3s' }"
+      >YOU'VE BEEN HERE BEFORE</p>
+
       <!-- 主标题 - 逐字浮现 -->
-      <div class="entry-title-group">
-        <h1 class="entry-title">
-          <span
-            v-for="(char, i) in titleChars"
-            :key="i"
-            class="char"
-            :class="{ visible: show }"
-            :style="{ transitionDelay: (0.3 + i * 0.06) + 's' }"
-          >{{ char === ' ' ? '\u00A0' : char }}</span>
-        </h1>
-      </div>
+      <h1 class="line-1">
+        <span v-for="(c, i) in chars" :key="i"
+              class="word"
+              :class="{ on: show }"
+              :style="{ animationDelay: (0.8 + i * 0.1) + 's' }"
+        >{{ c }}</span>
+      </h1>
+
+      <!-- 英文副标题 -->
+      <p class="line-en"
+         :class="{ on: show }"
+         :style="{ animationDelay: '2.8s' }"
+      >between what you feel and what you know</p>
+
+      <!-- 诗意描述 -->
+      <p class="line-2"
+         :class="{ on: show }"
+         :style="{ animationDelay: '3.2s' }"
+      >你感受过它，只是一直没有名字</p>
+
+      <!-- 分隔线 -->
+      <div class="divider"
+           :class="{ on: show }"
+           :style="{ animationDelay: '3.8s' }"
+      ></div>
 
       <!-- 进入按钮 -->
-      <router-link
-        to="/hall"
-        class="entry-btn fade-up"
-        :class="{ visible: show }"
-        :style="{ transitionDelay: '1.2s' }"
-      >
-        <span class="btn-text">走进去</span>
-        <span class="btn-arrow">→</span>
+      <router-link to="/hall" class="door"
+                   :class="{ on: show }"
+                   :style="{ animationDelay: '4.2s' }">
+        <span class="door-text">进去看看</span>
+        <span class="door-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1"/>
+          </svg>
+        </span>
       </router-link>
     </div>
 
     <!-- 底部 -->
-    <footer class="entry-footer fade-up" :class="{ visible: show }" :style="{ transitionDelay: '1.6s' }">
-      <span class="footer-text">THE MIND GALLERY &middot; 一座关于心灵的档案馆</span>
-      <span class="footer-year">2026</span>
-    </footer>
+    <div class="entry-bottom" :class="{ on: show }" :style="{ animationDelay: '5s' }">
+      <span class="bottom-line"></span>
+      <span class="bottom-text">这里不提供答案，只有回声</span>
+    </div>
   </div>
 </template>
 
@@ -55,36 +80,26 @@
 import { ref, computed, onMounted, reactive } from 'vue'
 
 const show = ref(false)
-const parallax = reactive({ transform: 'translate(0, 0)' })
-
-// 逐字浮现的标题
+const parallax = reactive({ transform: '' })
+const pageEl = ref(null)
 const titleText = '人的内心是一片旷野'
-const titleChars = computed(() => titleText.split(''))
+const chars = computed(() => titleText.split(''))
 
 function onMouse(e) {
   const cx = window.innerWidth / 2
   const cy = window.innerHeight / 2
   const dx = (e.clientX - cx) / cx
   const dy = (e.clientY - cy) / cy
-  parallax.transform = `translate(${dx * 12}px, ${dy * 8}px)`
+  parallax.transform = `translate(${dx * 15}px, ${dy * 12}px)`
 }
 
-onMounted(() => {
-  requestAnimationFrame(() => { show.value = true })
-})
+onMounted(() => requestAnimationFrame(() => show.value = true))
 </script>
 
 <style scoped>
-@import '../styles/psyche.css';
-
-.entry-page {
+.entry {
   min-height: 100vh;
   background: var(--p-bg);
-  background-image:
-    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(91,154,111,0.03) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 80% 20%, rgba(107,91,149,0.03) 0%, transparent 60%);
-  background-size: 100% 100%;
-  animation: bg-shift 20s ease-in-out infinite;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -93,232 +108,216 @@ onMounted(() => {
   justify-content: center;
 }
 
-@keyframes bg-shift {
-  0%, 100% { background-position: 0% 0%; }
-  50% { background-position: 50% 50%; }
-}
-
-/* === 浮动光球 === */
-.orbs {
-  position: absolute;
-  inset: 0;
+/* ===== 墨迹层 ===== */
+.ink-layer {
+  position: absolute; inset: 0;
   pointer-events: none;
-  transition: transform 0.6s ease-out;
+  transition: transform 0.8s var(--ease);
   will-change: transform;
 }
 
-.orb {
+.ink {
   position: absolute;
   border-radius: 50%;
+  filter: blur(80px);
 }
 
-.orb-1 {
-  width: 380px; height: 380px;
-  background: radial-gradient(circle, rgba(107,91,149,0.06) 0%, transparent 70%);
-  top: -10%; right: -5%;
-  animation: drift-a 18s ease-in-out infinite;
+.ink-1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, var(--c-psychoanalysis), transparent 70%);
+  top: -20%; right: -15%;
+  opacity: 0;
+  animation: ink-drop 4s var(--ease) both;
+  animation-delay: 0.2s;
 }
-.orb-2 {
-  width: 260px; height: 260px;
-  background: radial-gradient(circle, rgba(91,154,111,0.05) 0%, transparent 70%);
-  bottom: 8%; left: -3%;
-  animation: drift-b 14s ease-in-out infinite 1s;
+
+.ink-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, var(--c-humanistic), transparent 70%);
+  bottom: -10%; left: -12%;
+  opacity: 0;
+  animation: ink-drop 4s var(--ease) both;
+  animation-delay: 0.8s;
 }
-.orb-3 {
+
+.ink-3 {
+  width: 250px; height: 250px;
+  background: radial-gradient(circle, var(--c-cognitive), transparent 70%);
+  top: 30%; left: 55%;
+  opacity: 0;
+  animation: ink-drop 3.5s var(--ease) both;
+  animation-delay: 1.4s;
+}
+
+.ink-4 {
   width: 180px; height: 180px;
-  background: radial-gradient(circle, rgba(74,144,164,0.05) 0%, transparent 70%);
-  top: 35%; right: 12%;
-  animation: drift-a 16s ease-in-out infinite 2.5s;
-}
-.orb-4 {
-  width: 100px; height: 100px;
-  background: radial-gradient(circle, rgba(212,168,67,0.06) 0%, transparent 70%);
-  top: 18%; left: 15%;
-  animation: drift-b 12s ease-in-out infinite 0.5s;
-}
-.orb-5 {
-  width: 220px; height: 220px;
-  background: radial-gradient(circle, rgba(196,125,78,0.04) 0%, transparent 70%);
-  bottom: 20%; right: -8%;
-  animation: drift-a 20s ease-in-out infinite 3s;
+  background: radial-gradient(circle, var(--c-developmental), transparent 70%);
+  top: 60%; left: 20%;
+  opacity: 0;
+  animation: ink-drop 3s var(--ease) both;
+  animation-delay: 2s;
 }
 
-@keyframes drift-a {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(10px, -12px) scale(1.03); }
-  66% { transform: translate(-8px, 8px) scale(0.97); }
-}
-@keyframes drift-b {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-12px, -10px) scale(1.04); }
-}
-
-/* === 线条装饰 === */
-.lines {
-  position: absolute;
-  inset: 0;
+/* ===== 漂浮粒子 ===== */
+.particles {
+  position: absolute; inset: 0;
   pointer-events: none;
 }
 
-.line {
+.particle {
   position: absolute;
-}
-
-.line-v {
-  width: 1px;
-  height: 0;
-  background: linear-gradient(to bottom, transparent, rgba(107,91,149,0.12), transparent);
-  left: 20%;
-  top: 10%;
-  transition: height 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s;
-}
-.line-v.draw { height: 40%; }
-
-.line-h {
-  height: 1px;
-  width: 0;
-  background: linear-gradient(to right, transparent, rgba(91,154,111,0.1), transparent);
-  top: 72%;
-  right: 10%;
-  transition: width 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.7s;
-}
-.line-h.draw { width: 30%; }
-
-.line-circle {
-  width: 120px; height: 120px;
-  border: 1px solid rgba(74,144,164,0.06);
+  width: 2px; height: 2px;
+  background: var(--p-text);
   border-radius: 50%;
-  top: 15%; right: 18%;
-  transform: scale(0);
-  transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.9s;
-  animation: spin-slow 30s linear infinite;
-}
-.line-circle.draw { transform: scale(1); }
-
-@keyframes spin-slow {
-  from { transform: scale(1) rotate(0deg); }
-  to { transform: scale(1) rotate(360deg); }
+  opacity: 0;
+  animation: flicker 4s ease-in-out infinite;
 }
 
-/* === 主内容 === */
-.entry-content {
-  position: relative;
-  z-index: 2;
-  text-align: center;
+/* ===== 主内容 ===== */
+.entry-center {
+  position: relative; z-index: 2;
+  text-align: left;
   max-width: 560px;
   padding: 0 2rem;
 }
 
-/* 标题组 */
-.entry-title-group {
+/* 标注 */
+.line-0 {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  color: var(--p-text-ghost);
   margin-bottom: 3rem;
+  opacity: 0;
+  animation: text-emerge 1.2s var(--ease) both;
 }
 
-.entry-title {
+/* 主标题 */
+.line-1 {
   font-family: var(--font-serif);
-  font-size: clamp(3rem, 8vw, 5rem);
-  font-weight: 300;
-  letter-spacing: 0.08em;
-  color: var(--p-text);
-  line-height: 1.35;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  font-size: clamp(2.8rem, 8vw, 4.5rem);
+  font-weight: 200;
+  line-height: 1.6;
+  letter-spacing: 0.12em;
+  color: var(--p-text-bright);
+  margin-bottom: 1.5rem;
 }
 
-/* 逐字浮现 */
-.char {
+.word {
   display: inline-block;
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.char.visible {
-  opacity: 1;
-  transform: translateY(0);
+  filter: blur(10px);
+  animation: text-emerge 0.9s var(--ease) both;
+  margin-right: 0.06em;
 }
 
-/* 按钮 */
-.entry-btn {
+/* 英文副标题 */
+.line-en {
+  font-family: var(--font-display);
+  font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  color: var(--p-text-mid);
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: text-emerge 1s var(--ease) both;
+}
+
+/* 诗意描述 */
+.line-2 {
+  font-family: var(--font-serif);
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  font-weight: 300;
+  line-height: 2.4;
+  color: var(--p-text-mid);
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: float-in 1.2s var(--ease) both;
+}
+
+/* 分隔线 */
+.divider {
+  width: 40px; height: 1px;
+  background: var(--p-text-ghost);
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  transform-origin: left;
+  animation: line-grow 1s var(--ease) both;
+}
+
+/* 进入按钮 */
+.door {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 2.5rem;
-  border: 1px solid var(--p-text);
-  background: transparent;
-  color: var(--p-text);
+  gap: 1rem;
   text-decoration: none;
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  transition: all 0.35s var(--ease);
+  color: var(--p-text);
+  opacity: 0;
+  animation: float-in 1s var(--ease) both;
   cursor: pointer;
-  animation: btn-breathe 5s ease-in-out infinite;
+  padding: 0.75rem 0;
+  transition: gap 0.5s var(--ease), color 0.3s;
 }
 
-@keyframes btn-breathe {
-  0%, 100% { border-color: rgba(44, 44, 44, 0.6); }
-  50% { border-color: rgba(44, 44, 44, 1); }
+.door-text {
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
 }
 
-.entry-btn:hover {
-  background: var(--p-text);
-  color: var(--p-bg);
+.door-icon {
+  display: flex;
+  align-items: center;
+  color: var(--p-text-ghost);
+  transition: transform 0.4s var(--ease), color 0.3s;
 }
 
-.entry-btn:hover .btn-arrow {
+.door:hover {
+  color: var(--c-psychoanalysis);
+  gap: 1.5rem;
+}
+
+.door:hover .door-icon {
+  color: var(--c-psychoanalysis);
   transform: translateX(4px);
 }
 
-.btn-text { transition: color 0.35s; }
-
-.btn-arrow {
-  font-weight: 300;
-  font-size: 1rem;
-  transition: transform 0.35s var(--ease), color 0.35s;
-}
-
-/* === 底部 === */
-.entry-footer {
+/* 底部 */
+.entry-bottom {
   position: absolute;
-  bottom: 0;
-  left: 0; right: 0;
+  bottom: 3rem; left: 0; right: 0;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  padding: 1.5rem 2.5rem;
-  pointer-events: none;
+  gap: 0.75rem;
+  opacity: 0;
+  animation: text-emerge 1s var(--ease) both;
 }
 
-.footer-text {
-  font-family: var(--font-sans);
-  font-size: 0.5625rem;
-  font-weight: 600;
-  letter-spacing: 0.3em;
-  color: var(--p-text-light);
-  opacity: 0.35;
+.bottom-line {
+  display: block;
+  width: 24px; height: 1px;
+  background: var(--p-text-ghost);
 }
 
-.footer-year {
-  font-family: var(--font-sans);
-  font-size: 0.5625rem;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  color: var(--p-text-light);
-  opacity: 0.3;
+.bottom-text {
+  font-family: var(--font-serif);
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: var(--p-text-ghost);
+  font-style: italic;
 }
 
-/* === 响应式 === */
 @media (max-width: 768px) {
-  .entry-content { padding: 0 1.5rem; }
-  .entry-footer { padding: 1.25rem 1.5rem; }
-  .orb-1 { width: 220px; height: 220px; }
-  .orb-2 { width: 160px; height: 160px; }
-  .orb-5 { display: none; }
-  .line-v { left: 10%; }
-  .line-circle { width: 80px; height: 80px; right: 8%; }
+  .entry-center { padding: 0 1.5rem; }
+  .ink-1 { width: 300px; height: 300px; }
+  .ink-2 { width: 250px; height: 250px; }
+  .ink-3 { width: 150px; height: 150px; }
+  .ink-4 { display: none; }
+  .entry-bottom { bottom: 2rem; }
 }
 </style>

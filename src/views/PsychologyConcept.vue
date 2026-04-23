@@ -1,69 +1,67 @@
 <template>
-  <div class="concept-page" v-if="concept && school">
-    <!-- 导航 -->
-    <nav class="top-bar">
-      <router-link :to="`/school/${school.id}`" class="back-link">← {{ school.name }}</router-link>
-      <span class="bar-code">{{ concept.nameEn }}</span>
+  <div class="concept" v-if="concept && school">
+    <nav class="c-nav">
+      <router-link :to="`/school/${school.id}`" class="c-back">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M12 8H4M4 8L7 5M4 8L7 11" stroke="currentColor" stroke-width="1"/>
+        </svg>
+        <span>{{ school.name }}</span>
+      </router-link>
+      <span class="c-dot" :style="{ background: school.accent }"></span>
     </nav>
 
-    <div class="page-body">
-      <!-- 概念头部 -->
-      <header class="concept-header fade-up" :class="{ visible: show }" :style="{ '--accent': school.accent }">
-        <p class="ch-school">{{ school.name }} · {{ school.period }}</p>
-        <h1 class="ch-title">{{ concept.name }}</h1>
-        <p class="ch-en">{{ concept.nameEn }}</p>
+    <div class="c-body" :style="{ '--accent': school.accent }">
+      <!-- 概念名 -->
+      <header class="c-hero fade-up" :class="{ visible: show }">
+        <div class="c-glow"></div>
+        <div class="c-from">
+          <span class="c-from-school">{{ school.name }}</span>
+          <span class="c-from-divider"></span>
+          <span class="c-from-period">{{ school.period }}</span>
+        </div>
+        <h1 class="c-title">{{ concept.name }}</h1>
+        <p class="c-en">{{ concept.nameEn }}</p>
       </header>
 
-      <!-- 描述 -->
-      <section class="desc-block fade-up" :class="{ visible: secVis[0] }">
-        <div class="sec-head">
-          <span class="sec-dot"></span>
-          <h2 class="sec-title">这个词语意味着</h2>
-          <span class="sec-line"></span>
-        </div>
-        <p class="desc-text">{{ concept.description }}</p>
+      <!-- 意味着什么 -->
+      <section class="c-section fade-up" :class="{ visible: secVis[0] }">
+        <p class="c-label">这个词语意味着</p>
+        <p class="c-meaning">{{ concept.description }}</p>
       </section>
 
-      <!-- 生活中的例子 -->
-      <section class="example-block fade-up" :class="{ visible: secVis[1] }">
-        <div class="sec-head">
-          <span class="sec-dot"></span>
-          <h2 class="sec-title">它在你的生活里回响</h2>
-          <span class="sec-line"></span>
-        </div>
-        <div class="example-card">
-          <p class="example-text">{{ concept.example }}</p>
+      <!-- 生活里的回响 -->
+      <section class="c-section fade-up" :class="{ visible: secVis[1] }">
+        <p class="c-label">它在你的生活里回响</p>
+        <div class="c-echo">
+          <div class="echo-glow"></div>
+          <p class="c-echo-text">{{ concept.example }}</p>
         </div>
       </section>
 
-      <!-- 关联人物 -->
-      <section class="related-block fade-up" :class="{ visible: secVis[2] }">
-        <div class="sec-head">
-          <span class="sec-dot"></span>
-          <h2 class="sec-title">相邻的路标</h2>
-          <span class="sec-line"></span>
-        </div>
-        <div class="related-list">
-          <router-link
-            v-for="rc in relatedConcepts"
-            :key="rc.id"
-            :to="`/concept/${rc.id}`"
-            class="related-item"
-            :style="{ '--accent': school.accent }"
-          >
-            <span class="ri-en">{{ rc.nameEn }}</span>
-            <span class="ri-name">{{ rc.name }}</span>
-            <span class="ri-arrow">→</span>
+      <!-- 相邻的路标 -->
+      <section class="c-section fade-up" :class="{ visible: secVis[2] }">
+        <p class="c-label">相邻的路标</p>
+        <div class="c-related">
+          <router-link v-for="rc in relatedConcepts" :key="rc.id"
+            :to="`/concept/${rc.id}`" class="c-word">
+            {{ rc.name }}
           </router-link>
         </div>
       </section>
 
-      <!-- 返回流派 -->
-      <div class="bottom-link">
-        <router-link :to="`/school/${school.id}`" class="back-school-btn">
-          ← 返回 {{ school.name }}
+      <div class="c-foot">
+        <router-link :to="`/school/${school.id}`" class="c-link">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M9 6H3M3 6L5 4M3 6L5 8" stroke="currentColor" stroke-width="1"/>
+          </svg>
+          {{ school.name }}
         </router-link>
-        <router-link to="/" class="back-home-btn">回到入口</router-link>
+        <router-link to="/" class="c-link">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <circle cx="6" cy="6" r="4" stroke="currentColor" stroke-width="1"/>
+          </svg>
+          入口
+        </router-link>
       </div>
     </div>
   </div>
@@ -91,15 +89,13 @@ function toTop() {
 }
 
 function init() {
-  toTop()
-  show.value = false
-  secVis.value = [false, false, false]
+  toTop(); show.value = false; secVis.value = [false, false, false]
   nextTick(() => {
     toTop()
     requestAnimationFrame(() => {
       show.value = true
       setTimeout(() => {
-        const secs = document.querySelectorAll('.concept-page .fade-up')
+        const secs = document.querySelectorAll('.concept .fade-up')
         const obs = new IntersectionObserver(entries => {
           entries.forEach(e => {
             if (e.isIntersecting) {
@@ -119,246 +115,170 @@ watch(() => route.params.id, init)
 </script>
 
 <style scoped>
-@import '../styles/psyche.css';
+.concept { min-height: 100vh; background: var(--p-bg); }
 
-.concept-page {
-  min-height: 100vh;
-  background: var(--p-bg);
-}
-
-.top-bar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background: rgba(250, 249, 246, 0.92);
-  backdrop-filter: blur(10px);
+.c-nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 2rem;
+  background: rgba(10, 10, 11, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--p-border);
 }
 
-.back-link {
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  color: var(--p-text-light);
-  text-decoration: none;
+.c-back {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-mono); font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  color: var(--p-text-ghost); text-decoration: none;
   transition: color 0.2s;
 }
-.back-link:hover { color: var(--accent, var(--p-text)); }
+.c-back:hover { color: var(--p-text); }
 
-.bar-code {
-  font-family: var(--font-sans);
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  color: var(--accent, var(--p-text-light));
+.c-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  animation: breathe 4s ease-in-out infinite;
 }
 
-.page-body {
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 0 2rem 4rem;
-}
+.c-body { max-width: 560px; margin: 0 auto; padding: 0 2rem 4rem; }
 
-/* === 头部 === */
-.concept-header {
-  padding: 3.5rem 0 2.5rem;
+/* 英雄 */
+.c-hero {
+  position: relative;
+  padding: 5rem 0 3.5rem;
   border-bottom: 1px solid var(--p-border);
+  margin-bottom: 3rem;
+  overflow: hidden;
+}
+
+.c-glow {
+  position: absolute;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent), transparent 70%);
+  opacity: 0.04;
+  top: -150px; right: -100px;
+  filter: blur(60px);
+  animation: breathe-deep 8s ease-in-out infinite;
+}
+
+.c-from {
+  display: flex; align-items: center; gap: 0.75rem;
   margin-bottom: 2rem;
 }
 
-.ch-school {
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  color: var(--accent, var(--p-text-light));
-  margin-bottom: 1rem;
+.c-from-school {
+  font-family: var(--font-mono);
+  font-size: 0.5rem; font-weight: 400;
+  letter-spacing: 0.2em; color: var(--accent);
 }
 
-.ch-title {
+.c-from-divider {
+  display: block;
+  width: 12px; height: 1px;
+  background: var(--p-text-ghost);
+}
+
+.c-from-period {
+  font-family: var(--font-mono);
+  font-size: 0.5rem; font-weight: 400;
+  letter-spacing: 0.15em; color: var(--p-text-ghost);
+}
+
+.c-title {
   font-family: var(--font-serif);
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 700;
-  margin-bottom: 0.25rem;
+  font-size: clamp(3rem, 9vw, 5rem);
+  font-weight: 200;
+  letter-spacing: 0.08em;
+  color: var(--p-text-bright);
+  margin-bottom: 0.5rem;
 }
 
-.ch-en {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  color: var(--p-text-light);
+.c-en {
+  font-family: var(--font-display);
+  font-size: 0.875rem; font-weight: 400;
+  font-style: italic; letter-spacing: 0.06em; color: var(--p-text-ghost);
 }
 
-/* === 区块通用 === */
-.sec-head {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
+/* 区块 */
+.c-section { margin-bottom: 3.5rem; }
+
+.c-label {
+  font-family: var(--font-serif);
+  font-size: 0.8125rem; font-weight: 300;
+  font-style: italic; color: var(--p-text-ghost);
+  margin-bottom: 1.5rem;
 }
 
-.sec-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent, var(--p-text-light));
-}
-
-.sec-title {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.sec-line {
-  flex: 1;
-  height: 1px;
-  background: var(--p-border);
-  transform-origin: left;
-}
-
-.desc-block.visible .sec-line,
-.example-block.visible .sec-line,
-.related-block.visible .sec-line {
-  animation: line-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes line-reveal {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
-/* === 概述 === */
-.desc-block {
-  margin-bottom: 2.5rem;
-}
-
-.desc-text {
+.c-meaning {
   font-family: var(--font-serif);
   font-size: 1.0625rem;
-  line-height: 2;
+  line-height: 2.4;
   color: var(--p-text);
 }
 
-/* === 例子 === */
-.example-block {
-  margin-bottom: 2.5rem;
-}
-
-.example-card {
-  padding: 1.5rem;
-  background: var(--p-surface);
-  border-left: 3px solid var(--accent, var(--p-border));
+/* 回响 */
+.c-echo {
   position: relative;
-}
-.example-card::after {
-  content: '';
-  position: absolute;
-  bottom: 0; right: 0;
-  width: 40px; height: 40px;
-  border-right: 1px solid var(--accent, var(--p-border));
-  border-bottom: 1px solid var(--accent, var(--p-border));
-  opacity: 0.3;
+  padding: 2rem;
+  border: 1px solid var(--p-border-strong);
+  border-left: 2px solid var(--accent);
+  background: var(--p-bg-card);
+  overflow: hidden;
 }
 
-.example-text {
+.echo-glow {
+  position: absolute;
+  width: 150px; height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent), transparent 70%);
+  opacity: 0.04;
+  bottom: -50px; right: -30px;
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+.c-echo-text {
   font-family: var(--font-serif);
   font-size: 0.9375rem;
   font-style: italic;
-  line-height: 1.8;
-  color: var(--p-text);
+  line-height: 2;
+  color: var(--p-text-mid);
+  position: relative; z-index: 1;
 }
 
-/* === 关联概念 === */
-.related-block {
-  margin-bottom: 2.5rem;
+/* 相邻词语 */
+.c-related { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.c-word {
+  font-family: var(--font-serif); font-size: 0.875rem;
+  color: var(--p-text-mid); text-decoration: none; cursor: pointer;
+  padding: 0.4rem 0.875rem; border: 1px solid var(--p-border-strong);
+  transition: all 0.3s var(--ease);
+}
+.c-word:hover {
+  color: var(--accent); border-color: var(--accent);
+  transform: translateY(-2px);
 }
 
-.related-list {
-  display: flex;
-  flex-direction: column;
+.c-foot {
+  display: flex; justify-content: space-between;
+  padding-top: 2rem; border-top: 1px solid var(--p-border);
 }
 
-.related-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.875rem 0;
-  border-bottom: 1px solid var(--p-border);
-  text-decoration: none;
-  color: var(--p-text);
-  cursor: pointer;
-  transition: padding-left 0.25s var(--ease);
-}
-
-.related-item:last-child { border-bottom: none; }
-.related-item:hover { padding-left: 0.5rem; }
-
-.ri-en {
-  font-family: var(--font-sans);
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  color: var(--accent, var(--p-text-light));
-  min-width: 120px;
-}
-
-.ri-name {
-  font-family: var(--font-serif);
-  font-size: 0.9375rem;
-  font-weight: 600;
-  flex: 1;
-}
-
-.ri-arrow {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 300;
-  color: var(--p-text-light);
-  opacity: 0;
-  transform: translateX(-4px);
-  transition: all 0.25s var(--ease);
-}
-
-.related-item:hover .ri-arrow {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* === 底部 === */
-.bottom-link {
-  display: flex;
-  justify-content: space-between;
-  padding-top: 2rem;
-  border-top: 1px solid var(--p-border);
-}
-
-.back-school-btn, .back-home-btn {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  color: var(--p-text-light);
-  text-decoration: none;
+.c-link {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-mono); font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  color: var(--p-text-ghost); text-decoration: none;
   transition: color 0.2s;
 }
-
-.back-school-btn:hover, .back-home-btn:hover {
-  color: var(--accent, var(--p-text));
-}
+.c-link:hover { color: var(--accent); }
 
 @media (max-width: 768px) {
-  .page-body { padding: 0 1.25rem 3rem; }
-  .top-bar { padding: 1rem 1.25rem; }
-  .ri-en { min-width: auto; display: none; }
+  .c-body { padding: 0 1.25rem 3rem; }
+  .c-nav { padding: 1rem 1.25rem; }
+  .c-title { font-size: clamp(2.5rem, 10vw, 3.5rem); }
 }
 </style>

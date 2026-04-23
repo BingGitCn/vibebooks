@@ -1,119 +1,141 @@
 <template>
-  <div class="school-page" v-if="school">
+  <div class="school" v-if="school">
     <!-- 导航 -->
-    <nav class="top-bar">
-      <router-link to="/hall" class="back-link">← 展馆</router-link>
-      <span class="bar-code">{{ school.nameEn }}</span>
+    <nav class="s-nav">
+      <router-link to="/hall" class="s-back">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M12 8H4M4 8L7 5M4 8L7 11" stroke="currentColor" stroke-width="1"/>
+        </svg>
+        <span>BACK</span>
+      </router-link>
+      <span class="s-label">{{ school.nameEn }}</span>
+      <span class="s-dot" :style="{ background: school.accent }"></span>
     </nav>
 
-    <!-- 头部 -->
-    <header class="school-header" :style="{ '--accent': school.accent }">
-      <div class="header-inner">
-        <p class="header-period fade-up" :class="{ visible: show }">{{ school.period }}</p>
-        <h1 class="header-title fade-up" :class="{ visible: show }" :style="{ transitionDelay: '0.1s' }">
-          {{ school.name }}
-        </h1>
-        <p class="header-en fade-up" :class="{ visible: show }" :style="{ transitionDelay: '0.15s' }">
-          {{ school.nameEn }}
-        </p>
-        <p class="header-desc fade-up" :class="{ visible: show }" :style="{ transitionDelay: '0.2s' }">
-          {{ school.description }}
-        </p>
+    <!-- 英雄区 -->
+    <header class="s-hero" :style="{ '--accent': school.accent }">
+      <div class="hero-glow"></div>
+      <div class="hero-grain"></div>
+
+      <div class="hero-inner fade-up" :class="{ visible: show }">
+        <div class="hero-meta">
+          <span class="hero-era">{{ school.period }}</span>
+          <span class="hero-icon">{{ school.icon }}</span>
+        </div>
+        <h1 class="hero-name">{{ school.name }}</h1>
+        <p class="hero-en">{{ school.nameEn }}</p>
+        <div class="hero-divider"></div>
+        <p class="hero-desc">{{ school.description }}</p>
       </div>
     </header>
 
-    <div class="page-body">
+    <!-- 内容流 -->
+    <div class="s-flow" :style="{ '--accent': school.accent }">
+
       <!-- 提灯者 -->
-      <section class="section" v-if="schoolFigures.length">
-        <div class="sec-head">
-          <span class="sec-num">01</span>
-          <h2 class="sec-title">提灯者</h2>
-          <span class="sec-line"></span>
+      <section class="flow-section" v-if="schoolFigures.length">
+        <div class="sec-header">
+          <div class="sec-label">
+            <span class="sec-num">01</span>
+            <span class="sec-divider"></span>
+            <span class="sec-title">提灯者</span>
+          </div>
+          <p class="sec-poem">他们举起火把，照进内心的暗处</p>
         </div>
-        <p class="sec-epigraph">他们举起火把，照进内心的暗处</p>
-        <div class="figures-list">
+
+        <div class="figures">
           <router-link
-            v-for="fig in schoolFigures"
+            v-for="(fig, i) in schoolFigures"
             :key="fig.id"
             :to="`/figure/${fig.id}`"
-            class="fig-row"
+            class="figure-card fade-up"
+            :class="{ visible: show }"
+            :style="{ transitionDelay: (0.3 + i * 0.12) + 's' }"
           >
-            <div class="fig-summary">
-              <div class="fig-left">
-                <p class="fig-name">{{ fig.name }}</p>
-                <p class="fig-years">{{ fig.years }}</p>
-              </div>
-              <p class="fig-quote-short">{{ fig.quote }}</p>
-              <span class="fig-arrow">→</span>
+            <div class="fig-glow"></div>
+            <p class="fig-quote">"{{ fig.quote }}"</p>
+            <div class="fig-meta">
+              <span class="fig-name">{{ fig.name }}</span>
+              <span class="fig-arrow">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <path d="M3 7H11M11 7L8 4M11 7L8 10" stroke="currentColor" stroke-width="1"/>
+                </svg>
+              </span>
+              <span class="fig-years">{{ fig.years }}</span>
             </div>
           </router-link>
         </div>
       </section>
 
-      <!-- 他们留下的词语 -->
-      <section class="section" v-if="schoolConcepts.length">
-        <div class="sec-head">
-          <span class="sec-num">02</span>
-          <h2 class="sec-title">他们留下的词语</h2>
-          <span class="sec-line"></span>
+      <!-- 词语 -->
+      <section class="flow-section" v-if="schoolConcepts.length">
+        <div class="sec-header">
+          <div class="sec-label">
+            <span class="sec-num">02</span>
+            <span class="sec-divider"></span>
+            <span class="sec-title">他们留下的词语</span>
+          </div>
+          <p class="sec-poem">每一个词，都是一扇被推开的门</p>
         </div>
-        <p class="sec-epigraph">每一个词，都是一扇被推开的门</p>
-        <div class="concepts-list">
+
+        <div class="concepts-cloud">
           <router-link
             v-for="c in schoolConcepts"
             :key="c.id"
             :to="`/concept/${c.id}`"
-            class="concept-row"
+            class="concept-word"
           >
-            <span class="concept-en">{{ c.nameEn }}</span>
-            <span class="concept-name">{{ c.name }}</span>
-            <span class="concept-arrow">→</span>
+            {{ c.name }}
           </router-link>
         </div>
       </section>
 
-      <!-- 在控制与偶然之间 -->
-      <section class="section" v-if="schoolExperiments.length">
-        <div class="sec-head">
-          <span class="sec-num">03</span>
-          <h2 class="sec-title">在控制与偶然之间</h2>
-          <span class="sec-line"></span>
+      <!-- 实验 -->
+      <section class="flow-section" v-if="schoolExperiments.length">
+        <div class="sec-header">
+          <div class="sec-label">
+            <span class="sec-num">03</span>
+            <span class="sec-divider"></span>
+            <span class="sec-title">在控制与偶然之间</span>
+          </div>
+          <p class="sec-poem">他们设计实验，像设计一场冒险</p>
         </div>
-        <p class="sec-epigraph">他们设计实验，像设计一场冒险</p>
-        <div class="experiments-list">
-          <div v-for="exp in schoolExperiments" :key="exp.id" class="experiment-card">
+
+        <div class="experiments">
+          <div v-for="exp in schoolExperiments" :key="exp.id" class="exp-block">
             <div class="exp-head">
               <span class="exp-year">{{ exp.year }}</span>
               <h3 class="exp-name">{{ exp.name }}</h3>
             </div>
-            <p class="exp-en">{{ exp.nameEn }}</p>
-            <p class="exp-desc">{{ exp.description }}</p>
-            <div class="exp-sig">
-              <span class="sig-label">它改变了什么</span>
-              <span>{{ exp.significance }}</span>
+            <p class="exp-name-en">{{ exp.nameEn }}</p>
+            <p class="exp-body">{{ exp.description }}</p>
+            <div class="exp-impact">
+              <span class="impact-tag">它改变了什么</span>
+              <span class="impact-text">{{ exp.significance }}</span>
             </div>
           </div>
         </div>
       </section>
     </div>
 
-    <!-- 底部导航到其他流派 -->
-    <div class="bottom-nav">
-      <div class="sec-head">
-        <h2 class="sec-title">其他的门</h2>
-        <span class="sec-line"></span>
-      </div>
-      <div class="other-schools">
+    <!-- 其他的门 -->
+    <div class="s-other" :style="{ '--accent': school.accent }">
+      <p class="other-title">其他的门</p>
+      <div class="other-grid">
         <router-link
           v-for="s in otherSchools"
           :key="s.id"
           :to="`/school/${s.id}`"
-          class="other-card"
+          class="other-door"
           :style="{ '--accent': s.accent }"
         >
-          <span class="other-icon">{{ s.icon }}</span>
-          <span class="other-name">{{ s.name }}</span>
-          <span class="other-arrow">→</span>
+          <span class="door-num">{{ s.icon }}</span>
+          <span class="door-name">{{ s.name }}</span>
+          <span class="door-go">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M3 6H9M9 6L7 4M9 6L7 8" stroke="currentColor" stroke-width="1"/>
+            </svg>
+          </span>
         </router-link>
       </div>
     </div>
@@ -129,7 +151,6 @@ const route = useRoute()
 const show = ref(false)
 
 const school = computed(() => getSchool(route.params.id))
-
 const schoolFigures = computed(() =>
   school.value ? figures.filter(f => f.school === school.value.id) : []
 )
@@ -154,7 +175,7 @@ function init() {
   show.value = false
   nextTick(() => {
     toTop()
-    requestAnimationFrame(() => { show.value = true })
+    requestAnimationFrame(() => show.value = true)
   })
 }
 
@@ -163,421 +184,405 @@ watch(() => route.params.id, init)
 </script>
 
 <style scoped>
-@import '../styles/psyche.css';
+.school { min-height: 100vh; background: var(--p-bg); }
 
-.school-page {
-  min-height: 100vh;
-  background: var(--p-bg);
-}
-
-/* === 顶部栏 === */
-.top-bar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background: rgba(250, 249, 246, 0.92);
-  backdrop-filter: blur(10px);
+/* ===== 导航 ===== */
+.s-nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 2rem;
+  background: rgba(10, 10, 11, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--p-border);
 }
 
-.back-link {
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  color: var(--p-text-light);
-  text-decoration: none;
+.s-back {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-mono); font-size: 0.5rem;
+  letter-spacing: 0.2em;
+  color: var(--p-text-ghost); text-decoration: none;
   transition: color 0.2s;
 }
-.back-link:hover { color: var(--accent, var(--p-text)); }
+.s-back:hover { color: var(--p-text); }
 
-.bar-code {
-  font-family: var(--font-sans);
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  color: var(--accent, var(--p-text-light));
+.s-label {
+  font-family: var(--font-mono);
+  font-size: 0.5rem; font-weight: 400;
+  letter-spacing: 0.4em; color: var(--p-text-ghost);
 }
 
-/* === 头部 === */
-.school-header {
+.s-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* ===== 英雄区 ===== */
+.s-hero {
+  position: relative;
+  overflow: hidden;
   border-bottom: 1px solid var(--p-border);
 }
 
-.header-inner {
-  max-width: 720px;
+.hero-glow {
+  position: absolute;
+  width: 700px; height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent), transparent 70%);
+  opacity: 0.05;
+  top: -300px; right: -200px;
+  animation: breathe-deep 10s ease-in-out infinite;
+  filter: blur(60px);
+}
+
+.hero-grain {
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.hero-inner {
+  position: relative; z-index: 1;
+  max-width: 640px;
   margin: 0 auto;
-  padding: 4rem 2rem 3rem;
+  padding: 6rem 2rem 5rem;
 }
 
-.header-period {
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  color: var(--accent);
-  margin-bottom: 1rem;
+.hero-meta {
+  display: flex; align-items: center; gap: 0.75rem;
+  margin-bottom: 2rem;
 }
 
-.header-title {
-  font-family: var(--font-serif);
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 700;
-  margin-bottom: 0.25rem;
+.hero-era {
+  font-family: var(--font-mono);
+  font-size: 0.5rem; font-weight: 400;
+  letter-spacing: 0.25em; color: var(--accent);
 }
 
-.header-en {
-  font-family: var(--font-sans);
+.hero-icon {
   font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  color: var(--p-text-light);
-  margin-bottom: 1.5rem;
+  animation: float 6s ease-in-out infinite;
 }
 
-.header-desc {
+.hero-name {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 200;
+  letter-spacing: 0.12em;
+  color: var(--p-text-bright);
+  margin-bottom: 0.5rem;
+}
+
+.hero-en {
+  font-family: var(--font-display);
+  font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  color: var(--p-text-ghost);
+  margin-bottom: 2rem;
+}
+
+.hero-divider {
+  width: 32px; height: 1px;
+  background: var(--accent);
+  opacity: 0.4;
+  margin-bottom: 2rem;
+  animation: line-grow 1.2s var(--ease) both;
+  animation-delay: 0.5s;
+}
+
+.hero-desc {
   font-family: var(--font-serif);
   font-size: 1.0625rem;
-  line-height: 1.8;
-  color: var(--p-text-light);
+  line-height: 2.2;
+  color: var(--p-text-mid);
 }
 
-/* === 内容 === */
-.page-body {
-  max-width: 720px;
+/* ===== 内容流 ===== */
+.s-flow {
+  max-width: 640px;
   margin: 0 auto;
   padding: 0 2rem;
 }
 
-/* === 区块 === */
-.section {
-  padding: 2rem 0;
+.flow-section {
+  padding: 4rem 0;
   border-bottom: 1px solid var(--p-border);
 }
 
-.sec-head {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+/* 区块标签 */
+.sec-header { margin-bottom: 3rem; }
+
+.sec-label {
+  display: flex; align-items: center; gap: 0.75rem;
   margin-bottom: 0.5rem;
 }
 
 .sec-num {
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  color: var(--accent, var(--p-text-light));
-  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+  font-size: 1.5rem; font-weight: 400;
+  color: var(--accent); opacity: 0.4;
+}
+
+.sec-divider {
+  display: block;
+  width: 16px; height: 1px;
+  background: var(--accent);
+  opacity: 0.3;
 }
 
 .sec-title {
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem; font-weight: 400;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--p-text-mid);
 }
 
-.sec-line {
-  flex: 1;
-  height: 1px;
-  background: var(--p-border);
-  transform-origin: left;
-  animation: line-grow 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes line-grow {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
-.sec-epigraph {
+.sec-poem {
   font-family: var(--font-serif);
   font-size: 0.875rem;
+  font-weight: 300;
   font-style: italic;
-  color: var(--p-text-light);
-  opacity: 0.6;
-  margin-bottom: 1.5rem;
-  animation: fade-in 0.6s ease 0.3s both;
+  color: var(--p-text-ghost);
 }
 
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 0.6; transform: translateY(0); }
-}
-
-/* === 人物列表 === */
-.figures-list {
+/* ===== 人物 ===== */
+.figures {
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
 }
 
-.fig-row {
+.figure-card {
   display: block;
-  border-bottom: 1px solid var(--p-border);
   text-decoration: none;
   color: var(--p-text);
   cursor: pointer;
-  animation: row-in 0.5s ease both;
+  padding: 2rem;
+  background: var(--p-bg-card);
+  border: 1px solid var(--p-border);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.4s, transform 0.4s var(--ease);
 }
 
-.fig-row:nth-child(1) { animation-delay: 0.15s; }
-.fig-row:nth-child(2) { animation-delay: 0.25s; }
-.fig-row:nth-child(3) { animation-delay: 0.35s; }
-.fig-row:nth-child(4) { animation-delay: 0.45s; }
-
-@keyframes row-in {
-  from { opacity: 0; transform: translateX(-8px); }
-  to { opacity: 1; transform: translateX(0); }
+.figure-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
 }
 
-.fig-row:last-child { border-bottom: none; }
+.fig-glow {
+  position: absolute;
+  top: -50%; right: -50%;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent), transparent 70%);
+  opacity: 0;
+  filter: blur(40px);
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
 
-.fig-summary {
+.figure-card:hover .fig-glow { opacity: 0.08; }
+
+.fig-quote {
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 400;
+  line-height: 2;
+  color: var(--p-text);
+  margin-bottom: 1.5rem;
+  transition: color 0.3s;
+}
+
+.figure-card:hover .fig-quote { color: var(--accent); }
+
+.fig-meta {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  padding: 1rem 0;
-  transition: padding-left 0.25s var(--ease);
+  gap: 0.75rem;
 }
-
-.fig-row:hover .fig-summary { padding-left: 0.5rem; }
-
-.fig-left { min-width: 140px; }
 
 .fig-name {
   font-family: var(--font-serif);
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 0.125rem;
-}
-
-.fig-years {
-  font-family: var(--font-sans);
-  font-size: 0.625rem;
+  font-size: 0.875rem;
   font-weight: 500;
-  color: var(--accent, var(--p-text-light));
-  letter-spacing: 0.1em;
-}
-
-.fig-quote-short {
-  flex: 1;
-  font-family: var(--font-serif);
-  font-size: 0.8125rem;
-  font-style: italic;
-  color: var(--p-text-light);
-  line-height: 1.6;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding-left: 0.75rem;
-  border-left: 2px solid var(--accent, var(--p-border));
+  color: var(--p-text-mid);
 }
 
 .fig-arrow {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 300;
-  color: var(--p-text-light);
+  color: var(--accent);
   opacity: 0;
   transform: translateX(-4px);
-  transition: all 0.25s var(--ease);
+  transition: opacity 0.3s, transform 0.3s var(--ease);
 }
 
-.fig-row:hover .fig-arrow { opacity: 1; transform: translateX(0); color: var(--accent); }
-
-/* === 概念列表（简化） === */
-.concepts-list {
-  display: flex;
-  flex-direction: column;
-}
-
-.concept-row {
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--p-border);
-  text-decoration: none;
-  color: var(--p-text);
-  cursor: pointer;
-  transition: padding-left 0.3s var(--ease);
-  animation: row-in 0.5s ease both;
-}
-
-.concept-row:nth-child(1) { animation-delay: 0.15s; }
-.concept-row:nth-child(2) { animation-delay: 0.22s; }
-.concept-row:nth-child(3) { animation-delay: 0.29s; }
-.concept-row:nth-child(4) { animation-delay: 0.36s; }
-.concept-row:nth-child(5) { animation-delay: 0.43s; }
-.concept-row:nth-child(6) { animation-delay: 0.50s; }
-
-.concept-row:hover { padding-left: 0.5rem; }
-.concept-row:last-child { border-bottom: none; }
-
-.concept-en {
-  font-family: var(--font-sans);
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  color: var(--accent, var(--p-text-light));
-  min-width: 140px;
-}
-
-.concept-name {
-  font-family: var(--font-serif);
-  font-size: 0.9375rem;
-  font-weight: 600;
-  flex: 1;
-}
-
-.concept-arrow {
-  font-family: var(--font-sans);
-  font-weight: 300;
-  font-size: 0.875rem;
-  color: var(--p-text-light);
-  opacity: 0;
-  transform: translateX(-4px);
-  transition: all 0.25s var(--ease);
-}
-
-.concept-row:hover .concept-arrow {
-  opacity: 1;
+.figure-card:hover .fig-arrow {
+  opacity: 0.6;
   transform: translateX(0);
-  color: var(--accent, var(--p-text));
 }
 
-/* === 实验卡片 === */
-.experiments-list {
+.fig-years {
+  font-family: var(--font-mono);
+  font-size: 0.5rem; font-weight: 400;
+  letter-spacing: 0.15em;
+  color: var(--p-text-ghost);
+  margin-left: auto;
+}
+
+/* ===== 概念云 ===== */
+.concepts-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+
+.concept-word {
+  display: inline-block;
+  font-family: var(--font-serif);
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--p-text-mid);
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--p-border-strong);
+  transition: all 0.3s var(--ease);
+}
+
+.concept-word:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* ===== 实验 ===== */
+.experiments {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-.experiment-card {
-  padding: 1.5rem;
-  background: var(--p-surface);
+.exp-block {
+  padding: 2rem;
+  background: var(--p-bg-card);
+  border-left: 2px solid var(--accent);
   border: 1px solid var(--p-border);
+  border-left: 2px solid var(--accent);
+  transition: background 0.3s;
+}
+
+.exp-block:hover {
+  background: var(--p-bg-hover);
 }
 
 .exp-head {
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
+  display: flex; align-items: baseline; gap: 1rem;
   margin-bottom: 0.25rem;
 }
 
 .exp-year {
-  font-family: var(--font-sans);
-  font-size: 0.625rem;
-  font-weight: 600;
-  color: var(--accent, var(--p-text-light));
-  letter-spacing: 0.1em;
+  font-family: var(--font-mono);
+  font-size: 0.5rem; font-weight: 400;
+  letter-spacing: 0.2em; color: var(--accent);
 }
 
 .exp-name {
   font-family: var(--font-serif);
-  font-size: 1.0625rem;
-  font-weight: 600;
-}
-
-.exp-en {
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 400;
-  color: var(--p-text-light);
-  letter-spacing: 0.05em;
-  margin-bottom: 1rem;
-}
-
-.exp-desc {
-  font-family: var(--font-serif);
-  font-size: 0.875rem;
-  line-height: 1.8;
+  font-size: 1.125rem; font-weight: 500;
   color: var(--p-text);
-  margin-bottom: 1rem;
 }
 
-.exp-sig {
+.exp-name-en {
+  font-family: var(--font-display);
+  font-size: 0.75rem; font-weight: 400;
+  font-style: italic; color: var(--p-text-ghost);
+  letter-spacing: 0.04em; margin-bottom: 1.25rem;
+}
+
+.exp-body {
   font-family: var(--font-serif);
-  font-size: 0.8125rem;
-  line-height: 1.7;
-  color: var(--p-text-light);
+  font-size: 0.9375rem;
+  line-height: 2; color: var(--p-text-mid); margin-bottom: 1.25rem;
+}
+
+.exp-impact {
   padding-top: 1rem;
   border-top: 1px solid var(--p-border);
+  font-family: var(--font-serif);
+  font-size: 0.8125rem;
+  line-height: 1.9; color: var(--p-text-mid);
 }
 
-.sig-label {
-  font-family: var(--font-sans);
-  font-size: 0.5625rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  color: var(--accent, var(--p-text-light));
+.impact-tag {
+  font-family: var(--font-mono);
+  font-size: 0.4375rem; font-weight: 400;
+  letter-spacing: 0.2em; color: var(--accent);
   margin-right: 0.5rem;
+  text-transform: uppercase;
 }
 
-/* === 底部其他流派 === */
-.bottom-nav {
-  max-width: 720px;
+/* ===== 其他的门 ===== */
+.s-other {
+  max-width: 640px;
   margin: 0 auto;
-  padding: 3rem 2rem 4rem;
+  padding: 4rem 2rem 5rem;
 }
 
-.other-schools {
+.other-title {
+  font-family: var(--font-serif);
+  font-size: 0.875rem; font-weight: 300;
+  font-style: italic; color: var(--p-text-ghost);
+  margin-bottom: 1.5rem;
+}
+
+.other-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 0.75rem;
 }
 
-.other-card {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+.other-door {
+  display: flex; align-items: center; gap: 0.5rem;
   padding: 1rem;
-  background: var(--p-card);
-  border: 1px solid var(--p-border);
-  text-decoration: none;
-  color: var(--p-text);
+  text-decoration: none; color: var(--p-text);
   cursor: pointer;
-  transition: all 0.25s var(--ease);
+  border: 1px solid var(--p-border);
+  transition: all 0.3s var(--ease);
 }
 
-.other-card:hover {
+.other-door:hover {
   border-color: var(--accent);
   transform: translateY(-2px);
+  background: var(--p-bg-card);
 }
 
-.other-icon { font-size: 1.125rem; }
-.other-name {
+.door-num {
+  font-size: 0.75rem;
+  opacity: 0.4;
+}
+
+.door-name {
   font-family: var(--font-serif);
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: 0.875rem; font-weight: 400;
   flex: 1;
 }
-.other-arrow {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 300;
-  color: var(--p-text-light);
-  opacity: 0;
-  transition: all 0.25s var(--ease);
-}
-.other-card:hover .other-arrow { opacity: 1; }
 
-/* === 响应式 === */
+.door-go {
+  color: var(--accent);
+  opacity: 0; transition: opacity 0.3s;
+}
+
+.other-door:hover .door-go { opacity: 0.7; }
+
 @media (max-width: 768px) {
-  .top-bar { padding: 1rem 1.25rem; }
-  .header-inner { padding: 2.5rem 1.25rem 2rem; }
-  .page-body { padding: 0 1.25rem; }
-  .fig-summary { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-  .fig-left { min-width: auto; }
-  .fig-quote-short { white-space: normal; }
-  .concept-row { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
-  .concept-en { min-width: auto; }
-  .bottom-nav { padding: 2rem 1.25rem 3rem; }
+  .hero-inner { padding: 3rem 1.25rem 2.5rem; }
+  .s-flow { padding: 0 1.25rem; }
+  .flow-section { padding: 2.5rem 0; }
+  .figure-card { padding: 1.5rem; }
+  .s-other { padding: 2.5rem 1.25rem 4rem; }
 }
 </style>

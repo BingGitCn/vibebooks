@@ -1,318 +1,552 @@
 <template>
-  <div class="mind-intro">
-    <!-- 装饰几何体 -->
-    <div class="geo geo-1"></div>
-    <div class="geo geo-2"></div>
-    <div class="geo geo-3"></div>
+  <div class="hall">
+    <nav class="hall-nav">
+      <router-link to="/" class="nav-back">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M12 8H4M4 8L7 5M4 8L7 11" stroke="currentColor" stroke-width="1"/>
+        </svg>
+      </router-link>
+      <span class="nav-marker"></span>
+    </nav>
 
-    <div class="intro-body">
-      <!-- 顶部标签 -->
-      <p class="tag fade-up" :class="{ visible: show }">
-        <router-link to="/" class="tag-back">←</router-link>
-        <span class="tag-dot"></span>
-        THE MIND GALLERY
-      </p>
-
-      <!-- 主标题 -->
-      <h1 class="title fade-up" :class="{ visible: show }" :style="{ transitionDelay: '0.1s' }">
-        六条路
-      </h1>
-
-      <p class="subtitle fade-up" :class="{ visible: show }" :style="{ transitionDelay: '0.2s' }">
-        六盏灯，各自照亮了内心的一间暗室<br>
-        它们彼此争论，却在不经意间拼出了同一张地图
-      </p>
-
-      <!-- 分隔线 -->
-      <div class="sep fade-up" :class="{ visible: show }" :style="{ transitionDelay: '0.3s' }"></div>
-
-      <!-- 六个流派入口 -->
-      <div class="schools-grid">
-        <router-link
-          v-for="(school, i) in schools"
-          :key="school.id"
-          :to="`/school/${school.id}`"
-          class="school-card fade-up"
-          :class="{ visible: show }"
-          :style="{
-            '--accent': school.accent,
-            transitionDelay: (0.35 + i * 0.08) + 's',
-          }"
-        >
-          <span class="card-icon">{{ school.icon }}</span>
-          <div class="card-body">
-            <p class="card-name-en">{{ school.nameEn }}</p>
-            <p class="card-name">{{ school.name }}</p>
-            <p class="card-period">{{ school.period }}</p>
-          </div>
-          <p class="card-subtitle">{{ school.subtitle }}</p>
-          <span class="card-arrow">→</span>
-        </router-link>
+    <!-- 全屏诗意头图 -->
+    <header class="hero">
+      <!-- 漂浮光晕 -->
+      <div class="hero-inks">
+        <div class="ink ink-a"></div>
+        <div class="ink ink-b"></div>
       </div>
+
+      <div class="hero-inner">
+        <!-- 序号标记 -->
+        <div class="hero-mark fade-up" :class="{ visible: show }">
+          <span class="mark-line"></span>
+          <span class="mark-text">PSYCHE</span>
+          <span class="mark-line"></span>
+        </div>
+
+        <!-- 大标题 - 每个字独立呼吸 -->
+        <h1 class="hero-title">
+          <span v-for="(c, i) in titleChars" :key="i"
+                class="title-char fade-up"
+                :class="{ visible: show }"
+                :style="{ transitionDelay: (0.2 + i * 0.12) + 's' }"
+          >{{ c }}</span>
+        </h1>
+
+        <!-- 英文 -->
+        <p class="hero-en fade-up" :class="{ visible: show }" :style="{ transitionDelay: '0.9s' }">
+          Something in you knows, before you do
+        </p>
+
+        <!-- 分隔 -->
+        <div class="hero-divider fade-up" :class="{ visible: show }" :style="{ transitionDelay: '1.2s' }">
+          <span class="div-dot"></span>
+          <span class="div-line"></span>
+          <span class="div-dot"></span>
+        </div>
+
+        <!-- 诗意正文 - 逐行浮现 -->
+        <div class="hero-poem">
+          <p class="poem-line fade-up" :class="{ visible: show }" :style="{ transitionDelay: '1.5s' }">
+            有些东西在你意识到之前，就已经替你做了决定
+          </p>
+          <p class="poem-line fade-up" :class="{ visible: show }" :style="{ transitionDelay: '1.9s' }">
+            他们试图给那种东西一个名字
+          </p>
+          <p class="poem-line poem-accent fade-up" :class="{ visible: show }" :style="{ transitionDelay: '2.3s' }">
+            于是有了这些路
+          </p>
+        </div>
+      </div>
+
+      <!-- 向下指引 -->
+      <div class="hero-scroll fade-up" :class="{ visible: show }" :style="{ transitionDelay: '2.8s' }">
+        <div class="scroll-line"></div>
+      </div>
+    </header>
+
+    <!-- 六个流派 -->
+    <div class="paths">
+      <router-link
+        v-for="(school, i) in schools"
+        :key="school.id"
+        :to="`/school/${school.id}`"
+        class="path"
+        :style="{ '--accent': school.accent }"
+        @mouseenter="hoverSchool = i"
+        @mouseleave="hoverSchool = -1"
+      >
+        <!-- 背景光晕 -->
+        <div class="path-glow" :class="{ active: hoverSchool === i }"></div>
+
+        <!-- 左侧编号 -->
+        <div class="path-left">
+          <span class="path-icon">{{ school.icon }}</span>
+        </div>
+
+        <!-- 中间内容 -->
+        <div class="path-core">
+          <div class="path-names">
+            <h2 class="path-name">{{ school.name }}</h2>
+            <span class="path-name-en">{{ school.nameEn }}</span>
+          </div>
+          <p class="path-mood">{{ school.subtitle }}</p>
+          <p class="path-reveal">{{ school.description }}</p>
+        </div>
+
+        <!-- 右侧时期 + 箭头 -->
+        <div class="path-right">
+          <span class="path-era">{{ school.period }}</span>
+          <span class="path-go">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+              <path d="M4 9H14M14 9L10 5M14 9L10 13" stroke="currentColor" stroke-width="1"/>
+            </svg>
+          </span>
+        </div>
+      </router-link>
     </div>
 
-    <!-- 底部 -->
-    <footer class="intro-footer fade-up" :class="{ visible: show }" :style="{ transitionDelay: '1s' }">
-      <span>一座关于心灵的档案馆</span>
+    <footer class="hall-foot">
+      <div class="foot-poem">
+        <span class="foot-char">往</span>
+        <span class="foot-char">下</span>
+        <span class="foot-char">走</span>
+        <span class="foot-comma">，</span>
+        <span class="foot-char">哪</span>
+        <span class="foot-char">里</span>
+        <span class="foot-char">都</span>
+        <span class="foot-char">是</span>
+        <span class="foot-char">入</span>
+        <span class="foot-char">口</span>
+      </div>
     </footer>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { schools } from '../data/psychology'
 
 const show = ref(false)
+const hoverSchool = ref(-1)
+const titleChars = computed(() => '无名之物'.split(''))
+
 onMounted(() => {
   window.scrollTo({ top: 0, behavior: 'instant' })
   document.documentElement.scrollTop = 0
-  requestAnimationFrame(() => { show.value = true })
+  requestAnimationFrame(() => show.value = true)
 })
 </script>
 
 <style scoped>
-@import '../styles/psyche.css';
-
-.mind-intro {
+.hall {
   min-height: 100vh;
   background: var(--p-bg);
-  position: relative;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
-/* === 浮动装饰 === */
-.geo {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.08;
-  pointer-events: none;
-}
-.geo-1 {
-  width: 320px; height: 320px;
-  background: var(--c-humanistic);
-  top: -80px; right: -60px;
-  animation: gentle-float 8s ease-in-out infinite;
-}
-.geo-2 {
-  width: 200px; height: 200px;
-  background: var(--c-cognitive);
-  bottom: 15%; left: -40px;
-  animation: gentle-float 6s ease-in-out infinite 1s;
-}
-.geo-3 {
-  width: 140px; height: 140px;
-  background: var(--c-behaviorism);
-  top: 40%; right: 8%;
-  animation: gentle-float 7s ease-in-out infinite 2s;
+/* ===== 导航 ===== */
+.hall-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem 2rem;
+  background: transparent;
+  transition: background 0.4s;
 }
 
-/* === 主体 === */
-.intro-body {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 5rem 2rem 3rem;
-  position: relative;
-  z-index: 1;
-  flex: 1;
-}
-
-/* 标签 */
-.tag {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.25em;
-  color: var(--p-text-light);
-  margin-bottom: 2rem;
-}
-.tag-back {
-  color: var(--p-text-light);
+.nav-back {
+  display: flex; align-items: center;
+  color: var(--p-text-ghost);
   text-decoration: none;
-  font-size: 1rem;
   transition: color 0.2s;
-  margin-right: 0.25rem;
 }
-.tag-back:hover { color: var(--p-text); }
-.tag-dot {
-  width: 6px; height: 6px;
+.nav-back:hover { color: var(--p-text); }
+
+.nav-marker {
+  display: block;
+  width: 4px; height: 4px;
   border-radius: 50%;
-  background: var(--c-cognitive);
-  animation: dot-pulse 3s ease-in-out infinite;
-}
-
-@keyframes dot-pulse {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.3); }
-}
-
-/* 标题 */
-.title {
-  font-family: var(--font-serif);
-  font-size: clamp(2rem, 5vw, 3.25rem);
-  font-weight: 400;
-  line-height: 1.35;
-  color: var(--p-text);
-  margin-bottom: 1.25rem;
-}
-
-.subtitle {
-  font-family: var(--font-serif);
-  font-size: clamp(0.9375rem, 2vw, 1.125rem);
-  font-weight: 300;
-  line-height: 1.7;
-  color: var(--p-text-light);
-  margin-bottom: 2.5rem;
-}
-
-.sep {
-  width: 48px; height: 2px;
-  background: var(--c-cognitive);
+  background: var(--p-text-ghost);
   opacity: 0.4;
-  margin-bottom: 3rem;
-  transform-origin: left;
-  animation: line-draw 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+  animation: breathe 6s ease-in-out infinite;
 }
 
-@keyframes line-draw {
-  from { transform: scaleX(0); opacity: 0; }
-  to { transform: scaleX(1); opacity: 0.4; }
-}
-
-/* === 流派网格 === */
-.schools-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
-.school-card {
+/* ===== 全屏诗意头图 ===== */
+.hero {
+  position: relative;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 1.75rem;
-  background: var(--p-card);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--p-border);
-  text-decoration: none;
-  color: var(--p-text);
-  position: relative;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s ease;
 }
 
-.school-card::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: radial-gradient(circle at 50% 0%, var(--accent), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.4s ease;
+/* 光晕 */
+.hero-inks {
+  position: absolute; inset: 0;
   pointer-events: none;
 }
 
-.school-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.06);
-  border-color: var(--accent);
+.ink {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
 }
 
-.school-card:hover::after {
-  opacity: 0.04;
+.ink-a {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, var(--c-psychoanalysis), transparent 70%);
+  opacity: 0.06;
+  top: -10%; right: -5%;
+  animation: breathe-deep 12s ease-in-out infinite;
 }
 
-.card-icon {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+.ink-b {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, var(--c-humanistic), transparent 70%);
+  opacity: 0.05;
+  bottom: 10%; left: -8%;
+  animation: breathe-deep 10s ease-in-out infinite;
+  animation-delay: 3s;
+}
+
+.hero-inner {
+  position: relative; z-index: 2;
+  text-align: center;
+  max-width: 600px;
+  padding: 0 2rem;
+}
+
+/* 序号标记 */
+.hero-mark {
+  display: flex; align-items: center; gap: 1rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.mark-line {
   display: block;
-  animation: gentle-float 5s ease-in-out infinite;
+  width: 40px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--p-text-ghost), transparent);
 }
 
-.card-body {
-  margin-bottom: 0.75rem;
-}
-
-.card-name-en {
-  font-family: var(--font-sans);
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  color: var(--accent);
-  margin-bottom: 0.25rem;
-}
-
-.card-name {
-  font-family: var(--font-serif);
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-}
-
-.card-period {
-  font-family: var(--font-sans);
-  font-size: 0.625rem;
+.mark-text {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
   font-weight: 400;
-  color: var(--p-text-light);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.5em;
+  color: var(--p-text-ghost);
+  font-style: italic;
 }
 
-.card-subtitle {
+/* 大标题 */
+.hero-title {
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.title-char {
+  display: inline-block;
+  font-family: var(--font-serif);
+  font-size: clamp(3.5rem, 12vw, 7rem);
+  font-weight: 200;
+  letter-spacing: 0.08em;
+  color: var(--p-text-bright);
+  opacity: 0;
+  transform: translateY(40px) scale(0.95);
+  filter: blur(8px);
+  transition: opacity 1s var(--ease), transform 1s var(--ease), filter 1s var(--ease);
+  margin: 0 0.02em;
+}
+
+.title-char.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+/* 英文 */
+.hero-en {
+  font-family: var(--font-display);
+  font-size: clamp(0.8125rem, 1.5vw, 1rem);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.2em;
+  color: var(--p-text-mid);
+  margin-bottom: 3rem;
+  opacity: 0;
+  transform: translateY(15px);
+  filter: blur(4px);
+  transition: opacity 1s var(--ease), transform 1s var(--ease), filter 1s var(--ease);
+}
+
+.hero-en.visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* 分隔线 */
+.hero-divider {
+  display: flex; align-items: center; gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+  opacity: 0;
+  transition: opacity 1s var(--ease);
+}
+
+.hero-divider.visible { opacity: 1; }
+
+.div-dot {
+  display: block;
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: var(--p-text-ghost);
+}
+
+.div-line {
+  display: block;
+  width: 60px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--p-text-ghost), transparent);
+}
+
+/* 诗意正文 */
+.hero-poem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.poem-line {
+  font-family: var(--font-serif);
+  font-size: clamp(0.9375rem, 1.8vw, 1.125rem);
+  font-weight: 300;
+  line-height: 2.6;
+  color: var(--p-text-mid);
+  letter-spacing: 0.08em;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+}
+
+.poem-line.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.poem-accent {
+  color: var(--c-psychoanalysis);
+  font-weight: 400;
+}
+
+/* 向下指引 */
+.hero-scroll {
+  position: absolute;
+  bottom: 3rem; left: 50%;
+  transform: translateX(-50%);
+}
+
+.scroll-line {
+  width: 1px; height: 40px;
+  background: linear-gradient(to bottom, transparent, var(--p-text-ghost));
+  animation: float 3s ease-in-out infinite;
+}
+
+/* ===== 六条路 ===== */
+.paths {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.path {
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2.5rem 1.75rem;
+  text-decoration: none;
+  color: var(--p-text);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--p-border);
+  transition: background 0.5s var(--ease);
+}
+
+.path:first-child { border-top: 1px solid var(--p-border); }
+
+/* 背景光晕 */
+.path-glow {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 20% 50%, var(--accent), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.6s var(--ease);
+  pointer-events: none;
+  filter: blur(40px);
+}
+
+.path-glow.active { opacity: 0.06; }
+.path:hover .path-glow { opacity: 0.06; }
+
+.path:hover {
+  background: var(--p-bg-elevated);
+}
+
+/* 左侧 */
+.path-left {
+  display: flex; align-items: center; justify-content: center;
+}
+
+.path-icon {
+  font-size: 1.25rem;
+  opacity: 0.25;
+  transition: opacity 0.4s, transform 0.4s var(--ease), color 0.4s;
+  color: var(--p-text-ghost);
+}
+
+.path:hover .path-icon {
+  opacity: 0.8;
+  color: var(--accent);
+  transform: scale(1.15);
+}
+
+/* 中间 */
+.path-core { position: relative; }
+
+.path-names {
+  display: flex; align-items: baseline; gap: 0.75rem;
+  margin-bottom: 0.375rem;
+}
+
+.path-name {
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  transition: color 0.4s;
+}
+
+.path:hover .path-name { color: var(--accent); }
+
+.path-name-en {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  color: var(--p-text-ghost);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.path:hover .path-name-en { opacity: 0.6; }
+
+.path-mood {
   font-family: var(--font-serif);
   font-size: 0.8125rem;
+  font-weight: 300;
+  color: var(--p-text-mid);
   font-style: italic;
-  color: var(--p-text-light);
-  line-height: 1.5;
-  flex: 1;
+  transition: opacity 0.3s;
 }
 
-.card-arrow {
-  position: absolute;
-  bottom: 1.25rem;
-  right: 1.25rem;
-  font-family: var(--font-sans);
-  font-size: 0.875rem;
-  font-weight: 300;
-  color: var(--p-text-light);
+/* hover 时浮现的描述 */
+.path-reveal {
+  font-family: var(--font-serif);
+  font-size: 0.8125rem;
+  line-height: 1.9;
+  color: var(--p-text-mid);
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transform: translateY(4px);
+  transition: opacity 0.4s 0.1s, transform 0.4s 0.1s, max-height 0.5s var(--ease);
+  pointer-events: none;
+}
+
+.path:hover .path-mood { opacity: 0; }
+.path:hover .path-reveal {
+  opacity: 0.8;
+  max-height: 100px;
+  transform: translateY(0);
+}
+
+/* 右侧 */
+.path-right {
+  display: flex; align-items: center; gap: 1rem;
+}
+
+.path-era {
+  font-family: var(--font-mono);
+  font-size: 0.5rem; font-weight: 400;
+  letter-spacing: 0.1em; color: var(--p-text-ghost);
+  white-space: nowrap;
+}
+
+.path-go {
+  display: flex; align-items: center;
+  color: var(--accent);
   opacity: 0;
   transform: translateX(-6px);
-  transition: all 0.3s var(--ease);
+  transition: opacity 0.3s, transform 0.3s var(--ease);
 }
 
-.school-card:hover .card-arrow {
-  opacity: 1;
+.path:hover .path-go {
+  opacity: 0.7;
   transform: translateX(0);
-  color: var(--accent);
 }
 
-/* === 底部 === */
-.intro-footer {
-  text-align: center;
-  padding: 1.5rem;
-  font-family: var(--font-sans);
-  font-size: 0.625rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  color: var(--p-text-light);
-  opacity: 0.6;
+/* 底部 */
+.hall-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 5rem 2rem 6rem;
 }
 
-/* === 响应式 === */
+.foot-poem {
+  display: flex;
+  gap: 0.5em;
+}
+
+.foot-char {
+  font-family: var(--font-serif);
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: var(--p-text-ghost);
+  font-style: italic;
+  transition: color 0.3s, transform 0.3s var(--ease);
+  cursor: default;
+}
+
+.foot-char:hover {
+  color: var(--c-psychoanalysis);
+  transform: translateY(-2px);
+}
+
+.foot-comma {
+  font-family: var(--font-serif);
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: var(--p-text-ghost);
+  font-style: italic;
+}
+
 @media (max-width: 768px) {
-  .intro-body { padding: 3rem 1.25rem 2rem; }
-  .schools-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
+  .hero-inner { padding: 0 1.5rem; }
+  .title-char { font-size: clamp(2.5rem, 14vw, 4rem); }
+  .paths { padding: 0 1.25rem; }
+  .path {
+    grid-template-columns: 40px 1fr;
+    gap: 1rem;
+    padding: 1.75rem 1rem;
   }
-  .school-card { padding: 1.25rem; }
-  .card-name { font-size: 1.05rem; }
-}
-
-@media (max-width: 480px) {
-  .schools-grid { grid-template-columns: 1fr; }
+  .path-right { display: none; }
+  .path-reveal { display: none; }
+  .hero-scroll { display: none; }
 }
 </style>
