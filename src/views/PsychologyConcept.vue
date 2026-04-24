@@ -1,5 +1,5 @@
 <template>
-  <div class="concept" v-if="concept && school">
+  <div class="concept" v-if="concept && school" :class="`concept-${school.id}`" :style="{ '--accent': school.accent }">
     <nav class="c-nav">
       <router-link :to="`/school/${school.id}`" class="c-back">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -281,4 +281,41 @@ watch(() => route.params.id, init)
   .c-nav { padding: 1rem 1.25rem; }
   .c-title { font-size: clamp(2.5rem, 10vw, 3.5rem); }
 }
+
+/* ===== 流派感知微调 ===== */
+.concept-psychoanalysis .c-echo { border-radius: 8px; }
+.concept-psychoanalysis .c-glow { animation: water-ripple 10s ease-in-out infinite; }
+
+.concept-behaviorism .c-echo { border-radius: 0; }
+.concept-behaviorism .c-hero::before {
+  content: '';
+  position: absolute;
+  left: 2rem; top: 0; bottom: 0;
+  width: 1px;
+  background: repeating-linear-gradient(to bottom, var(--accent) 0px, var(--accent) 1px, transparent 1px, transparent 20px);
+  opacity: 0.1;
+}
+
+.concept-humanistic .c-echo { border-radius: 12px; box-shadow: 0 4px 24px rgba(91,154,111,0.06); }
+.concept-humanistic .c-glow { animation: forest-dapple 12s ease-in-out infinite; }
+
+.concept-cognitive .c-hero {
+  background-image:
+    linear-gradient(rgba(74,144,164,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74,144,164,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.concept-cognitive .c-echo { border-left: 2px solid var(--accent); font-family: var(--font-mono); font-size: 0.8125rem; }
+
+.concept-developmental .c-echo { border-left: 2px solid var(--accent); position: relative; }
+.concept-developmental .c-echo::before {
+  content: '';
+  position: absolute;
+  left: -1px; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--accent), transparent);
+  opacity: 0.3;
+}
+
+.concept-social .c-echo { border-left: 3px solid var(--accent); background: rgba(184,92,92,0.03); }
 </style>

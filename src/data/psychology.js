@@ -11,6 +11,8 @@ export const schools = [
     description: '人的行为并非完全由理性驱动。在我们能察觉的意识之下，涌动着欲望、创伤和被压抑的记忆——它们才是真正的导演。',
     accent: '#6B5B95', // 淡紫
     icon: '◎',
+    heroPoem: '在水面之下，词语有自己的重量',
+    heroQuote: { text: '未被表达的情绪永远不会消失。它们只是被活埋了，并将在未来以更加丑陋的方式涌现。', figure: '西格蒙德·弗洛伊德', years: '1856 — 1939' },
     figures: ['freud', 'jung', 'adler', 'erikson'],
     concepts: ['unconscious', 'defense-mechanisms', 'shadow', 'collective-unconscious', 'id-ego-superego', 'oedipus-complex', 'psychosexual-stages', 'transference', 'repression', 'projection', 'denial', 'rationalization', 'sublimation', 'individuation'],
     experiments: ['dream-analysis', 'free-association', 'case-studies']
@@ -24,6 +26,8 @@ export const schools = [
     description: '不必猜测内心在想什么——只看行为本身。刺激与反应之间的规律，足以解释人为什么做他们做的事。',
     accent: '#D4A843', // 暖金
     icon: '⬡',
+    heroPoem: '每一次反应背后，都有一个被设计的世界',
+    heroQuote: { text: '自由是一种幻觉。我们的行为是由环境塑造的——认识到这一点，才是真正的自由。', figure: 'B.F. 斯金纳', years: '1904 — 1990' },
     figures: ['pavlov', 'skinner', 'watson'],
     concepts: ['conditioning', 'reinforcement', 'operant-conditioning', 'stimulus-response', 'shaping', 'extinction'],
     experiments: ['pavlov-dog', 'skinner-box', 'little-albert']
@@ -37,6 +41,8 @@ export const schools = [
     description: '人不是机器，也不是症状的集合。每个人都有向善、成长和实现自身潜能的内在动力——心理学的任务是帮助它绽放。',
     accent: '#5B9A6F', // 嫩绿
     icon: '✿',
+    heroPoem: '不需要完美的理由，只需要真实的方向',
+    heroQuote: { text: '人可以被夺走一切，除了一样东西——选择自己态度的自由。', figure: '维克多·弗兰克尔', years: '1905 — 1997' },
     figures: ['maslow', 'rogers', 'frankl'],
     concepts: ['self-actualization', 'hierarchy-of-needs', 'unconditional-regard', 'peak-experience', 'meaning-of-life', 'congruence'],
     experiments: ['maslow-hierarchy', 'rogers-therapy', 'frankl-logotherapy']
@@ -50,6 +56,8 @@ export const schools = [
     description: '大脑是一台精密但不完美的信息处理器。它用捷径快速做出判断——而这些捷径，常常让我们犯错却不自知。',
     accent: '#4A90A4', // 青蓝
     icon: '◇',
+    heroPoem: '你看到的，只是大脑允许你看到的',
+    heroQuote: { text: '我们对自己认为熟知的事物确信无疑，但我们对自己的无知却一无所知。', figure: '丹尼尔·卡尼曼', years: '1934 — 2024' },
     figures: ['kahneman', 'tversky', 'piaget', 'beck'],
     concepts: ['cognitive-bias', 'confirmation-bias', 'anchoring', 'heuristics', 'memory', 'attention', 'dual-process', 'loss-aversion'],
     experiments: ['invisible-gorilla', 'kahneman-prospect', 'false-memory', 'stroop-effect']
@@ -63,6 +71,8 @@ export const schools = [
     description: '人的一生是一条不断变化的河流。从婴儿期的第一次依恋，到青春期的身份探索，再到老年的回顾与和解——每个阶段都有独特的课题。',
     accent: '#C47D4E', // 暖橙
     icon: '△',
+    heroPoem: '每个年龄，都是一条新的河流',
+    heroQuote: { text: '人类从摇篮到坟墓，最幸福的时刻莫过于将情感寄托在某个值得信赖的人身上。', figure: '约翰·鲍尔比', years: '1907 — 1990' },
     figures: ['piaget', 'erikson', 'bowlby', 'vygotsky'],
     concepts: ['attachment-theory', 'cognitive-stages', 'psychosocial-stages', 'zone-of-proximal', 'object-permanence', 'identity-crisis', 'scaffolding', 'secure-base'],
     experiments: ['strange-situation', 'piaget-conservation', 'marshmallow-test']
@@ -76,6 +86,8 @@ export const schools = [
     description: '你以为自己是独立的个体？研究表明：群体的力量远超想象。从服从权威到旁观者效应，社会情境在悄悄操控你的选择。',
     accent: '#B85C5C', // 暖红
     icon: '○',
+    heroPoem: '你以为你在做选择，但人群已经在替你决定了',
+    heroQuote: { text: '普通人在接到权威的命令时，会做出令人难以置信的残忍行为——不是因为他们邪恶，而是因为他们服从。', figure: '斯坦利·米尔格拉姆', years: '1933 — 1984' },
     figures: ['milgram', 'zimbardo', 'asch', 'festinger'],
     concepts: ['conformity', 'obedience', 'bystander-effect', 'groupthink', 'cognitive-dissonance', 'attribution', 'prejudice', 'social-facilitation'],
     experiments: ['milgram-obedience', 'stanford-prison', 'asch-conformity', 'bystander-smoke']

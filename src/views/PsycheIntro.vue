@@ -1,5 +1,5 @@
 <template>
-  <div class="hall">
+  <div class="hall" @mousemove="onMouse">
     <nav class="hall-nav">
       <router-link to="/" class="nav-back">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -9,128 +9,97 @@
       <span class="nav-marker"></span>
     </nav>
 
-    <!-- 全屏诗意头图 -->
-    <header class="hero">
+    <!-- 一屏布局 -->
+    <div class="hall-body" ref="bodyEl">
       <!-- 漂浮光晕 -->
-      <div class="hero-inks">
+      <div class="hero-inks" :style="inkParallax">
         <div class="ink ink-a"></div>
         <div class="ink ink-b"></div>
+        <div class="ink ink-c"></div>
       </div>
 
-      <div class="hero-inner">
-        <!-- 序号标记 -->
+      <!-- 漂浮粒子 -->
+      <div class="particles">
+        <span v-for="n in 8" :key="n" class="particle"
+              :style="{
+                left: (10 + Math.random() * 80) + '%',
+                top: (10 + Math.random() * 80) + '%',
+                animationDelay: (Math.random() * 6) + 's',
+                animationDuration: (5 + Math.random() * 6) + 's'
+              }"
+        ></span>
+      </div>
+
+      <!-- 标题区 -->
+      <div class="hall-top">
         <div class="hero-mark fade-up" :class="{ visible: show }">
           <span class="mark-line"></span>
           <span class="mark-text">PSYCHE</span>
           <span class="mark-line"></span>
         </div>
 
-        <!-- 大标题 - 每个字独立呼吸 -->
         <h1 class="hero-title">
           <span v-for="(c, i) in titleChars" :key="i"
                 class="title-char fade-up"
                 :class="{ visible: show }"
-                :style="{ transitionDelay: (0.2 + i * 0.12) + 's' }"
+                :style="{ transitionDelay: (0.15 + i * 0.1) + 's' }"
           >{{ c }}</span>
         </h1>
 
-        <!-- 英文 -->
-        <p class="hero-en fade-up" :class="{ visible: show }" :style="{ transitionDelay: '0.9s' }">
+        <p class="hero-en fade-up" :class="{ visible: show }" :style="{ transitionDelay: '0.6s' }">
           Something in you knows, before you do
         </p>
-
-        <!-- 分隔 -->
-        <div class="hero-divider fade-up" :class="{ visible: show }" :style="{ transitionDelay: '1.2s' }">
-          <span class="div-dot"></span>
-          <span class="div-line"></span>
-          <span class="div-dot"></span>
-        </div>
-
-        <!-- 诗意正文 - 逐行浮现 -->
-        <div class="hero-poem">
-          <p class="poem-line fade-up" :class="{ visible: show }" :style="{ transitionDelay: '1.5s' }">
-            有些东西在你意识到之前，就已经替你做了决定
-          </p>
-          <p class="poem-line fade-up" :class="{ visible: show }" :style="{ transitionDelay: '1.9s' }">
-            他们试图给那种东西一个名字
-          </p>
-          <p class="poem-line poem-accent fade-up" :class="{ visible: show }" :style="{ transitionDelay: '2.3s' }">
-            于是有了这些路
-          </p>
-        </div>
       </div>
 
-      <!-- 向下指引 -->
-      <div class="hero-scroll fade-up" :class="{ visible: show }" :style="{ transitionDelay: '2.8s' }">
-        <div class="scroll-line"></div>
-      </div>
-    </header>
-
-    <!-- 六个流派 -->
-    <div class="paths">
-      <router-link
-        v-for="(school, i) in schools"
-        :key="school.id"
-        :to="`/school/${school.id}`"
-        class="path"
-        :style="{ '--accent': school.accent }"
-        @mouseenter="hoverSchool = i"
-        @mouseleave="hoverSchool = -1"
-      >
-        <!-- 背景光晕 -->
-        <div class="path-glow" :class="{ active: hoverSchool === i }"></div>
-
-        <!-- 左侧编号 -->
-        <div class="path-left">
+      <!-- 六个流派 — 自由散布 -->
+      <div class="paths">
+        <router-link
+          v-for="(school, i) in schools"
+          :key="school.id"
+          :to="`/school/${school.id}`"
+          class="path"
+          :class="[
+            `path-${i}`,
+            { visible: show }
+          ]"
+          :style="{ '--accent': school.accent, '--delay': (0.8 + i * 0.1) + 's' }"
+          @mouseenter="hoverSchool = i"
+          @mouseleave="hoverSchool = -1"
+        >
+          <div class="path-atmos" :class="{ active: hoverSchool === i }"></div>
           <span class="path-icon">{{ school.icon }}</span>
-        </div>
-
-        <!-- 中间内容 -->
-        <div class="path-core">
-          <div class="path-names">
-            <h2 class="path-name">{{ school.name }}</h2>
-            <span class="path-name-en">{{ school.nameEn }}</span>
-          </div>
-          <p class="path-mood">{{ school.subtitle }}</p>
-          <p class="path-reveal">{{ school.description }}</p>
-        </div>
-
-        <!-- 右侧时期 + 箭头 -->
-        <div class="path-right">
-          <span class="path-era">{{ school.period }}</span>
-          <span class="path-go">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path d="M4 9H14M14 9L10 5M14 9L10 13" stroke="currentColor" stroke-width="1"/>
-            </svg>
-          </span>
-        </div>
-      </router-link>
-    </div>
-
-    <footer class="hall-foot">
-      <div class="foot-poem">
-        <span class="foot-char">往</span>
-        <span class="foot-char">下</span>
-        <span class="foot-char">走</span>
-        <span class="foot-comma">，</span>
-        <span class="foot-char">哪</span>
-        <span class="foot-char">里</span>
-        <span class="foot-char">都</span>
-        <span class="foot-char">是</span>
-        <span class="foot-char">入</span>
-        <span class="foot-char">口</span>
+          <h2 class="path-name">{{ school.name }}</h2>
+          <p class="path-sub">{{ school.subtitle }}</p>
+          <span class="path-line"></span>
+        </router-link>
       </div>
-    </footer>
+
+      <!-- 底部诗句 -->
+      <div class="hall-foot fade-up" :class="{ visible: show }" :style="{ transitionDelay: '1.6s' }">
+        <span class="foot-text">往下走，哪里都是入口</span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, reactive } from 'vue'
 import { schools } from '../data/psychology'
 
 const show = ref(false)
 const hoverSchool = ref(-1)
+const bodyEl = ref(null)
 const titleChars = computed(() => '无名之物'.split(''))
+
+const inkParallax = reactive({ transform: '' })
+
+function onMouse(e) {
+  const cx = window.innerWidth / 2
+  const cy = window.innerHeight / 2
+  const dx = (e.clientX - cx) / cx
+  const dy = (e.clientY - cy) / cy
+  inkParallax.transform = `translate(${dx * 12}px, ${dy * 10}px)`
+}
 
 onMounted(() => {
   window.scrollTo({ top: 0, behavior: 'instant' })
@@ -141,19 +110,19 @@ onMounted(() => {
 
 <style scoped>
 .hall {
-  min-height: 100vh;
+  height: 100vh;
   background: var(--p-bg);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 /* ===== 导航 ===== */
 .hall-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  position: relative; z-index: 100;
   display: flex; justify-content: space-between; align-items: center;
-  padding: 1.25rem 2rem;
-  background: transparent;
-  transition: background 0.4s;
+  padding: 1rem 2rem;
+  flex-shrink: 0;
 }
 
 .nav-back {
@@ -173,21 +142,25 @@ onMounted(() => {
   animation: breathe 6s ease-in-out infinite;
 }
 
-/* ===== 全屏诗意头图 ===== */
-.hero {
-  position: relative;
-  min-height: 100vh;
+/* ===== 主体 ===== */
+.hall-body {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
   overflow: hidden;
+  padding: 0 2rem 1rem;
+  gap: 2rem;
 }
 
 /* 光晕 */
 .hero-inks {
   position: absolute; inset: 0;
   pointer-events: none;
+  transition: transform 0.6s var(--ease);
+  will-change: transform;
 }
 
 .ink {
@@ -200,7 +173,7 @@ onMounted(() => {
   width: 500px; height: 500px;
   background: radial-gradient(circle, var(--c-psychoanalysis), transparent 70%);
   opacity: 0.06;
-  top: -10%; right: -5%;
+  top: -15%; right: -5%;
   animation: breathe-deep 12s ease-in-out infinite;
 }
 
@@ -208,58 +181,80 @@ onMounted(() => {
   width: 350px; height: 350px;
   background: radial-gradient(circle, var(--c-humanistic), transparent 70%);
   opacity: 0.05;
-  bottom: 10%; left: -8%;
+  bottom: 5%; left: -8%;
   animation: breathe-deep 10s ease-in-out infinite;
   animation-delay: 3s;
 }
 
-.hero-inner {
-  position: relative; z-index: 2;
-  text-align: center;
-  max-width: 600px;
-  padding: 0 2rem;
+.ink-c {
+  width: 250px; height: 250px;
+  background: radial-gradient(circle, var(--c-cognitive), transparent 70%);
+  opacity: 0.03;
+  top: 40%; left: 55%;
+  animation: breathe-deep 14s ease-in-out infinite;
+  animation-delay: 6s;
 }
 
-/* 序号标记 */
+/* 粒子 */
+.particles {
+  position: absolute; inset: 0;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: var(--p-text);
+  border-radius: 50%;
+  opacity: 0;
+  animation: flicker 5s ease-in-out infinite;
+}
+
+/* ===== 标题区 ===== */
+.hall-top {
+  position: relative; z-index: 2;
+  text-align: center;
+  flex-shrink: 0;
+}
+
 .hero-mark {
-  display: flex; align-items: center; gap: 1rem;
+  display: flex; align-items: center; gap: 0.75rem;
   justify-content: center;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
 }
 
 .mark-line {
   display: block;
-  width: 40px; height: 1px;
+  width: 30px; height: 1px;
   background: linear-gradient(90deg, transparent, var(--p-text-ghost), transparent);
 }
 
 .mark-text {
   font-family: var(--font-display);
-  font-size: 0.75rem;
+  font-size: 0.625rem;
   font-weight: 400;
   letter-spacing: 0.5em;
   color: var(--p-text-ghost);
   font-style: italic;
 }
 
-/* 大标题 */
 .hero-title {
-  margin-bottom: 1.5rem;
-  line-height: 1.2;
+  line-height: 1.15;
   white-space: nowrap;
+  margin-bottom: 0.625rem;
 }
 
 .title-char {
   display: inline-block;
   font-family: var(--font-serif);
-  font-size: clamp(3.5rem, 12vw, 7rem);
+  font-size: clamp(2.25rem, 6vw, 4rem);
   font-weight: 200;
   letter-spacing: 0.08em;
   color: var(--p-text-bright);
   opacity: 0;
-  transform: translateY(40px) scale(0.95);
-  filter: blur(8px);
-  transition: opacity 1s var(--ease), transform 1s var(--ease), filter 1s var(--ease);
+  transform: translateY(25px) scale(0.95);
+  filter: blur(6px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease), filter 0.8s var(--ease);
   margin: 0 0.02em;
 }
 
@@ -269,19 +264,17 @@ onMounted(() => {
   filter: blur(0);
 }
 
-/* 英文 */
 .hero-en {
   font-family: var(--font-display);
-  font-size: clamp(0.8125rem, 1.5vw, 1rem);
+  font-size: clamp(0.75rem, 1.2vw, 0.9375rem);
   font-weight: 400;
   font-style: italic;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.15em;
   color: var(--p-text-mid);
-  margin-bottom: 3rem;
   opacity: 0;
-  transform: translateY(15px);
-  filter: blur(4px);
-  transition: opacity 1s var(--ease), transform 1s var(--ease), filter 1s var(--ease);
+  transform: translateY(10px);
+  filter: blur(3px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease), filter 0.8s var(--ease);
 }
 
 .hero-en.visible {
@@ -290,263 +283,164 @@ onMounted(() => {
   filter: blur(0);
 }
 
-/* 分隔线 */
-.hero-divider {
-  display: flex; align-items: center; gap: 0.75rem;
-  justify-content: center;
-  margin-bottom: 3rem;
-  opacity: 0;
-  transition: opacity 1s var(--ease);
-}
-
-.hero-divider.visible { opacity: 1; }
-
-.div-dot {
-  display: block;
-  width: 3px; height: 3px;
-  border-radius: 50%;
-  background: var(--p-text-ghost);
-}
-
-.div-line {
-  display: block;
-  width: 60px; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--p-text-ghost), transparent);
-}
-
-/* 诗意正文 */
-.hero-poem {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.poem-line {
-  font-family: var(--font-serif);
-  font-size: clamp(0.9375rem, 1.8vw, 1.125rem);
-  font-weight: 300;
-  line-height: 2.6;
-  color: var(--p-text-mid);
-  letter-spacing: 0.08em;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
-}
-
-.poem-line.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.poem-accent {
-  color: var(--c-psychoanalysis);
-  font-weight: 400;
-}
-
-/* 向下指引 */
-.hero-scroll {
-  position: absolute;
-  bottom: 3rem; left: 50%;
-  transform: translateX(-50%);
-}
-
-.scroll-line {
-  width: 1px; height: 40px;
-  background: linear-gradient(to bottom, transparent, var(--p-text-ghost));
-  animation: float 3s ease-in-out infinite;
-}
-
-/* ===== 六条路 ===== */
+/* ===== 六条路 — 自由散布 ===== */
 .paths {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 2rem;
+  position: relative; z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  width: 100%;
+  max-width: 1000px;
+  gap: 0;
+  flex-shrink: 0;
 }
 
 .path {
-  display: grid;
-  grid-template-columns: 60px 1fr auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
-  padding: 2.5rem 1.75rem;
+  text-align: center;
+  padding: 1.75rem 0.5rem;
   text-decoration: none;
   color: var(--p-text);
   cursor: pointer;
-  position: relative;
   overflow: hidden;
-  border-bottom: 1px solid var(--p-border);
-  transition: background 0.5s var(--ease);
-}
-
-.path:first-child { border-top: 1px solid var(--p-border); }
-
-/* 背景光晕 */
-.path-glow {
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 20% 50%, var(--accent), transparent 70%);
   opacity: 0;
-  transition: opacity 0.6s var(--ease);
+  transform: translateY(20px);
+  filter: blur(4px);
+  transition: opacity 0.8s var(--ease), transform 0.8s var(--ease), filter 0.8s var(--ease);
+}
+
+.path.visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+  transition-delay: var(--delay);
+}
+
+/* 每个流派独特的浮动姿态 */
+.path-0 { animation: float 7s ease-in-out infinite; }
+.path-1 { animation: float 8s ease-in-out infinite; animation-delay: 1s; }
+.path-2 { animation: float 6s ease-in-out infinite; animation-delay: 2.5s; }
+.path-3 { animation: float 9s ease-in-out infinite; animation-delay: 0.5s; }
+.path-4 { animation: float 7.5s ease-in-out infinite; animation-delay: 3s; }
+.path-5 { animation: float 8.5s ease-in-out infinite; animation-delay: 1.5s; }
+
+.path-atmos {
+  position: absolute;
+  bottom: 0; left: 50%; right: 50%;
+  height: 0;
+  background: var(--accent);
+  opacity: 0;
+  border-radius: 50% 50% 0 0;
+  filter: blur(25px);
+  transition: all 0.6s var(--ease);
   pointer-events: none;
-  filter: blur(40px);
 }
 
-.path-glow.active { opacity: 0.06; }
-.path:hover .path-glow { opacity: 0.06; }
-
-.path:hover {
-  background: var(--p-bg-elevated);
-}
-
-/* 左侧 */
-.path-left {
-  display: flex; align-items: center; justify-content: center;
+.path:hover .path-atmos,
+.path-atmos.active {
+  left: -20%;
+  right: -20%;
+  height: 60px;
+  opacity: 0.08;
 }
 
 .path-icon {
   font-size: 1.25rem;
-  opacity: 0.25;
-  transition: opacity 0.4s, transform 0.4s var(--ease), color 0.4s;
+  opacity: 0.15;
+  margin-bottom: 0.75rem;
   color: var(--p-text-ghost);
+  transition: opacity 0.4s, transform 0.5s var(--ease), color 0.4s;
 }
 
 .path:hover .path-icon {
   opacity: 0.8;
   color: var(--accent);
-  transform: scale(1.15);
-}
-
-/* 中间 */
-.path-core { position: relative; }
-
-.path-names {
-  display: flex; align-items: baseline; gap: 0.75rem;
-  margin-bottom: 0.375rem;
+  transform: scale(1.3) translateY(-2px);
 }
 
 .path-name {
   font-family: var(--font-serif);
-  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-size: clamp(0.875rem, 1.3vw, 1.0625rem);
   font-weight: 500;
-  letter-spacing: 0.08em;
-  transition: color 0.4s;
-}
-
-.path:hover .path-name { color: var(--accent); }
-
-.path-name-en {
-  font-family: var(--font-mono);
-  font-size: 0.5rem;
-  letter-spacing: 0.15em;
-  color: var(--p-text-ghost);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.path:hover .path-name-en { opacity: 0.6; }
-
-.path-mood {
-  font-family: var(--font-serif);
-  font-size: 0.8125rem;
-  font-weight: 300;
-  color: var(--p-text-mid);
-  font-style: italic;
-  transition: opacity 0.3s;
-}
-
-/* hover 时浮现的描述 */
-.path-reveal {
-  font-family: var(--font-serif);
-  font-size: 0.8125rem;
-  line-height: 1.9;
-  color: var(--p-text-mid);
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  transform: translateY(4px);
-  transition: opacity 0.4s 0.1s, transform 0.4s 0.1s, max-height 0.5s var(--ease);
-  pointer-events: none;
-}
-
-.path:hover .path-mood { opacity: 0; }
-.path:hover .path-reveal {
-  opacity: 0.8;
-  max-height: 100px;
-  transform: translateY(0);
-}
-
-/* 右侧 */
-.path-right {
-  display: flex; align-items: center; gap: 1rem;
-}
-
-.path-era {
-  font-family: var(--font-mono);
-  font-size: 0.5rem; font-weight: 400;
-  letter-spacing: 0.1em; color: var(--p-text-ghost);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.375rem;
+  transition: color 0.3s, letter-spacing 0.4s var(--ease);
   white-space: nowrap;
 }
 
-.path-go {
-  display: flex; align-items: center;
+.path:hover .path-name {
   color: var(--accent);
+  letter-spacing: 0.15em;
+}
+
+.path-sub {
+  font-family: var(--font-serif);
+  font-size: 0.625rem;
+  font-weight: 300;
+  color: var(--p-text-ghost);
+  font-style: italic;
+  line-height: 1.5;
   opacity: 0;
-  transform: translateX(-6px);
-  transition: opacity 0.3s, transform 0.3s var(--ease);
+  max-height: 0;
+  transition: opacity 0.4s, max-height 0.5s var(--ease), margin 0.4s;
+  overflow: hidden;
 }
 
-.path:hover .path-go {
+.path:hover .path-sub {
   opacity: 0.7;
-  transform: translateX(0);
+  max-height: 40px;
+  margin-top: 0.25rem;
 }
 
-/* 底部 */
+.path-line {
+  display: block;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  margin-top: 0.625rem;
+  transition: width 0.5s var(--ease), opacity 0.4s;
+  opacity: 0;
+}
+
+.path:hover .path-line {
+  width: 24px;
+  opacity: 0.5;
+}
+
+/* ===== 底部 ===== */
 .hall-foot {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 5rem 2rem 6rem;
+  position: relative; z-index: 2;
+  flex-shrink: 0;
+  text-align: center;
 }
 
-.foot-poem {
-  display: flex;
-  gap: 0.5em;
-}
-
-.foot-char {
+.foot-text {
   font-family: var(--font-serif);
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   font-weight: 300;
   color: var(--p-text-ghost);
   font-style: italic;
-  transition: color 0.3s, transform 0.3s var(--ease);
-  cursor: default;
+  letter-spacing: 0.1em;
 }
 
-.foot-char:hover {
-  color: var(--c-psychoanalysis);
-  transform: translateY(-2px);
-}
-
-.foot-comma {
-  font-family: var(--font-serif);
-  font-size: 0.875rem;
-  font-weight: 300;
-  color: var(--p-text-ghost);
-  font-style: italic;
-}
-
-@media (max-width: 768px) {
-  .hero-inner { padding: 0 1.5rem; }
-  .title-char { font-size: clamp(2.5rem, 14vw, 4rem); }
-  .paths { padding: 0 1.25rem; }
-  .path {
-    grid-template-columns: 40px 1fr;
-    gap: 1rem;
-    padding: 1.75rem 1rem;
+/* ===== 响应式 ===== */
+@media (max-width: 900px) {
+  .paths {
+    grid-template-columns: repeat(3, 1fr);
   }
-  .path-right { display: none; }
-  .path-reveal { display: none; }
-  .hero-scroll { display: none; }
+  .path { padding: 1.5rem 0.75rem; }
+  .path-sub { opacity: 0.6; max-height: 40px; margin-top: 0.25rem; }
+}
+
+@media (max-width: 600px) {
+  .hall-body { gap: 1.5rem; padding: 0 1.25rem 1rem; }
+  .title-char { font-size: clamp(2rem, 9vw, 3rem); }
+  .paths {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+  .path { padding: 1.25rem 0.5rem; }
 }
 </style>

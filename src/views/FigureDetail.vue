@@ -1,5 +1,5 @@
 <template>
-  <div class="portrait" v-if="figure && school">
+  <div class="portrait" v-if="figure && school" :class="`portrait-${school.id}`" :style="{ '--accent': school.accent }">
     <nav class="p-nav">
       <router-link :to="`/school/${school.id}`" class="p-back">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -26,7 +26,7 @@
 
       <!-- 引言 -->
       <section class="p-quote-section fade-up" :class="{ visible: secVis[0] }">
-        <div class="quote-mark">"</div>
+        <div class="quote-mark">{{ school.icon }}</div>
         <p class="p-quote">{{ figure.quote }}</p>
         <div class="quote-line"></div>
       </section>
@@ -308,6 +308,45 @@ watch(() => route.params.id, init)
   opacity: 0.5;
   transform: translateY(-50%);
 }
+
+/* ===== 流派感知微调 ===== */
+.portrait-psychoanalysis .quote-mark { font-size: 4rem; line-height: 1; }
+.portrait-psychoanalysis .p-glow { animation: water-ripple 10s ease-in-out infinite; }
+
+.portrait-behaviorism .quote-mark { font-family: var(--font-mono); font-size: 2rem; }
+.portrait-behaviorism .p-quote { font-style: normal; font-family: var(--font-body); }
+.portrait-behaviorism .p-hero::before {
+  content: '';
+  position: absolute;
+  left: 2rem; top: 0; bottom: 0;
+  width: 1px;
+  background: repeating-linear-gradient(to bottom, var(--accent) 0px, var(--accent) 1px, transparent 1px, transparent 20px);
+  opacity: 0.1;
+}
+
+.portrait-humanistic .quote-mark { font-size: 4rem; opacity: 0.2; }
+.portrait-humanistic .p-glow { animation: forest-dapple 12s ease-in-out infinite; }
+.portrait-humanistic .p-quote-section { border-radius: 0; }
+
+.portrait-cognitive .quote-mark { font-family: var(--font-mono); font-size: 2rem; }
+.portrait-cognitive .p-hero {
+  background-image:
+    linear-gradient(rgba(74,144,164,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74,144,164,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.portrait-developmental .p-hero::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent 10%, var(--accent) 30%, var(--accent) 70%, transparent 90%);
+  opacity: 0.08;
+}
+
+.portrait-social .quote-mark { font-size: 5rem; color: var(--accent); opacity: 0.2; }
+.portrait-social .p-quote { letter-spacing: 0.02em; }
 
 /* 同路人 */
 .p-peers { display: flex; flex-direction: column; }
